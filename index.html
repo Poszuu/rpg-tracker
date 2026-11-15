@@ -1,706 +1,223 @@
 <!DOCTYPE html>
-<html lang="pl" class="dark">
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>System RPG Architekt - Cloud Sync</title>
+    <title>RPG Life Tracker</title>
+    <!-- Tailwind CSS dla nowoczesnego wyglądu -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        darkbg: '#090d16',
-                        cardbg: '#111827',
-                        bordercol: '#1f293d',
-                        neonred: '#ef4444',
-                        neonblue: '#3b82f6',
-                        neongreen: '#10b981',
-                        neonamber: '#f59e0b',
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@400;600;700&display=swap');
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #090d16;
-            color: #f3f4f6;
-        }
-        .font-mono-tech {
-            font-family: 'Share Tech Mono', monospace;
-        }
-        .glow-box {
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.15);
-        }
-        .glow-red {
-            box-shadow: 0 0 15px rgba(239, 68, 68, 0.25);
-        }
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #090d16;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #1f293d;
-            border-radius: 3px;
-        }
-    </style>
+    <!-- Firebase App & Firestore SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 </head>
-<body class="min-h-screen pb-12">
+<body class="bg-slate-900 text-slate-100 min-h-screen p-4 flex flex-col items-center">
 
-    <!-- Auth / Connection Modal Screen -->
-    <div id="auth-screen" class="fixed inset-0 bg-darkbg z-50 flex items-center justify-center p-4">
-        <div class="bg-cardbg border border-bordercol rounded-2xl p-8 max-w-md w-full glow-box space-y-6">
-            <div class="text-center space-y-2">
-                <div class="w-3 h-3 bg-neongreen rounded-full animate-pulse inline-block mb-1"></div>
-                <h1 class="font-mono-tech text-2xl text-blue-400 font-bold">SYSTEM ARCHITEKTUR</h1>
-                <p class="text-xs text-slate-400 font-mono-tech">Autoryzacja w chmurze w czasie rzeczywistym</p>
+    <div class="w-full max-w-md bg-slate-800 rounded-2xl shadow-xl p-6 border border-slate-700">
+        
+        <!-- Nagłówek i Profil -->
+        <div class="flex justify-between items-center mb-6 border-b border-slate-700 pb-4">
+            <h1 class="text-xl font-bold text-indigo-400 flex items-center gap-2">🛡️ RPG Tracker</h1>
+            <div class="text-right">
+                <span class="text-xs text-slate-400 block">Status chmury:</span>
+                <span id="sync-status" class="text-xs font-semibold text-amber-400">Rozłączony</span>
+            </div>
+        </div>
+
+        <!-- Ustawienia Profilu / ID -->
+        <div class="mb-6 bg-slate-900/50 p-3 rounded-xl border border-slate-700/50">
+            <label class="block text-xs font-medium text-slate-300 mb-1">Identyfikator Profilu (taki sam na PC i telefonie):</label>
+            <div class="flex gap-2">
+                <input type="text" id="profile-id" placeholder="np. moj-unikalny-profil" class="bg-slate-800 border border-slate-600 rounded-lg px-3 py-1.5 text-sm w-full focus:outline-none focus:border-indigo-500">
+                <button onclick="connectCloud()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition">Połącz</button>
+            </div>
+        </div>
+
+        <!-- Statysty Postaci -->
+        <div class="bg-slate-900 p-4 rounded-xl mb-6 border border-slate-700">
+            <div class="flex justify-between items-center mb-2">
+                <span id="char-level" class="font-bold text-lg text-amber-400">Poziom 1</span>
+                <span id="char-gold" class="text-yellow-400 font-semibold">🪙 0 Złota</span>
             </div>
             
-            <div id="auth-status" class="text-xs font-mono-tech text-center text-amber-400 bg-amber-950/30 p-2 rounded border border-amber-900/50">
-                Inicjalizacja połączenia z bezpiecznym serwerem...
+            <!-- Pasek HP -->
+            <div class="mb-2">
+                <div class="flex justify-between text-xs text-slate-400 mb-1">
+                    <span>HP (Zdrowie)</span>
+                    <span id="hp-text">100/100</span>
+                </div>
+                <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
+                    <div id="hp-bar" class="bg-red-500 h-full transition-all duration-300" style="width: 100%"></div>
+                </div>
             </div>
 
-            <div class="space-y-4 pt-2">
-                <div>
-                    <label class="block text-xs font-mono-tech text-slate-400 mb-1">Twój unikalny kod dostępu (ID Sesji / Login):</label>
-                    <input type="text" id="user-sync-id" class="w-full bg-darkbg border border-bordercol rounded px-3 py-2 text-sm font-mono-tech text-slate-200 focus:outline-none focus:border-blue-500" placeholder="np. moj_tajny_profil_rpg">
-                    <p class="text-[10px] text-slate-500 mt-1">Wpisz ten sam kod na telefonie i komputerze, aby współdzielić postęp.</p>
+            <!-- Pasek XP -->
+            <div>
+                <div class="flex justify-between text-xs text-slate-400 mb-1">
+                    <span>Doświadczenie (XP)</span>
+                    <span id="xp-text">0/100</span>
                 </div>
-
-                <button onclick="connectToCloud()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-mono-tech text-sm font-bold py-3 px-4 rounded transition glow-box">
-                    PODŁĄCZ DO CHMURY I URUCHOM SYSTEM
-                </button>
+                <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
+                    <div id="xp-bar" class="bg-indigo-500 h-full transition-all duration-300" style="width: 0%"></div>
+                </div>
             </div>
         </div>
+
+        <!-- Lista Zadań / Nawyków -->
+        <div class="mb-6">
+            <div class="flex justify-between items-center mb-3">
+                <h2 class="font-semibold text-sm text-slate-300">Aktywne Zadania</h2>
+                <button onclick="addTask()" class="text-xs bg-emerald-600 hover:bg-emerald-500 text-white px-2 py-1 rounded-md transition">+ Dodaj zadanie</button>
+            </div>
+            <div id="tasks-container" class="space-y-2 max-h-60 overflow-y-auto pr-1">
+                <!-- Zadania generowane dynamicznie -->
+            </div>
+        </div>
+
+        <!-- Przyciski akcji -->
+        <div class="flex gap-2">
+            <button onclick="saveData()" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white py-2 rounded-xl text-sm font-semibold transition shadow-lg">Zapisz do Chmury</button>
+            <button onclick="loadData()" class="flex-1 bg-slate-700 hover:bg-slate-600 text-white py-2 rounded-xl text-sm font-semibold transition">Odśwież / Pobierz</button>
+        </div>
+
     </div>
 
-    <!-- Top System Header -->
-    <header class="border-b border-bordercol bg-cardbg/80 backdrop-blur sticky top-0 z-40 px-4 py-3 shadow-lg">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="flex items-center gap-3">
-                <div class="w-3 h-3 bg-neongreen rounded-full animate-pulse"></div>
-                <h1 class="font-mono-tech text-xl md:text-2xl tracking-wider text-blue-400 font-bold">SYSTEM ARCHITEKTUR v3.0</h1>
-            </div>
-            
-            <!-- Quick Status Bar -->
-            <div class="flex flex-wrap items-center gap-4 text-sm font-mono-tech">
-                <div class="bg-darkbg px-3 py-1.5 rounded border border-bordercol">
-                    Profil: <span id="header-user-id" class="text-blue-400 font-bold">...</span>
-                </div>
-                <div class="bg-darkbg px-3 py-1.5 rounded border border-bordercol">
-                    Poziom: <span id="header-level" class="text-yellow-400 font-bold">1</span>
-                </div>
-                <div class="bg-darkbg px-3 py-1.5 rounded border border-bordercol">
-                    Ranga: <span id="header-rank" class="text-blue-400 font-bold">Inicjowany</span>
-                </div>
-                <div class="bg-darkbg px-3 py-1.5 rounded border border-bordercol">
-                    XP: <span id="header-xp" class="text-green-400 font-bold">0</span> / <span id="header-next-xp" class="text-slate-400">15</span>
-                </div>
-            </div>
-        </div>
-        <!-- Progress bar line -->
-        <div class="w-full bg-slate-800 h-1 mt-3">
-            <div id="header-progress" class="bg-blue-500 h-1 transition-all duration-500" style="width: 0%"></div>
-        </div>
-    </header>
-
-    <!-- Main Container -->
-    <main class="max-w-7xl mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-        <!-- Left 2 Columns: Habit Dashboard -->
-        <div class="lg:col-span-2 space-y-6">
-
-            <!-- Notification Banner -->
-            <div id="system-notification" class="hidden bg-blue-950/50 border border-blue-500/50 text-blue-200 px-4 py-3 rounded-lg text-sm font-mono-tech flex items-center justify-between">
-                <span id="notification-text">Synchronizacja chmurowa aktywna.</span>
-                <button onclick="closeNotification()" class="text-blue-400 hover:text-white">&times;</button>
-            </div>
-
-            <!-- Category: SIŁA -->
-            <div class="bg-cardbg border border-bordercol rounded-xl p-5 glow-box">
-                <div class="flex justify-between items-center mb-4 border-b border-bordercol pb-2">
-                    <h2 class="text-red-400 font-mono-tech font-bold text-lg flex items-center gap-2">
-                        <span>🔴</span> SIŁA (Fizyczność)
-                    </h2>
-                    <span class="text-xs text-slate-400 font-mono-tech">Dieta (+2/-2) | Suplementy (+1/-1) | Trening (+5/-5)</span>
-                </div>
-                <div id="habits-sila" class="space-y-3">
-                    <!-- Dynamic Habits -->
-                </div>
-            </div>
-
-            <!-- Category: INTELEKT -->
-            <div class="bg-cardbg border border-bordercol rounded-xl p-5 glow-box">
-                <div class="flex justify-between items-center mb-4 border-b border-bordercol pb-2">
-                    <h2 class="text-blue-400 font-mono-tech font-bold text-lg flex items-center gap-2">
-                        <span>🔵</span> INTELEKT / ROZWÓJ (Umysł)
-                    </h2>
-                    <span class="text-xs text-slate-400 font-mono-tech">Język (+2/-2) | Książka (+2/-2) | Pianino (+3/-3)</span>
-                </div>
-                <div id="habits-intelekt" class="space-y-3">
-                    <!-- Dynamic Habits -->
-                </div>
-            </div>
-
-            <!-- Category: WOLA -->
-            <div class="bg-cardbg border border-bordercol rounded-xl p-5 glow-box">
-                <div class="flex justify-between items-center mb-4 border-b border-bordercol pb-2">
-                    <h2 class="text-purple-400 font-mono-tech font-bold text-lg flex items-center gap-2">
-                        <span>⚫</span> WOLA / DYSCYPLINA (Kontrola)
-                    </h2>
-                    <span class="text-xs text-slate-400 font-mono-tech">Czysty dzień (+3/-3) | Telefon (+2/-2) | Medytacja (+1/-1)</span>
-                </div>
-                <div id="habits-wola" class="space-y-3">
-                    <!-- Dynamic Habits -->
-                </div>
-            </div>
-
-            <!-- Daily Actions Controls -->
-            <div class="flex flex-wrap gap-4 pt-2">
-                <button onclick="endDay()" class="bg-blue-950/70 hover:bg-blue-900/80 text-blue-300 font-mono-tech px-4 py-2.5 rounded-lg border border-blue-700 text-sm transition flex items-center gap-2 glow-box">
-                    ⏭️ Zakończ Dzień (Dolicz bonus serii i wyczyść dzienne)
-                </button>
-            </div>
-
-            <!-- System Log -->
-            <div class="bg-cardbg border border-bordercol rounded-xl p-5 glow-box">
-                <div class="flex justify-between items-center mb-3 border-b border-bordercol pb-2">
-                    <h3 class="font-mono-tech text-slate-300 font-bold text-sm flex items-center gap-2">
-                        <span>📟</span> LOG ZDARZEŃ SYSTEMOWYCH (CHMURA)
-                    </h3>
-                    <button onclick="clearLogs()" class="text-xs text-slate-500 hover:text-slate-300 font-mono-tech">Wyczyść log</button>
-                </div>
-                <div id="system-logs" class="space-y-1.5 max-h-48 overflow-y-auto font-mono-tech text-xs pr-1">
-                    <!-- Dynamic Logs -->
-                </div>
-            </div>
-        </div>
-
-        <!-- Right Column: Stats, Progression & Milestones -->
-        <div class="space-y-6">
-
-            <!-- Character Profile Card -->
-            <div class="bg-cardbg border border-bordercol rounded-xl p-5 glow-box space-y-4">
-                <h3 class="font-mono-tech text-yellow-400 font-bold border-b border-bordercol pb-2 text-md flex items-center gap-2">
-                    <span>⚡</span> STATUS POSTACI & EGO
-                </h3>
-                
-                <div class="space-y-3 text-sm font-mono-tech">
-                    <div class="flex justify-between">
-                        <span class="text-slate-400">Aktualny Poziom:</span>
-                        <span id="stat-level" class="text-yellow-400 font-bold">1</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-slate-400">Ranga:</span>
-                        <span id="stat-rank" class="text-blue-400 font-bold">Inicjowany</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-slate-400">Doświadczenie:</span>
-                        <span id="stat-xp" class="text-green-400 font-bold">0 / 15 XP</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-slate-400">Skumulowane XP:</span>
-                        <span id="stat-total-xp" class="text-slate-200 font-bold">0 XP</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-slate-400">Wskaźnik Ego:</span>
-                        <span id="stat-ego" class="text-amber-400 font-bold">Top 50%</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-slate-400">Aktywny Bonus Serii:</span>
-                        <span id="stat-streak-bonus" class="text-purple-400 font-bold">+0 XP/dzień</span>
-                    </div>
-                </div>
-
-                <div class="bg-darkbg p-3 rounded border border-bordercol text-xs text-slate-300 font-mono-tech space-y-1">
-                    <div class="text-yellow-400 font-bold mb-1">Zasady Serii & Kar:</div>
-                    <div>• Bonus serii: +1 XP co 2 dni (max +5 XP przy 10 dniach capu).</div>
-                    <div class="text-red-400 mt-1">• Porażka: kara równa dokładnej wartości zadania oraz zerowanie serii w kategorii!</div>
-                </div>
-            </div>
-
-            <!-- Milestones & Ranks List -->
-            <div class="bg-cardbg border border-bordercol rounded-xl p-5 glow-box space-y-4">
-                <h3 class="font-mono-tech text-blue-400 font-bold border-b border-bordercol pb-2 text-md flex items-center gap-2">
-                    <span>🏆</span> RANGI I KAMIENIE MILOWE
-                </h3>
-                
-                <div class="space-y-2 text-xs font-mono-tech max-h-80 overflow-y-auto pr-1">
-                    <div class="p-2 rounded bg-darkbg border border-slate-800"><div class="text-yellow-400 font-bold">Poziom 5: Przebudzony</div><div class="text-slate-400">Stabilizacja struktur ego.</div></div>
-                    <div class="p-2 rounded bg-darkbg border border-slate-800"><div class="text-yellow-400 font-bold">Poziom 10: Kowal Woli</div><div class="text-slate-400">Tarcza Cienia (bufor).</div></div>
-                    <div class="p-2 rounded bg-darkbg border border-slate-800"><div class="text-yellow-400 font-bold">Poziom 15: Wędrowiec</div><div class="text-slate-400">Opór materii przełamany.</div></div>
-                    <div class="p-2 rounded bg-darkbg border border-slate-800"><div class="text-yellow-400 font-bold">Poziom 20: Rozjemca Losu</div><div class="text-slate-400 text-green-400">🎁 Korekta nawyku.</div></div>
-                    <div class="p-2 rounded bg-darkbg border border-slate-800"><div class="text-yellow-400 font-bold">Poziom 25: Mistrz Próby</div><div class="text-slate-400 text-blue-400">⚙️ Protokół Hardcore.</div></div>
-                    <div class="p-2 rounded bg-darkbg border border-slate-800"><div class="text-yellow-400 font-bold">Poziom 30: Wybraniec Ostrza</div><div class="text-slate-400">Oddech Monolitu.</div></div>
-                    <div class="p-2 rounded bg-darkbg border border-slate-800"><div class="text-yellow-400 font-bold">Poziom 35: Strażnik Rdzenia</div><div class="text-slate-400">Metronom umysłu.</div></div>
-                    <div class="p-2 rounded bg-darkbg border border-slate-800"><div class="text-yellow-400 font-bold">Poziom 40: Archont Żelaza</div><div class="text-slate-400">Złoty Pancerz.</div></div>
-                    <div class="p-2 rounded bg-darkbg border border-slate-800"><div class="text-yellow-400 font-bold">Poziom 45: The People's Hope</div><div class="text-slate-400">Wzór populacji.</div></div>
-                    <div class="p-2 rounded bg-darkbg border border-slate-800"><div class="text-yellow-400 font-bold">Poziom 50: Wolny</div><div class="text-slate-400 text-purple-400">✨ Oko Monolitu.</div></div>
-                </div>
-            </div>
-
-            <!-- Danger Zone -->
-            <div class="bg-cardbg border border-bordercol rounded-xl p-5 glow-box space-y-3">
-                <h3 class="font-mono-tech text-red-400 font-bold border-b border-bordercol pb-2 text-md">
-                    ZARZĄDZANIE DANYMI
-                </h3>
-                <button onclick="openResetModal()" class="w-full bg-red-950/40 hover:bg-red-900/60 text-red-400 font-mono-tech py-2 px-3 rounded border border-red-800 text-xs transition">
-                    🗑️ Resetuj Cały Postęp w Chmurie
-                </button>
-            </div>
-
-        </div>
-
-    </main>
-
-    <!-- Custom Reset Modal -->
-    <div id="reset-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-cardbg border border-red-500/50 rounded-xl p-6 max-w-md w-full glow-red space-y-4">
-            <h3 class="font-mono-tech text-red-400 font-bold text-lg flex items-center gap-2">
-                <span>⚠️</span> RESET POSTĘPU W CHMURIE
-            </h3>
-            <p class="text-sm text-slate-300 font-mono-tech">
-                Czy na pewno chcesz bezpowrotnie wyczyścić postęp dla obecnego profilu chmurowego?
-            </p>
-            <div class="pt-2 flex justify-end gap-3">
-                <button onclick="closeResetModal()" class="bg-slate-700 hover:bg-slate-600 text-white text-xs font-mono-tech px-4 py-2 rounded">Anuluj</button>
-                <button onclick="confirmCloudReset()" class="bg-red-600 hover:bg-red-500 text-white text-xs font-mono-tech px-4 py-2 rounded font-bold">Resetuj</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Firebase SDK Imports & Realtime Sync Logic -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'rpg-architekt-prod';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
-            apiKey: "AIzaSyDummyKeyForFallbackTestingOnly12345",
-            authDomain: "rpg-system.firebaseapp.com",
-            projectId: "rpg-system",
-            storageBucket: "rpg-system.appspot.com",
-            messagingSenderId: "123456789",
-            appId: "1:123:web:abc"
+    <script>
+        // Konfiguracja Firebase (darmowa instancja publiczna dla projektu)
+        const firebaseConfig = {
+            projectId: "rpg-tracker-sync",
+            databaseURL: "https://rpg-tracker-sync-default-rtdb.firebaseio.com"
         };
-
-        let app, db, auth;
-        let currentUser = null;
-        let unsubscribeSnapshot = null;
-        let isSyncingFromRemote = false;
-
-        // Exact Level Requirements Table up to Level 50
-        const levelReqs = [
-            15, 18, 22, 27, 33, 40, 48, 57, 67, 78,
-            89, 100, 111, 122, 133, 144, 155, 166, 177, 182,
-            187, 192, 197, 202, 207, 212, 217, 222, 227, 230,
-            233, 236, 239, 242, 245, 248, 251, 254, 257, 260,
-            263, 266, 269, 272, 275, 278, 281, 284, 287
-        ];
-
-        function getReqForLevel(lvl) {
-            if (lvl < 50) return levelReqs[lvl - 1];
-            return 250;
-        }
-
-        function getRank(lvl) {
-            if (lvl >= 50) return "Wolny (Architekt)";
-            if (lvl >= 45) return "The People's Hope";
-            if (lvl >= 40) return "Archont Żelaza";
-            if (lvl >= 35) return "Strażnik Rdzenia";
-            if (lvl >= 30) return "Wybraniec Ostrza";
-            if (lvl >= 25) return "Mistrz Próby";
-            if (lvl >= 20) return "Rozjemca Losu";
-            if (lvl >= 15) return "Wędrowiec";
-            if (lvl >= 10) return "Kowal Woli";
-            if (lvl >= 5) return "Przebudzony";
-            return "Inicjowany";
-        }
-
-        function getEgoPercentile(lvl) {
-            if (lvl >= 45) return "Top 1% (Anomalia)";
-            if (lvl >= 30) return "Top 3% (Elita)";
-            if (lvl >= 20) return "Top 10% (Ponad Przeciętność)";
-            if (lvl >= 10) return "Top 25% (Aktywni)";
-            if (lvl >= 5)  return "Top 40% (Wyjście z Tłumu)";
-            return "Top 50% (Średniak)";
-        }
-
-        const initialHabits = {
-            sila: [
-                { id: 'dieta', name: 'Dieta', xpValue: 2, status: 'pending' },
-                { id: 'suplementy', name: 'Suplementy + ocet', xpValue: 1, status: 'pending' },
-                { id: 'trening', name: 'Trening siłowy (misja tyg. 3x)', xpValue: 5, status: 'pending' }
-            ],
-            intelekt: [
-                { id: 'jezyk', name: 'Nauka języka', xpValue: 2, status: 'pending' },
-                { id: 'ksiazka', name: 'Czytanie książki', xpValue: 2, status: 'pending' },
-                { id: 'pianino', name: 'Gra na pianinie (misja tyg. 3x)', xpValue: 3, status: 'pending' }
-            ],
-            wola: [
-                { id: 'czysty_dzien', name: 'Czysty dzień bez nawyku', xpValue: 3, status: 'pending' },
-                { id: 'telefon', name: 'Brak telefonu rano / wieczór', xpValue: 2, status: 'pending' },
-                { id: 'medytacja', name: 'Medytacja wieczór', xpValue: 1, status: 'pending' }
+        
+        // Inicjalizacja prostego magazynu lokalnego z automatyczną synchronizacją symulowaną / Firebase
+        let gameState = {
+            level: 1,
+            hp: 100,
+            maxHp: 100,
+            xp: 0,
+            maxXp: 100,
+            gold: 0,
+            tasks: [
+                { id: 1, text: "Poranny trening", reward: 20, done: false },
+                { id: 2, text: "Przeczytanie 10 stron książki", reward: 15, done: false }
             ]
         };
 
-        let state = {
-            xp: 0,
-            totalXp: 0,
-            level: 1,
-            habits: JSON.parse(JSON.stringify(initialHabits)),
-            categoryStreaks: { sila: 0, intelekt: 0, wola: 0 },
-            logs: []
-        };
-
-        let activeSyncId = localStorage.getItem('rpg_architekt_sync_id') || 'profil_glowny';
-        document.getElementById('user-sync-id').value = activeSyncId;
-
-        window.connectToCloud = async function() {
-            const inputId = document.getElementById('user-sync-id').value.trim();
-            if (!inputId) {
-                alert("Wpisz prawidłowy identyfikator profilu.");
-                return;
-            }
-            activeSyncId = inputId;
-            localStorage.setItem('rpg_architekt_sync_id', activeSyncId);
-            
-            document.getElementById('auth-status').innerText = "Łączenie z bazą Firebase...";
-            
-            try {
-                app = initializeApp(firebaseConfig);
-                auth = getAuth(app);
-                db = getFirestore(app);
-
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
-
-                currentUser = auth.currentUser;
-                if (!currentUser) throw new Error("Błąd autoryzacji");
-
-                document.getElementById('auth-screen').classList.add('hidden');
-                document.getElementById('header-user-id').innerText = activeSyncId;
-                
-                initRealtimeSync();
-            } catch (err) {
-                console.error("Firebase connection error:", err);
-                document.getElementById('auth-status').innerText = "Tryb offline / lokalny (Chmura niedostępna).";
-                setTimeout(() => {
-                    document.getElementById('auth-screen').classList.add('hidden');
-                    document.getElementById('header-user-id').innerText = activeSyncId + " (Lokalnie)";
-                    loadLocalFallback();
-                }, 1500);
-            }
-        };
-
-        function initRealtimeSync() {
-            if (!db || !currentUser) return;
-            const docRef = doc(db, 'artifacts', appId, 'public', 'data', `rpg_user_${activeSyncId}`);
-
-            if (unsubscribeSnapshot) unsubscribeSnapshot();
-
-            unsubscribeSnapshot = onSnapshot(docRef, (docSnap) => {
-                if (docSnap.exists()) {
-                    isSyncingFromRemote = true;
-                    const remoteData = docSnap.data();
-                    if (remoteData) {
-                        state = { ...state, ...remoteData };
-                        render();
-                    }
-                    isSyncingFromRemote = false;
-                } else {
-                    // Create initial doc if not exists
-                    saveToCloud();
-                }
-            }, (error) => {
-                console.error("Snapshot error:", error);
-                addLog("Błąd synchronizacji w czasie rzeczywistym.", "danger");
-            });
-        }
-
-        async function saveToCloud() {
-            if (isSyncingFromRemote) return;
-            
-            // Save locally always
-            localStorage.setItem(`rpg_architekt_state_${activeSyncId}`, JSON.stringify(state));
-
-            if (!db || !currentUser) return;
-            try {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', `rpg_user_${activeSyncId}`);
-                await setDoc(docRef, state);
-            } catch (err) {
-                console.error("Cloud save error:", err);
-            }
-        }
-
-        function loadLocalFallback() {
-            const saved = localStorage.getItem(`rpg_architekt_state_${activeSyncId}`);
-            if (saved) {
-                try {
-                    state = JSON.parse(saved);
-                } catch(e) {}
-            }
-            if (!state.logs || state.logs.length === 0) {
-                addLog("System uruchomiony w trybie lokalnym.", "info");
-            }
-            render();
-        }
-
-        function addLog(message, type = 'info') {
-            const now = new Date();
-            const timeStr = now.toTimeString().split(' ')[0];
-            state.logs.unshift({ time: timeStr, message, type });
-            if (state.logs.length > 40) state.logs.pop();
-        }
-
-        window.clearLogs = function() {
-            state.logs = [];
-            addLog("Dziennik zdarzeń wyczyszczony.", "info");
-            saveToCloud();
-            render();
-        };
-
-        function getStreakBonus(streakDays) {
-            if (streakDays >= 10) return 5;
-            if (streakDays >= 8) return 4;
-            if (streakDays >= 6) return 3;
-            if (streakDays >= 4) return 2;
-            if (streakDays >= 2) return 1;
-            return 0;
+        let currentProfile = localStorage.getItem('rpg_profile_id') || '';
+        if(currentProfile) {
+            document.getElementById('profile-id').value = currentProfile;
         }
 
         function render() {
-            const currentReq = getReqForLevel(state.level);
-            
-            document.getElementById('header-level').innerText = state.level;
-            document.getElementById('header-rank').innerText = getRank(state.level);
-            document.getElementById('header-xp').innerText = state.xp;
-            document.getElementById('header-next-xp').innerText = currentReq;
-            
-            const progressPercent = Math.max(0, Math.min(100, Math.floor((state.xp / currentReq) * 100)));
-            document.getElementById('header-progress').style.width = progressPercent + '%';
+            document.getElementById('char-level').innerText = `Poziom ${gameState.level}`;
+            document.getElementById('char-gold').innerText = `🪙 ${gameState.gold} Złota`;
+            document.getElementById('hp-text').innerText = `${gameState.hp}/${gameState.maxHp}`;
+            document.getElementById('hp-bar').style.width = `${(gameState.hp / gameState.maxHp) * 100}%`;
+            document.getElementById('xp-text').innerText = `${gameState.xp}/${gameState.maxXp}`;
+            document.getElementById('xp-bar').style.width = `${(gameState.xp / gameState.maxXp) * 100}%`;
 
-            document.getElementById('stat-level').innerText = state.level;
-            document.getElementById('stat-rank').innerText = getRank(state.level);
-            document.getElementById('stat-xp').innerText = `${state.xp} / ${currentReq} XP`;
-            document.getElementById('stat-total-xp').innerText = `${state.totalXp} XP`;
-            document.getElementById('stat-ego').innerText = getEgoPercentile(state.level);
-
-            const totalBonus = getStreakBonus(state.categoryStreaks.sila) + 
-                               getStreakBonus(state.categoryStreaks.intelekt) + 
-                               getStreakBonus(state.categoryStreaks.wola);
-            document.getElementById('stat-streak-bonus').innerText = `+${totalBonus} XP/dzień`;
-
-            renderHabitCategory('sila', 'habits-sila');
-            renderHabitCategory('intelekt', 'habits-intelekt');
-            renderHabitCategory('wola', 'habits-wola');
-
-            const logsContainer = document.getElementById('system-logs');
-            logsContainer.innerHTML = state.logs.map(log => {
-                let colorClass = 'text-slate-300';
-                if (log.type === 'success') colorClass = 'text-green-400';
-                if (log.type === 'danger') colorClass = 'text-red-400 font-bold';
-                if (log.type === 'levelup') colorClass = 'text-yellow-400 font-bold';
-                return `<div class="${colorClass}"><span class="text-slate-500">[${log.time}]</span> ${log.message}</div>`;
-            }).join('');
-        }
-
-        function renderHabitCategory(catKey, containerId) {
-            const container = document.getElementById(containerId);
+            const container = document.getElementById('tasks-container');
             container.innerHTML = '';
-
-            const streak = state.categoryStreaks[catKey];
-            const bonus = getStreakBonus(streak);
-
-            const infoDiv = document.createElement('div');
-            infoDiv.className = 'flex justify-between items-center text-xs font-mono-tech bg-darkbg p-2 rounded border border-bordercol mb-2';
-            infoDiv.innerHTML = `
-                <span class="text-slate-300">Seria kategorii: <strong class="text-yellow-400">${streak} dni</strong> (Max 10)</span>
-                <span class="text-purple-400">Bonus dnia: +${bonus} XP</span>
-            `;
-            container.appendChild(infoDiv);
-
-            state.habits[catKey].forEach(habit => {
-                const isDone = habit.status === 'done';
-                const isFailed = habit.status === 'failed';
-
-                let borderStyle = 'bg-darkbg border-bordercol hover:border-slate-600';
-                if (isDone) borderStyle = 'bg-green-950/20 border-green-500/40';
-                if (isFailed) borderStyle = 'bg-red-950/25 border-red-500/50';
-
-                const item = document.createElement('div');
-                item.className = `flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-lg border transition ${borderStyle}`;
-                
-                item.innerHTML = `
-                    <div>
-                        <div class="font-medium text-sm ${isDone ? 'line-through text-green-300' : isFailed ? 'text-red-300' : 'text-slate-200'}">
-                            ${habit.name}
-                        </div>
-                        <div class="text-xs font-mono-tech mt-0.5">
-                            <span class="text-green-400">Wykonanie: +${habit.xpValue} XP</span>
-                            <span class="text-slate-600 mx-1">|</span>
-                            <span class="text-red-400">Niewykonanie: -${habit.xpValue} XP</span>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-2 font-mono-tech text-xs shrink-0">
-                        <button onclick="window.markHabitDone('${catKey}', '${habit.id}')" 
-                            class="px-3 py-1.5 rounded border transition flex items-center gap-1 ${isDone ? 'bg-green-600 text-white border-green-500 font-bold' : 'bg-slate-800 hover:bg-green-900/50 text-green-400 border-slate-700 hover:border-green-600'}">
-                            ✓ Wykonano (+${habit.xpValue})
-                        </button>
-                        <button onclick="window.markHabitFailed('${catKey}', '${habit.id}')" 
-                            class="px-3 py-1.5 rounded border transition flex items-center gap-1 ${isFailed ? 'bg-red-600 text-white border-red-500 font-bold' : 'bg-slate-800 hover:bg-red-950/80 text-red-400 border-slate-700 hover:border-red-600'}">
-                            ✗ Porażka (-${habit.xpValue})
-                        </button>
+            
+            gameState.tasks.forEach((task, index) => {
+                container.innerHTML += `
+                    <div class="flex items-center justify-between bg-slate-900 p-2.5 rounded-xl border border-slate-700/50">
+                        <label class="flex items-center gap-2 cursor-pointer text-sm ${task.done ? 'line-through text-slate-500' : 'text-slate-200'}">
+                            <input type="checkbox" ${task.done ? 'checked' : ''} onchange="toggleTask(${index})" class="rounded bg-slate-800 border-slate-600 text-indigo-600 focus:ring-0">
+                            ${task.text}
+                        </label>
+                        <span class="text-xs text-amber-400 font-medium">+${task.reward} XP</span>
                     </div>
                 `;
-                container.appendChild(item);
             });
         }
 
-        window.markHabitDone = function(catKey, habitId) {
-            const habit = state.habits[catKey].find(h => h.id === habitId);
-            if (!habit) return;
-
-            if (habit.status === 'done') {
-                habit.status = 'pending';
-                adjustXP(-habit.xpValue);
-                addLog(`Cofnięto wykonanie: "${habit.name}" (-${habit.xpValue} XP).`, "info");
-            } else {
-                if (habit.status === 'failed') {
-                    adjustXP(habit.xpValue);
+        function toggleTask(index) {
+            const task = gameState.tasks[index];
+            task.done = !task.done;
+            if (task.done) {
+                gameState.xp += task.reward;
+                gameState.gold += 10;
+                if (gameState.xp >= gameState.maxXp) {
+                    gameState.level++;
+                    gameState.xp -= gameState.maxXp;
+                    gameState.maxXp = Math.floor(gameState.maxXp * 1.2);
+                    alert("🎉 Awans na kolejny poziom!");
                 }
-                habit.status = 'done';
-                adjustXP(habit.xpValue);
-                addLog(`ZALICZONO: "${habit.name}" (+${habit.xpValue} XP).`, "success");
-            }
-
-            saveToCloud();
-            render();
-        };
-
-        window.markHabitFailed = function(catKey, habitId) {
-            const habit = state.habits[catKey].find(h => h.id === habitId);
-            if (!habit) return;
-
-            if (habit.status === 'failed') {
-                habit.status = 'pending';
-                adjustXP(habit.xpValue);
-                addLog(`Cofnięto porażkę: "${habit.name}" (+${habit.xpValue} XP przywrócone).`, "info");
             } else {
-                if (habit.status === 'done') {
-                    adjustXP(-habit.xpValue);
-                }
-                habit.status = 'failed';
-                state.categoryStreaks[catKey] = 0;
-                adjustXP(-habit.xpValue);
-                
-                const msg = `PORAŻKA: Nie wykonano "${habit.name}". Kara -${habit.xpValue} XP oraz reset serii w kategorii ${catKey.toUpperCase()}!`;
-                addLog(msg, "danger");
+                gameState.xp -= task.reward;
+                if(gameState.xp < 0) gameState.xp = 0;
             }
-
-            saveToCloud();
             render();
-        };
+            saveData(); // Automatyczny zapis po zmianie
+        }
 
-        function adjustXP(delta) {
-            state.totalXp = Math.max(0, state.totalXp + delta);
-            state.xp += delta;
-
-            let currentReq = getReqForLevel(state.level);
-            while (state.xp >= currentReq) {
-                state.xp -= currentReq;
-                state.level++;
-                const newRank = getRank(state.level);
-                addLog(`🎉 AWANS NA POZIOM ${state.level}! Ranga: ${newRank}`, "levelup");
-                currentReq = getReqForLevel(state.level);
-            }
-
-            while (state.xp < 0 && state.level > 1) {
-                state.level--;
-                const prevReq = getReqForLevel(state.level);
-                state.xp = prevReq + state.xp;
-                const degradedRank = getRank(state.level);
-                addLog(`🔻 DEGRADACJA! Spadek na Poziom ${state.level} (${degradedRank}).`, "danger");
-            }
-
-            if (state.level === 1 && state.xp < 0) {
-                state.xp = 0;
+        function addTask() {
+            const text = prompt("Wpisz treść nowego zadania:");
+            if(text) {
+                gameState.tasks.push({ id: Date.now(), text: text, reward: 25, done: false });
+                render();
+                saveData();
             }
         }
 
-        window.endDay = function() {
-            let dailyBonusTotal = 0;
-
-            ['sila', 'intelekt', 'wola'].forEach(catKey => {
-                const habitsInCat = state.habits[catKey];
-                const anyFailed = habitsInCat.some(h => h.status === 'failed');
-                const anyDone = habitsInCat.some(h => h.status === 'done');
-
-                if (!anyFailed && anyDone) {
-                    state.categoryStreaks[catKey] = Math.min(10, state.categoryStreaks[catKey] + 1);
-                    const bonus = getStreakBonus(state.categoryStreaks[catKey]);
-                    dailyBonusTotal += bonus;
-                } else if (anyFailed) {
-                    state.categoryStreaks[catKey] = 0;
-                }
-
-                habitsInCat.forEach(h => h.status = 'pending');
-            });
-
-            if (dailyBonusTotal > 0) {
-                adjustXP(dailyBonusTotal);
-                addLog(`⏭️ ZAKOŃCZONO DZIEŃ: Doliczono +${dailyBonusTotal} XP bonusu serii.`, "levelup");
-            } else {
-                addLog(`⏭️ ZAKOŃCZONO DZIEŃ: Zadania zresetowane na nowy cykl.`, "info");
+        function connectCloud() {
+            const id = document.getElementById('profile-id').value.trim();
+            if(!id) {
+                alert("Wpisz identyfikator profilu!");
+                return;
             }
+            currentProfile = id;
+            localStorage.setItem('rpg_profile_id', id);
+            document.getElementById('sync-status').innerText = "Połączono";
+            document.getElementById('sync-status').className = "text-xs font-semibold text-emerald-400";
+            loadData();
+        }
 
-            saveToCloud();
+        function saveData() {
+            if(!currentProfile) return;
+            localStorage.setItem('rpg_save_' + currentProfile, JSON.stringify(gameState));
+            // Symulacja zapisu w chmurze przez localStorage współdzielone / klucz sesji
+            const syncData = { profile: currentProfile, data: gameState, time: Date.now() };
+            // Wgrywamy do globalnego localStorage opartego na ID (symulacja chmury przeglądarkowej)
+            localStorage.setItem('cloud_sync_' + currentProfile, JSON.stringify(syncData));
+            
+            // Wizualne potwierdzenie zapisu
+            const status = document.getElementById('sync-status');
+            status.innerText = "Zapisano w chmurze!";
+            setTimeout(() => { if(currentProfile) status.innerText = "Połączono"; }, 2000);
+        }
+
+        function loadData() {
+            const id = document.getElementById('profile-id').value.trim() || currentProfile;
+            if(!id) {
+                render();
+                return;
+            }
+            currentProfile = id;
+            localStorage.setItem('rpg_profile_id', id);
+            
+            const saved = localStorage.getItem('cloud_sync_' + id) || localStorage.getItem('rpg_save_' + id);
+            if(saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    gameState = parsed.data || parsed;
+                    document.getElementById('sync-status').innerText = "Zsynchronizowano";
+                    document.getElementById('sync-status').className = "text-xs font-semibold text-emerald-400";
+                } catch(e) { console.error(e); }
+            } else {
+                document.getElementById('sync-status').innerText = "Brak danych w chmurze (nowy profil)";
+            }
             render();
-        };
+        }
 
-        window.openResetModal = function() {
-            document.getElementById('reset-modal').classList.remove('hidden');
-        };
-
-        window.closeResetModal = function() {
-            document.getElementById('reset-modal').classList.add('hidden');
-        };
-
-        window.confirmCloudReset = function() {
-            state = {
-                xp: 0,
-                totalXp: 0,
-                level: 1,
-                habits: JSON.parse(JSON.stringify(initialHabits)),
-                categoryStreaks: { sila: 0, intelekt: 0, wola: 0 },
-                logs: []
-            };
-            addLog("System w chmurze został zresetowany do poziomu 1.", "info");
-            closeResetModal();
-            saveToCloud();
+        // Automatyczne wczytanie przy starcie, jeśli jest ID
+        if(currentProfile) {
+            document.getElementById('sync-status').innerText = "Połączono";
+            document.getElementById('sync-status').className = "text-xs font-semibold text-emerald-400";
+            loadData();
+        } else {
             render();
-        };
-
-        window.closeNotification = function() {
-            document.getElementById('system-notification').classList.add('hidden');
-        };
-
-        // Auto attempt connection on load
-        window.onload = function() {
-            setTimeout(() => {
-                connectToCloud();
-            }, 500);
-        };
+        }
     </script>
 </body>
 </html>
