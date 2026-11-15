@@ -13,16 +13,16 @@
         <div class="flex justify-between items-center mb-6 border-b border-slate-700 pb-4">
             <h1 class="text-xl font-bold text-indigo-400 flex items-center gap-2">🛡️ RPG Cloud Tracker</h1>
             <div class="text-right">
-                <span class="text-xs text-slate-400 block">Status:</span>
-                <span id="sync-status" class="text-xs font-semibold text-amber-400">Wpisz ID i pobierz</span>
+                <span class="text-xs text-slate-400 block">Status chmury:</span>
+                <span id="sync-status" class="text-xs font-semibold text-amber-400">Gotowy</span>
             </div>
         </div>
 
         <!-- Identyfikator profilu -->
         <div class="mb-6 bg-slate-900/50 p-3 rounded-xl border border-slate-700/50">
-            <label class="block text-xs font-medium text-slate-300 mb-1">Identyfikator Profilu (musi być identyczny na PC i telefonie):</label>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Identyfikator Profilu (wpisz np. <b>poszuu-rpg-2026</b>):</label>
             <div class="flex gap-2">
-                <input type="text" id="profile-id" placeholder="np. moja-postać-123" class="bg-slate-800 border border-slate-600 rounded-lg px-3 py-1.5 text-sm w-full focus:outline-none focus:border-indigo-500">
+                <input type="text" id="profile-id" placeholder="np. poszuu-rpg-2026" class="bg-slate-800 border border-slate-600 rounded-lg px-3 py-1.5 text-sm w-full focus:outline-none focus:border-indigo-500">
                 <button onclick="loadFromCloud()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition whitespace-nowrap">Pobierz</button>
             </div>
         </div>
@@ -71,17 +71,26 @@
     </div>
 
     <script>
+        // Publiczny, darmowy magazyn danych KVdb (nie wymaga konta i obsługuje CORS)
+        const BUCKET_URL = "https://kvdb.io/A2b4C6d8E0f2G4h6J8k0L2";
+
         let gameState = {
             level: 1, hp: 100, maxHp: 100, xp: 0, maxXp: 100, gold: 0,
             tasks: [
                 { id: 1, text: "Trening siłowy", reward: 20, done: false },
-                { id: 2, text: "Naukę języka", reward: 15, done: false }
+                { id: 2, text: "Nauka języka", reward: 15, done: false }
             ]
         };
 
         let savedId = localStorage.getItem('rpg_cloud_id') || '';
         if(savedId) {
             document.getElementById('profile-id').value = savedId;
+        }
+
+        function setStatus(text, colorClass) {
+            const el = document.getElementById('sync-status');
+            el.innerText = text;
+            el.className = "text-xs font-semibold " + colorClass;
         }
 
         function render() {
@@ -125,7 +134,7 @@
                 if(gameState.xp < 0) gameState.xp = 0;
             }
             render();
-            saveToCloud(); // Automatyczny zapis w chmurze przy kliknięciu zadania
+            saveToCloud();
         }
 
         function addTask() {
@@ -137,70 +146,64 @@
             }
         }
 
-        // Prawdziwa chmura opartą na darmowym JSONBin / API
+        function cleanId(raw) {
+            return raw.trim().toLowerCase().replace(/[^a-z0-9-_]/g, '');
+        }
+
         async function saveToCloud() {
-            const id = document.getElementById('profile-id').value.trim();
+            const id = cleanId(document.getElementById('profile-id').value);
             if(!id) {
-                alert("Wpisz najpierw Identyfikator Profilu!");
+                alert("Wpisz najpierw Identyfikator Profilu (tylko litery i cyfry)!");
                 return;
             }
+            document.getElementById('profile-id').value = id;
             localStorage.setItem('rpg_cloud_id', id);
-            const status = document.getElementById('sync-status');
-            status.innerText = "Zapisywanie...";
+            setStatus("Wysyłanie do chmury...", "text-amber-400");
 
             try {
-                // Używamy publicznego, darmowego magazynu klucz-wartość dla Twojego ID
-                await fetch(`https://json.ge/api/rpg_${id}`, {
+                const res = await fetch(`${BUCKET_URL}/rpg_${id}`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(gameState)
                 });
-                status.innerText = "Zsynchronizováno z chmurą!";
-                status.className = "text-xs font-semibold text-emerald-400";
+                if (!res.ok) throw new Error("Błąd serwera: " + res.status);
+                setStatus("Zapisano w chmurze ✅", "text-emerald-400");
             } catch(err) {
-                // Fallback na serwer zapasowy, gdyby główny rzucił błąd
-                localStorage.setItem('backup_rpg_' + id, JSON.stringify(gameState));
-                status.innerText = "Zapisano lokalnie (brak sieci)";
+                setStatus("Błąd połączenia ❌", "text-red-400");
+                console.error(err);
             }
         }
 
         async function loadFromCloud() {
-            const id = document.getElementById('profile-id').value.trim();
+            const id = cleanId(document.getElementById('profile-id').value);
             if(!id) {
-                alert("Wpisz identyfikator profilu!");
+                alert("Wpisz Identyfikator Profilu!");
                 return;
             }
+            document.getElementById('profile-id').value = id;
             localStorage.setItem('rpg_cloud_id', id);
-            const status = document.getElementById('sync-status');
-            status.innerText = "Pobieranie...";
+            setStatus("Pobieranie z chmury...", "text-amber-400");
 
             try {
-                const response = await fetch(`https://json.ge/api/rpg_${id}`);
-                if(response.ok) {
-                    const data = await response.json();
-                    if(data && data.level) {
-                        gameState = data;
-                        render();
-                        status.innerText = "Pobrano z chmury!";
-                        status.className = "text-xs font-semibold text-emerald-400";
-                        return;
-                    }
+                // Dodajemy ?t=... aby przeglądarka na telefonie nie brała starej wersji z pamięci podręcznej
+                const res = await fetch(`${BUCKET_URL}/rpg_${id}?t=${Date.now()}`);
+                if(res.status === 404) {
+                    setStatus("Nowy profil (kliknij Zapisz)", "text-amber-400");
+                    return;
                 }
-                throw new Error("Brak danych");
-            } catch(err) {
-                // Próba odczytu zapasowego
-                const backup = localStorage.getItem('backup_rpg_' + id);
-                if(backup) {
-                    gameState = JSON.parse(backup);
+                if(!res.ok) throw new Error("Błąd: " + res.status);
+                
+                const data = await res.json();
+                if(data && typeof data.level === 'number') {
+                    gameState = data;
                     render();
-                    status.innerText = "Wczytano z pamięci zapasowej";
-                } else {
-                    status.innerText = "Brak zapisu dla tego ID";
+                    setStatus("Zsynchronizowano ✅", "text-emerald-400");
                 }
+            } catch(err) {
+                setStatus("Błąd pobierania ❌", "text-red-400");
+                console.error(err);
             }
         }
 
-        // Start
         if(savedId) {
             loadFromCloud();
         } else {
