@@ -3,8 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RPG Cloud Tracker</title>
+    <title>RPG Cloud Tracker - Firebase</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Firebase SDK (wersja kompatybilna dla skryptów HTML) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen p-4 flex flex-col items-center">
 
@@ -14,15 +17,15 @@
             <h1 class="text-xl font-bold text-indigo-400 flex items-center gap-2">🛡️ RPG Cloud Tracker</h1>
             <div class="text-right">
                 <span class="text-xs text-slate-400 block">Status chmury:</span>
-                <span id="sync-status" class="text-xs font-semibold text-amber-400">Gotowy</span>
+                <span id="sync-status" class="text-xs font-semibold text-amber-400">Łączenie...</span>
             </div>
         </div>
 
         <!-- Identyfikator profilu -->
         <div class="mb-6 bg-slate-900/50 p-3 rounded-xl border border-slate-700/50">
-            <label class="block text-xs font-medium text-slate-300 mb-1">Identyfikator Profilu (np. <b>poszuu-rpg-2026</b>):</label>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Identyfikator Profilu (np. <b>poszuu-postac</b>):</label>
             <div class="flex gap-2">
-                <input type="text" id="profile-id" placeholder="np. poszuu-rpg-2026" class="bg-slate-800 border border-slate-600 rounded-lg px-3 py-1.5 text-sm w-full focus:outline-none focus:border-indigo-500">
+                <input type="text" id="profile-id" placeholder="np. poszuu-postac" class="bg-slate-800 border border-slate-600 rounded-lg px-3 py-1.5 text-sm w-full focus:outline-none focus:border-indigo-500">
                 <button onclick="loadFromCloud()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition whitespace-nowrap">Pobierz</button>
             </div>
         </div>
@@ -71,6 +74,21 @@
     </div>
 
     <script>
+        // Konfiguracja Firebase z Twojego projektu
+        const firebaseConfig = {
+            apiKey: "AIzaSyBSBby9FM33xW-O6b8w9u80PkbxV05UHq4",
+            authDomain: "rpgg-597dd.firebaseapp.com",
+            projectId: "rpgg-597dd",
+            storageBucket: "rpgg-597dd.firebasestorage.app",
+            messagingSenderId: "647477564271",
+            appId: "1:647477564271:web:87f0d0c878c8ba0a4d4e9a",
+            measurementId: "G-PS84H4Y51M"
+        };
+
+        // Inicjalizacja Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
         let gameState = {
             level: 1, hp: 100, maxHp: 100, xp: 0, maxXp: 100, gold: 0,
             tasks: [
@@ -147,7 +165,6 @@
             return raw.trim().toLowerCase().replace(/[^a-z0-9-_]/g, '');
         }
 
-        // Korzystamy z niezawodnego, darmowego i bezpiecznego API chmurowego (jsonbin.org / ntfy / public test endpoint)
         async function saveToCloud() {
             const id = cleanId(document.getElementById('profile-id').value);
             if(!id) {
@@ -156,34 +173,14 @@
             }
             document.getElementById('profile-id').value = id;
             localStorage.setItem('rpg_cloud_id', id);
-            setStatus("Wysyłanie...", "text-amber-400");
+            setStatus("Zapisywanie...", "text-amber-400");
 
             try {
-                // Używamy darmowego serwera publicznego obsługującego bezpieczny JSON Sync
-                const response = await fetch(`https://api.jsonbin.io/v3/b`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Master-Key': '$2a$10$7Z8q...placeholder...' // Zastąpione wbudowanym store
-                    },
-                    body: JSON.stringify(gameState)
-                });
-                
-                // Awaryjny, prostszy darmowy endpoint cloud storage działający bez kluczy:
-                localStorage.setItem('rpg_cloud_backup_' + id, JSON.stringify(gameState));
-                
-                // Symulacja stabilnego zapisu w chmurze przeglądarkowej współdzielonej
-                await fetch(`https://httpbin.org/post`, {
-                    method: 'POST',
-                    body: JSON.stringify({ id, gameState })
-                });
-
-                // Zapisujemy bezpośrednio w globalnej pamięci chmurowej pod unikalnym kluczem ID
-                localStorage.setItem('rpg_global_' + id, JSON.stringify(gameState));
-                
+                await db.collection("profiles").doc(id).set(gameState);
                 setStatus("Zapisano w chmurze ✅", "text-emerald-400");
             } catch(err) {
-                setStatus("Zapisano lokalnie (chmura niedostępna)", "text-amber-400");
+                console.error(err);
+                setStatus("Błąd zapisu ❌", "text-red-400");
             }
         }
 
@@ -198,25 +195,26 @@
             setStatus("Pobieranie...", "text-amber-400");
 
             try {
-                // Sprawdzamy synchronizację chmurową
-                let dataStr = localStorage.getItem('rpg_global_' + id) || localStorage.getItem('rpg_cloud_backup_' + id);
-                
-                if (dataStr) {
-                    gameState = JSON.parse(dataStr);
+                const doc = await db.collection("profiles").doc(id).get();
+                if (doc.exists) {
+                    gameState = doc.data();
                     render();
-                    setStatus("Zsynchronizowano z chmurą ✅", "text-emerald-400");
+                    setStatus("Zsynchronizowano ✅", "text-emerald-400");
                 } else {
-                    setStatus("Brak zapisu dla tego ID", "text-amber-400");
+                    setStatus("Brak zapisu (nowy profil)", "text-amber-400");
                 }
             } catch(err) {
+                console.error(err);
                 setStatus("Błąd pobierania ❌", "text-red-400");
             }
         }
 
+        // Automatyczne pobranie przy starcie, jeśli zapamiętano ID
         if(savedId) {
             loadFromCloud();
         } else {
             render();
+            setStatus("Gotowy", "text-emerald-400");
         }
     </script>
 </body>
