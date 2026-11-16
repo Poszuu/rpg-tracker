@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SYSTEM ARCHITEKTUR // Shadow Interface v5.0</title>
+    <title>SYSTEM ARCHITEKTUR // Shadow Interface v6.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -49,22 +49,20 @@
             font-family: 'JetBrains Mono', monospace;
         }
 
-        /* Holograficzne okna Systemu z anime */
         .system-window {
-            background: linear-gradient(180deg, rgba(16, 22, 37, 0.88) 0%, rgba(11, 15, 26, 0.94) 100%);
+            background: linear-gradient(180deg, rgba(16, 22, 37, 0.9) 0%, rgba(11, 15, 26, 0.95) 100%);
             backdrop-filter: blur(10px);
             border: 1px solid #1c253b;
             position: relative;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.04);
         }
 
-        /* Narożniki taktyczne HUD */
         .system-window::before,
         .system-window::after {
             content: '';
             position: absolute;
-            width: 12px;
-            height: 12px;
+            width: 11px;
+            height: 11px;
             pointer-events: none;
             transition: all 0.3s ease;
         }
@@ -83,36 +81,22 @@
             border-right: 2px solid #8b5cf6;
         }
 
-        .system-window:hover::before {
-            border-color: #7dd3fc;
-            width: 16px;
-            height: 16px;
-        }
+        .system-window:hover::before { border-color: #7dd3fc; width: 15px; height: 15px; }
+        .system-window:hover::after { border-color: #a78bfa; width: 15px; height: 15px; }
 
-        .system-window:hover::after {
-            border-color: #a78bfa;
-            width: 16px;
-            height: 16px;
-        }
+        .system-window-urgent { border-color: rgba(139, 92, 246, 0.45); }
+        .system-window-urgent::before { border-color: #a78bfa; }
+        .system-window-urgent::after { border-color: #ec4899; }
 
-        /* Wariant dla sekcji Hardcore */
-        .system-window-hardcore {
-            border-color: rgba(245, 158, 11, 0.25);
-        }
-        .system-window-hardcore::before {
-            border-color: #f59e0b;
-        }
-        .system-window-hardcore::after {
-            border-color: #d97706;
-        }
+        .system-window-hardcore { border-color: rgba(245, 158, 11, 0.25); }
+        .system-window-hardcore::before { border-color: #f59e0b; }
+        .system-window-hardcore::after { border-color: #d97706; }
 
-        /* Subtelna linia skanująca pod nagłówkiem */
         .header-scanline {
             background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.4), rgba(139, 92, 246, 0.4), transparent);
             height: 1px;
         }
 
-        /* Pasek XP z miękkim połyskiem */
         @keyframes xpShimmer {
             0% { background-position: -200% 0; }
             100% { background-position: 200% 0; }
@@ -124,77 +108,66 @@
             animation: xpShimmer 6s linear infinite;
         }
 
-        /* Własny scrollbar */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #06080f;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #1c253b;
-            border-radius: 3px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #2e3d61;
-        }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #06080f; }
+        ::-webkit-scrollbar-thumb { background: #1c253b; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #2e3d61; }
     </style>
 </head>
 <body class="min-h-screen pb-14 selection:bg-violet-500/30 selection:text-violet-200">
 
     <!-- Górny Panel Systemu (HUD Header) -->
-    <header class="bg-panel/90 backdrop-blur-md sticky top-0 z-50 shadow-2xl border-b border-edge">
+    <header class="bg-panel/90 backdrop-blur-md sticky top-0 z-40 shadow-2xl border-b border-edge">
         <div class="max-w-7xl mx-auto px-4 py-3.5 flex flex-col md:flex-row justify-between items-center gap-4">
             
-            <!-- Tytuł Systemu i Status Połączenia -->
             <div class="flex items-center gap-3.5">
-                <div class="relative flex items-center justify-center">
-                    <div id="sync-indicator" class="w-2.5 h-2.5 bg-amber-400 rounded-full animate-pulse"></div>
-                </div>
+                <div id="sync-indicator" class="w-2.5 h-2.5 bg-amber-400 rounded-full animate-pulse"></div>
                 <div>
-                    <div class="flex items-center gap-2">
-                        <span class="text-[10px] font-tech uppercase tracking-[0.2em] text-sky-400/90">[SYSTEM POWiadomień // SHADOW OS]</span>
-                    </div>
+                    <span class="text-[10px] font-tech uppercase tracking-[0.2em] text-sky-400/90">[SYSTEM POWIADOMIEŃ // SHADOW OS]</span>
                     <h1 class="font-anime text-2xl md:text-[26px] tracking-wider text-slate-100 font-bold leading-tight">
                         ARCHITEKT RZECZYWISTOŚCI
                     </h1>
                 </div>
             </div>
             
-            <!-- Pasek Statusu Gracza & Synchronizacja ID -->
             <div class="flex flex-wrap items-center justify-center gap-2.5 text-xs font-tech">
-                <div class="bg-obsidian/90 px-3.5 py-2 rounded border border-edge flex items-center gap-1.5">
-                    <span class="text-slate-500">POZIOM</span>
+                <div class="bg-obsidian/90 px-3 py-2 rounded border border-edge flex items-center gap-1.5">
+                    <span class="text-slate-500">LVL</span>
                     <span id="header-level" class="text-amber-300 font-bold text-sm">1</span>
                     <span class="text-slate-600">/ 100</span>
                 </div>
 
-                <div class="bg-obsidian/90 px-3.5 py-2 rounded border border-violet-500/30 text-violet-300 flex items-center gap-1.5">
+                <div class="bg-obsidian/90 px-3 py-2 rounded border border-violet-500/30 text-violet-300 flex items-center gap-1.5">
                     <span class="text-violet-500">«</span>
                     <span id="header-rank" class="font-semibold tracking-wide">Bez Twarzy</span>
                     <span class="text-violet-500">»</span>
                 </div>
 
-                <div class="bg-obsidian/90 px-3.5 py-2 rounded border border-edge flex items-center gap-1.5">
+                <div class="bg-obsidian/90 px-3 py-2 rounded border border-edge flex items-center gap-1.5">
                     <span class="text-slate-500">XP</span>
                     <span id="header-xp" class="text-emerald-400 font-bold">0</span>
                     <span class="text-slate-600">/</span>
                     <span id="header-next-xp" class="text-slate-400">15</span>
                 </div>
+
+                <!-- Kredyty Cienia -->
+                <div class="bg-obsidian/90 px-3 py-2 rounded border border-amber-500/30 flex items-center gap-1.5" title="Kredyty Cienia (2x XP za 100% kategorii)">
+                    <span class="text-amber-400">🪙</span>
+                    <span id="header-coins" class="text-amber-300 font-bold">0</span>
+                    <span class="text-slate-500 text-[10px]">₵</span>
+                </div>
                 
-                <!-- Pole synchronizacji profilu w chmurze -->
+                <!-- Synchronizacja ID -->
                 <div class="flex items-center bg-obsidian rounded border border-sky-500/30 overflow-hidden">
-                    <span class="px-2.5 text-slate-500 select-none">ID:</span>
+                    <span class="px-2 text-slate-500 select-none">ID:</span>
                     <input type="text" id="profile-id-input" placeholder="poszuu" class="bg-transparent text-sky-300 px-1 py-2 w-24 focus:outline-none">
-                    <button onclick="changeProfileId()" class="bg-sky-500/15 hover:bg-sky-500/30 text-sky-300 px-3 py-2 border-l border-sky-500/30 transition font-semibold">
+                    <button onclick="changeProfileId()" class="bg-sky-500/15 hover:bg-sky-500/30 text-sky-300 px-2.5 py-2 border-l border-sky-500/30 transition font-semibold">
                         Sync
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- Pasek Postępu Doświadczenia (XP Bar) -->
         <div class="w-full bg-obsidian h-1.5 relative overflow-hidden">
             <div id="header-progress" class="xp-bar-fill h-full transition-all duration-500" style="width: 0%"></div>
         </div>
@@ -204,10 +177,10 @@
     <!-- Główny Kontener Aplikacji -->
     <main class="max-w-7xl mx-auto px-4 py-7 grid grid-cols-1 lg:grid-cols-3 gap-7">
 
-        <!-- Lewa Sekcja (2 kolumny): Zadania Dzienne, Tygodniowe i Protokół Hardcore -->
+        <!-- Lewa Sekcja (2 kolumny) -->
         <div class="lg:col-span-2 space-y-6">
 
-            <!-- Komunikat Systemowy (Powiadomienia) -->
+            <!-- Komunikat Systemowy -->
             <div id="system-notification" class="hidden bg-panelalt border-l-4 border-l-sky-400 border border-edge text-slate-200 px-4 py-3.5 rounded-r text-xs font-tech flex items-center justify-between shadow-lg">
                 <div class="flex items-center gap-2.5">
                     <span class="text-sky-400 font-bold">[SYSTEM]</span>
@@ -215,6 +188,23 @@
                 </div>
                 <button onclick="closeNotification()" class="text-slate-500 hover:text-slate-200 text-base leading-none ml-4">&times;</button>
             </div>
+
+            <!-- NAGŁA MISJA SYSTEMOWA (Losowana z puli 100 zadań przy zakończeniu dnia) -->
+            <section id="urgent-quest-section" class="system-window system-window-urgent rounded-lg p-5 sm:p-6">
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-3 border-b border-edge pb-2.5">
+                    <div class="flex items-center gap-2.5">
+                        <span class="w-2 h-2 rotate-45 bg-fuchsia-400 inline-block animate-ping"></span>
+                        <h2 class="text-fuchsia-300 font-anime font-bold text-xl tracking-wider uppercase">
+                            NAGŁA MISJA SYSTEMOWA
+                        </h2>
+                        <span class="text-[10px] font-tech text-fuchsia-300 px-2 py-0.5 bg-fuchsia-950/40 rounded border border-fuchsia-500/30">ZADANIE DODATKOWE</span>
+                    </div>
+                    <span class="text-[11px] text-slate-400 font-tech">Pula: 100 unikalnych wyzwań</span>
+                </div>
+                <div id="urgent-quest-container">
+                    <!-- Dynamicznie renderowana nagła misja -->
+                </div>
+            </section>
 
             <!-- KATEGORIA 1: SIŁA -->
             <section class="system-window rounded-lg p-5 sm:p-6">
@@ -224,13 +214,11 @@
                         <h2 class="text-rose-400 font-anime font-bold text-xl tracking-wider uppercase">
                             ATRYBUT: SIŁA
                         </h2>
-                        <span class="text-[11px] font-tech text-slate-500 px-2 py-0.5 bg-obsidian rounded border border-edge">FIZYCZNOŚĆ</span>
+                        <span id="badge-100-sila" class="text-[10px] font-tech px-2 py-0.5 rounded border border-edge bg-obsidian text-slate-500">0/3 ZROBIONE</span>
                     </div>
-                    <span class="text-[11px] text-slate-400 font-tech">Dieta +2 | Suplementy +1 | Trening +5</span>
+                    <span class="text-[11px] text-slate-400 font-tech">100% kat. = +16 🪙</span>
                 </div>
-                <div id="habits-sila" class="space-y-3">
-                    <!-- Dynamicznie renderowane zadania -->
-                </div>
+                <div id="habits-sila" class="space-y-3"></div>
             </section>
 
             <!-- KATEGORIA 2: INTELEKT -->
@@ -241,13 +229,11 @@
                         <h2 class="text-sky-400 font-anime font-bold text-xl tracking-wider uppercase">
                             ATRYBUT: INTELEKT
                         </h2>
-                        <span class="text-[11px] font-tech text-slate-500 px-2 py-0.5 bg-obsidian rounded border border-edge">UMYSŁ</span>
+                        <span id="badge-100-intelekt" class="text-[10px] font-tech px-2 py-0.5 rounded border border-edge bg-obsidian text-slate-500">0/3 ZROBIONE</span>
                     </div>
-                    <span class="text-[11px] text-slate-400 font-tech">Język +2 | Książka +2 | Pianino +3</span>
+                    <span class="text-[11px] text-slate-400 font-tech">100% kat. = +14 🪙</span>
                 </div>
-                <div id="habits-intelekt" class="space-y-3">
-                    <!-- Dynamicznie renderowane zadania -->
-                </div>
+                <div id="habits-intelekt" class="space-y-3"></div>
             </section>
 
             <!-- KATEGORIA 3: WOLA -->
@@ -258,16 +244,14 @@
                         <h2 class="text-violet-400 font-anime font-bold text-xl tracking-wider uppercase">
                             ATRYBUT: WOLA
                         </h2>
-                        <span class="text-[11px] font-tech text-slate-500 px-2 py-0.5 bg-obsidian rounded border border-edge">DYSCYPLINA</span>
+                        <span id="badge-100-wola" class="text-[10px] font-tech px-2 py-0.5 rounded border border-edge bg-obsidian text-slate-500">0/3 ZROBIONE</span>
                     </div>
-                    <span class="text-[11px] text-slate-400 font-tech">Czysty dzień +3 | Telefon +2 | Medytacja +1</span>
+                    <span class="text-[11px] text-slate-400 font-tech">100% kat. = +12 🪙</span>
                 </div>
-                <div id="habits-wola" class="space-y-3">
-                    <!-- Dynamicznie renderowane zadania -->
-                </div>
+                <div id="habits-wola" class="space-y-3"></div>
             </section>
 
-            <!-- KATEGORIA SPECJALNA: PROTOKÓŁ HARDCORE (ODBLOKOWYWANY NA POZIOMIE 25) -->
+            <!-- PROTOKÓŁ HARDCORE (LVL 25+) -->
             <section class="system-window system-window-hardcore rounded-lg p-5 sm:p-6">
                 <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-4 border-b border-edge pb-3">
                     <div class="flex items-center gap-2.5">
@@ -282,15 +266,13 @@
                     </span>
                 </div>
 
-                <!-- Widok zablokowany (Poziom < 25) -->
-                <div id="hardcore-locked" class="py-5 text-center font-tech space-y-1.5 bg-obsidian/50 rounded border border-edge/60">
+                <div id="hardcore-locked" class="py-4 text-center font-tech space-y-1 bg-obsidian/50 rounded border border-edge/60">
                     <div class="text-slate-300 text-xs tracking-wider">[DOSTĘP ZABLOKOWANY — WYMAGANY POZIOM 25]</div>
                     <div class="text-[11px] text-slate-500 max-w-md mx-auto">
                         Po osiągnięciu Poziomu 25 system odblokuje możliwość zdefiniowania dodatkowego, własnego wyzwania z wybraną pulą punktów XP.
                     </div>
                 </div>
 
-                <!-- Widok odblokowany (Poziom >= 25) -->
                 <div id="hardcore-unlocked" class="hidden space-y-3.5">
                     <div class="flex flex-col sm:flex-row gap-2.5 bg-obsidian/90 p-3 rounded border border-edge">
                         <input type="text" id="hardcore-name-input" placeholder="Nazwa dodatkowego wyzwania (np. Zimny prysznic rano)" class="flex-1 bg-panel border border-edge rounded px-3 py-2 text-xs font-tech text-slate-200 focus:outline-none focus:border-amber-400/50">
@@ -302,19 +284,17 @@
                             </button>
                         </div>
                     </div>
-                    <div id="hardcore-habit-container">
-                        <!-- Aktywne wyzwanie Hardcore -->
-                    </div>
+                    <div id="hardcore-habit-container"></div>
                 </div>
             </section>
 
             <!-- Przyciski Zarządzania Cyklem -->
             <div class="flex flex-wrap gap-3.5 pt-1">
-                <button onclick="endDay()" class="bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 font-tech px-4 py-2.5 rounded border border-sky-500/40 text-xs transition flex items-center gap-2 shadow">
-                    <span>⏭️</span> Zakończ Cykl Dnia (Dolicz bonus serii i zresetuj zadania)
+                <button onclick="endDay()" class="bg-gradient-to-r from-sky-600/25 to-violet-600/25 hover:from-sky-500/35 hover:to-violet-500/35 text-sky-200 font-tech px-5 py-3 rounded border border-sky-400/50 text-xs font-semibold transition flex items-center gap-2 shadow-lg">
+                    <span>⏭️</span> Zakończ Cykl Dnia (Wypłać Monety + Analiza Przewagi + Nowa Misja)
                 </button>
-                <button onclick="resetWeeklyCounters()" class="bg-panelalt hover:bg-slate-800 text-slate-300 font-tech px-4 py-2.5 rounded border border-edge text-xs transition flex items-center gap-2">
-                    <span>🔄</span> Nowy Tydzień (Wyzeruj liczniki 0/3)
+                <button onclick="resetWeeklyCounters()" class="bg-panelalt hover:bg-slate-800 text-slate-300 font-tech px-4 py-3 rounded border border-edge text-xs transition flex items-center gap-2">
+                    <span>🔄</span> Nowy Tydzień (Reset misji 0/3)
                 </button>
             </div>
 
@@ -326,13 +306,11 @@
                     </h3>
                     <button onclick="clearLogs()" class="text-[11px] text-slate-500 hover:text-slate-300 font-tech transition">Wyczyść log</button>
                 </div>
-                <div id="system-logs" class="space-y-1.5 max-h-48 overflow-y-auto font-tech text-xs pr-1">
-                    <!-- Dynamiczne logi -->
-                </div>
+                <div id="system-logs" class="space-y-1.5 max-h-48 overflow-y-auto font-tech text-xs pr-1"></div>
             </section>
         </div>
 
-        <!-- Prawa Sekcja (1 kolumna): Karta Statusu Postaci, Hierarchia Tytułów i Zarządzanie -->
+        <!-- Prawa Sekcja (1 kolumna) -->
         <div class="space-y-6">
 
             <!-- Karta Statusu Postaci -->
@@ -341,10 +319,12 @@
                     <h3 class="font-anime text-sky-400 font-bold text-xl tracking-wider uppercase flex items-center gap-2">
                         <span>⚡</span> KARTA STATUSU
                     </h3>
-                    <span class="text-[10px] font-tech text-slate-500">PROFIL GRACZA</span>
+                    <button onclick="openAdvantageModal()" class="text-[10px] font-tech bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 px-2 py-1 rounded border border-sky-500/30 transition">
+                        📊 Raport Przewagi
+                    </button>
                 </div>
                 
-                <div class="space-y-3 text-xs font-tech">
+                <div class="space-y-2.5 text-xs font-tech">
                     <div class="flex justify-between items-center">
                         <span class="text-slate-400">POZIOM POSTACI:</span>
                         <span id="stat-level" class="text-amber-300 font-bold text-sm">1 / 100</span>
@@ -361,52 +341,86 @@
                         <span class="text-slate-400">SKUMULOWANE XP:</span>
                         <span id="stat-total-xp" class="text-slate-200 font-bold">0 XP</span>
                     </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-slate-400">SKARBIEC (MONETY):</span>
+                        <span id="stat-coins" class="text-amber-300 font-bold">0 ₵</span>
+                    </div>
 
-                    <div class="pt-2.5 border-t border-edge space-y-1">
+                    <div class="pt-2 border-t border-edge space-y-1">
                         <span class="text-slate-500 text-[11px] block">POZYCJA W POPULACJI (SKALA 1–100):</span>
                         <span id="stat-ego" class="text-amber-300/90 font-semibold block leading-snug">Bottom 10% (Punkt Zerowy)</span>
                     </div>
 
-                    <div class="flex justify-between items-center pt-2.5 border-t border-edge">
+                    <div class="flex justify-between items-center pt-2 border-t border-edge">
                         <span class="text-slate-400">BONUS CIĄGŁOŚCI:</span>
                         <span id="stat-streak-bonus" class="text-violet-400 font-bold">+0 XP / dzień</span>
                     </div>
-                </div>
-
-                <!-- Okienko z zasadami mechaniki -->
-                <div class="bg-obsidian/90 p-3.5 rounded border border-edge text-[11px] text-slate-400 font-tech space-y-1.5 leading-relaxed">
-                    <div class="text-sky-400 font-semibold tracking-wider">[ZASADY SYSTEMU]</div>
-                    <div>• Co każde 2 dni serii: <span class="text-slate-200">+1 XP</span> (limit 10 dni = <span class="text-slate-200">+5 XP</span>)</div>
-                    <div class="text-rose-400/90">• Porażka w zadaniu: kara równa wartości zadania (-X XP) oraz reset serii kategorii</div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-slate-400">AKTYWNE TARCZE SERII:</span>
+                        <span id="stat-shields" class="text-sky-400 font-bold">0 szt.</span>
+                    </div>
                 </div>
             </section>
 
-            <!-- Hierarchia Tytułów (Co 5 poziomów aż do 100) -->
-            <section class="system-window rounded-lg p-5 sm:p-6 space-y-4">
-                <div class="flex items-center justify-between border-b border-edge pb-3">
+            <!-- SKLEP SYSTEMOWY (Wirtualne tarcze + Realne nagrody) -->
+            <section class="system-window rounded-lg p-5 sm:p-6 space-y-3.5">
+                <div class="flex items-center justify-between border-b border-edge pb-2.5">
+                    <h3 class="font-anime text-amber-300 font-bold text-xl tracking-wider uppercase flex items-center gap-2">
+                        <span>🛒</span> SKLEP SYSTEMOWY
+                    </h3>
+                    <span id="shop-balance" class="text-xs font-tech text-amber-300 font-bold bg-obsidian px-2.5 py-1 rounded border border-amber-500/30">0 ₵</span>
+                </div>
+                <p class="text-[11px] font-tech text-slate-400 leading-relaxed">
+                    Monety (2x XP) otrzymujesz na koniec dnia za każdą kategorię ukończoną w <span class="text-emerald-400">100%</span>.
+                </p>
+
+                <div id="shop-items" class="space-y-2 text-xs font-tech">
+                    <!-- Generowane dynamicznie przedmioty sklepu -->
+                </div>
+            </section>
+
+            <!-- Hierarchia Tytułów -->
+            <section class="system-window rounded-lg p-5 sm:p-6 space-y-3">
+                <div class="flex items-center justify-between border-b border-edge pb-2.5">
                     <h3 class="font-anime text-violet-400 font-bold text-xl tracking-wider uppercase flex items-center gap-2">
                         <span>⚔️</span> HIERARCHIA TYTUŁÓW
                     </h3>
-                    <span class="text-[10px] font-tech text-slate-500">CO 5 POZIOMÓW</span>
+                    <span class="text-[10px] font-tech text-slate-500">CO 5 LVL</span>
                 </div>
-                
-                <div id="titles-list" class="space-y-1.5 text-xs font-tech max-h-[440px] overflow-y-auto pr-1">
-                    <!-- Dynamicznie renderowana lista 20 tytułów -->
-                </div>
+                <div id="titles-list" class="space-y-1.5 text-xs font-tech max-h-[340px] overflow-y-auto pr-1"></div>
             </section>
 
             <!-- Strefa Zarządzania Danymi -->
-            <section class="system-window rounded-lg p-5 space-y-3">
-                <h3 class="font-anime text-slate-400 font-bold text-sm tracking-wider uppercase border-b border-edge pb-2">
-                    ZARZĄDZANIE PAMIĘCIĄ SYSTEMU
-                </h3>
+            <section class="system-window rounded-lg p-4">
                 <button onclick="openResetModal()" class="w-full bg-rose-950/25 hover:bg-rose-950/50 text-rose-400 font-tech py-2.5 px-3 rounded border border-rose-500/30 text-xs transition">
                     🗑️ Inicjalizuj Reset Postępu w Chmurze
                 </button>
             </section>
-
         </div>
     </main>
+
+    <!-- OKNO MODALNE: SYMULATOR PRZEWAGI (RAPORT KOŃCA DNIA) -->
+    <div id="advantage-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="system-window rounded-lg p-6 max-w-lg w-full space-y-5 shadow-2xl">
+            <div class="flex justify-between items-start border-b border-edge pb-3">
+                <div>
+                    <div class="text-[10px] font-tech text-sky-400 tracking-widest uppercase">[RAPORT ANALITYCZNY SYSTEMU]</div>
+                    <h3 class="font-anime text-2xl text-slate-100 font-bold tracking-wider">SYMULATOR PRZEWAGI NAD TŁUMEM</h3>
+                </div>
+                <button onclick="closeAdvantageModal()" class="text-slate-400 hover:text-white text-xl leading-none">&times;</button>
+            </div>
+
+            <div id="advantage-content" class="space-y-4 font-tech text-xs">
+                <!-- Wypełniane dynamicznie po zakończeniu dnia lub kliknięciu Raport Przewagi -->
+            </div>
+
+            <div class="pt-2 flex justify-end">
+                <button onclick="closeAdvantageModal()" class="w-full bg-sky-500/20 hover:bg-sky-500/30 text-sky-200 border border-sky-400/50 font-tech py-2.5 px-4 rounded font-bold transition">
+                    Przyjąłem do wiadomości [Zamknij]
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- Okno Modalne Potwierdzenia Resetu -->
     <div id="reset-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
@@ -415,15 +429,11 @@
                 <span>⚠️</span> OSTRZEŻENIE SYSTEMOWE
             </h3>
             <p class="text-xs text-slate-300 font-tech leading-relaxed">
-                Czy na pewno chcesz bezpowrotnie wyzerować wszystkie poziomy, odblokowane tytuły, punkty XP oraz serie zapisane w chmurze dla tego profilu?
+                Czy na pewno chcesz bezpowrotnie wyzerować wszystkie poziomy, odblokowane tytuły, punkty XP, monety oraz serie zapisane w chmurze?
             </p>
             <div class="pt-2 flex justify-end gap-3">
-                <button onclick="closeResetModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-tech px-4 py-2 rounded border border-edge">
-                    Anuluj
-                </button>
-                <button onclick="confirmHardReset()" class="bg-rose-600/80 hover:bg-rose-600 text-white text-xs font-tech px-4 py-2 rounded font-bold">
-                    Potwierdzam Reset
-                </button>
+                <button onclick="closeResetModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-tech px-4 py-2 rounded border border-edge">Anuluj</button>
+                <button onclick="confirmHardReset()" class="bg-rose-600/80 hover:bg-rose-600 text-white text-xs font-tech px-4 py-2 rounded font-bold">Potwierdzam Reset</button>
             </div>
         </div>
     </div>
@@ -433,7 +443,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Konfiguracja Firebase projektu rpgg-597dd
         const firebaseConfig = {
             apiKey: "AIzaSyBSBby9FM33xW-O6b8w9u80PkbxV05UHq4",
             authDomain: "rpgg-597dd.firebaseapp.com",
@@ -451,7 +460,149 @@
         let unsubscribeDoc = null;
         let isRemoteUpdate = false;
 
-        // Tabela wymagań XP na poziomy 1..49 (od 50 poziomu rośnie o +3 XP na poziom aż do 100)
+        // PULA 100 UNIKALNYCH, WYWAŻONYCH NAGŁYCH MISJI SYSTEMOWYCH (Nie gryzą się ze stałymi zadaniami)
+        const urgentQuestsPool = [
+            { text: "Zrób 50 pompek w dowolnych seriach w ciągu dnia", xp: 3 },
+            { text: "Zimny prysznic przez minimum 60 sekund", xp: 3 },
+            { text: "Wypij minimum 2.5 litra czystej wody dzisiaj", xp: 2 },
+            { text: "Zero przetworzonego cukru i słodyczy przez 24h", xp: 4 },
+            { text: "15 minut głębokiego rozciągania całego ciała", xp: 2 },
+            { text: "Deska (plank) łącznie przez 3 minuty", xp: 3 },
+            { text: "100 przysiadów bez obciążenia w ciągu dnia", xp: 3 },
+            { text: "Spacer na świeżym powietrzu przez min. 30 minut bez słuchawek", xp: 3 },
+            { text: "Wejdź po schodach zamiast jechać windą przez cały dzień", xp: 2 },
+            { text: "Zrób 30 podciągnięć lub australijskich podciągnięć", xp: 4 },
+            { text: "Praca w pełnym skupieniu (Deep Work) przez 45 min bez zerkania w ekran", xp: 4 },
+            { text: "Zapisz na kartce 3 główne cele na ten tydzień i plan ich realizacji", xp: 2 },
+            { text: "Uporządkuj biurko i przestrzeń roboczą do idealnego stanu", xp: 2 },
+            { text: "Posprzątaj pliki na pulpicie lub w telefonie (usuń zbędne śmieci)", xp: 2 },
+            { text: "Odsłuchaj wartościowy podcast edukacyjny lub wykład (min. 20 min)", xp: 2 },
+            { text: "Zrób notatki z ostatnio przeczytanego rozdziału książki", xp: 3 },
+            { text: "Naucz się 10 nowych, zaawansowanych słówek lub zwrotów w obcym języku", xp: 3 },
+            { text: "Obejrzyj materiał w języku obcym bez polskich napisów (min. 15 min)", xp: 2 },
+            { text: "Zrób 20 minut ćwiczeń oddechowych (np. metoda Wima Hofa / Box Breathing)", xp: 3 },
+            { text: "Całkowity detoks od mediów społecznościowych przez cały dzień", xp: 5 },
+            { text: "Zero narzekania i negatywnych komentarzy przez 24 godziny", xp: 4 },
+            { text: "Zjedz wszystkie posiłki dzisiaj powoli, bez telefonu i ekranu przed sobą", xp: 3 },
+            { text: "Wstań od razu po pierwszym budziku bez klikania drzemki", xp: 3 },
+            { text: "Przygotuj ubranie i plan dnia na jutro wieczorem", xp: 2 },
+            { text: "Zrób 15 minut ćwiczeń mobilności bioder i kręgosłupa", xp: 2 },
+            { text: "Wykonaj 60 wykroków (po 30 na nogę)", xp: 3 },
+            { text: "Przeczytaj 15 dodatkowych stron książki ponad codzienną normę", xp: 3 },
+            { text: "Napisz podsumowanie swoich postępów z ostatnich 7 dni", xp: 2 },
+            { text: "Zrób 20 minut treningu core / brzucha", xp: 3 },
+            { text: "Unikaj kofeiny po godzinie 14:00 dla maksymalnej jakości snu", xp: 2 },
+            { text: "Połóż się spać minimum 30 minut wcześniej niż zwykle", xp: 3 },
+            { text: "Zrób 100 pajacyków na rozruszanie krążenia w przerwie od siedzenia", xp: 2 },
+            { text: "Przez cały dzień pilnuj idealnie prostej postawy ciała", xp: 3 },
+            { text: "Zrób szybką sesję wizualizacji swoich długoterminowych celów (10 min)", xp: 2 },
+            { text: "Wykonaj 40 dipów (pompek na poręczach lub krześle)", xp: 3 },
+            { text: "Zjedz dodatkową porcję warzyw do dwóch posiłków", xp: 2 },
+            { text: "Zero podjadania między głównymi posiłkami przez cały dzień", xp: 3 },
+            { text: "Zrób 25 minut szybkiego marszu lub truchtu", xp: 3 },
+            { text: "Przetestuj swoją pamięć: powtórz bez zaglądania materiał z wczoraj", xp: 2 },
+            { text: "Zrób 30 minut pracy nad własnym projektem pobocznym", xp: 4 },
+            { text: "Ogranicz czas ekranowy telefonu o minimum 30% względem średniej", xp: 4 },
+            { text: "Zrób 3 serie po 15 wspięć na palce na każdą nogę", xp: 2 },
+            { text: "Wypij zieloną herbatę lub napar ziołowy zamiast słodkiego napoju", xp: 2 },
+            { text: "Zrób 10 minut automasażu lub rolowania spiętych mięśni", xp: 2 },
+            { text: "Przeczytaj wartościowy artykuł naukowy lub branżowy", xp: 2 },
+            { text: "Zrób 50 brzuszków lub spięć brzucha w dowolnym momencie dnia", xp: 2 },
+            { text: "Wyłącz wszystkie powiadomienia w telefonie na 4 godziny", xp: 3 },
+            { text: "Zrób 15 minut ćwiczeń na grip / przedramiona", xp: 2 },
+            { text: "Napisz 3 rzeczy, za które jesteś dzisiaj realnie wdzięczny", xp: 2 },
+            { text: "Zrób 20 minut treningu interwałowego (HIIT) lub tabaty", xp: 5 },
+            { text: "Posprzątaj dokładnie swoją szafę lub szufladę z ubraniami", xp: 2 },
+            { text: "Zrób 40 pompek diamentowych lub z wąskim rozstawem dłoni", xp: 4 },
+            { text: "Przez 2 godziny po przebudzeniu nie sprawdzaj żadnych wiadomości", xp: 4 },
+            { text: "Zrób 10 minut ćwiczeń równowagi (stanie na jednej nodze z zamkniętymi oczami)", xp: 2 },
+            { text: "Odsłuchaj utwór klasyczny lub instrumentalny w pełnym skupieniu (15 min)", xp: 2 },
+            { text: "Zrób 30 minut nauki nowej umiejętności spoza codziennej rutyny", xp: 3 },
+            { text: "Zjedz kolację minimum 3 godziny przed snem", xp: 3 },
+            { text: "Zrób 100 skoków na skakance (lub imitacji skakanki)", xp: 2 },
+            { text: "Przejrzyj swoje wydatki z tego tygodnia i zoptymalizuj budżet", xp: 3 },
+            { text: "Zrób 15 minut ćwiczeń rozluźniających kark i barki", xp: 2 },
+            { text: "Przez cały dzień pij tylko wodę i niesłodzoną kawę/herbatę", xp: 3 },
+            { text: "Zrób 3 serie maksymalnego zwisu na drążku (dead hang)", xp: 3 },
+            { text: "Napisz listę 5 złych nawyków, które całkowicie eliminujesz", xp: 2 },
+            { text: "Zrób 20 minut szybkiego czytania bez regresji wzroku", xp: 3 },
+            { text: "Wykonaj 50 wznosów bioder (glute bridge)", xp: 2 },
+            { text: "Zostaw telefon w innym pokoju na cały wieczór", xp: 4 },
+            { text: "Zrób 15 minut treningu koordynacji (np. żonglowanie lub praca nóg)", xp: 2 },
+            { text: "Przeczytaj biografię lub historię wybitnej postaci (min. 15 min)", xp: 2 },
+            { text: "Zrób 35 pompek z nogami na podwyższeniu", xp: 4 },
+            { text: "Przez cały dzień używaj niedominującej ręki do prostych czynności", xp: 3 },
+            { text: "Zrób 10 minut treningu wzroku (patrzenie w dal, ćwiczenia gałek ocznych)", xp: 2 },
+            { text: "Zaplanuj dokładnie jadłospis na kolejne 2 dni", xp: 2 },
+            { text: "Zrób 45 minut nauki lub pracy w kompletnej ciszy (bez muzyki w tle)", xp: 3 },
+            { text: "Wykonaj 30 burpees (padnij-powstań) w ciągu dnia", xp: 5 },
+            { text: "Zrób 15 minut ćwiczeń oddechowych przed samym snem", xp: 2 },
+            { text: "Usuń z telefonu 3 aplikacje, które najbardziej marnują Twój czas", xp: 3 },
+            { text: "Zrób 20 minut spaceru po zmroku dla wyciszenia układu nerwowego", xp: 2 },
+            { text: "Wykonaj 60 sekund krzesełka przy ścianie (wall sit) w 3 seriach", xp: 3 },
+            { text: "Napisz na głos lub na papierze swoje 3 najważniejsze zasady życiowe", xp: 2 },
+            { text: "Zrób 25 minut porządków w skrzynce mailowej lub chmurze", xp: 2 },
+            { text: "Wykonaj 40 klasycznych pompek w jak najkrótszym czasie", xp: 3 },
+            { text: "Zjedz dzisiaj min. 30g białka w pierwszym posiłku", xp: 2 },
+            { text: "Zrób 15 minut treningu kalistenicznego w domu", xp: 3 },
+            { text: "Przez cały dzień nie przerywaj nikomu w trakcie rozmowy", xp: 3 },
+            { text: "Zrób 20 minut analizy swoich błędów z ostatniego miesiąca", xp: 3 },
+            { text: "Wykonaj 50 przysiadów sumo", xp: 2 },
+            { text: "Zrób 10 minut zimnego okładu na twarz/kark rano dla pobudzenia", xp: 2 },
+            { text: "Przeczytaj 10 stron książki na głos dla poprawy dykcji", xp: 3 },
+            { text: "Zrób 30 minut pracy bez żadnego dostępu do internetu", xp: 4 },
+            { text: "Wykonaj 20 pompek typu pike (na barki)", xp: 3 },
+            { text: "Zadbaj o 100% nawodnienia tuż po przebudzeniu (500 ml wody)", xp: 2 },
+            { text: "Zrób 15 minut rozciągania klatki piersiowej i otwierania bioder", xp: 2 },
+            { text: "Zapisz 5 pomysłów na rozwój osobisty lub zawodowy", xp: 2 },
+            { text: "Wykonaj 100 spinaczy (mountain climbers)", xp: 3 },
+            { text: "Przez 1 godzinę wieczorem korzystaj tylko z ciepłego, słabego światła", xp: 2 },
+            { text: "Zrób 20 minut treningu refleksyjnego lub szachów / łamigłówek logicznych", xp: 3 },
+            { text: "Wykonaj 3 serie po 12 pompek z zatrzymaniem na dole (pauza 2 sek.)", xp: 4 },
+            { text: "Uporządkuj swoją listę zadań i wykreśl wszystko, co zbędne", xp: 2 },
+            { text: "Zrób 15 minut marszu pod górę lub po schodach", xp: 3 },
+            { text: "Zakończ dzień 10-minutową sesją wdzięczności i wyciszenia umysłu", xp: 2 }
+        ];
+
+        // PRZEDMIOTY W SKLEPIE SYSTEMOWYM (Tarcze + Nagrody w realu)
+        const shopCatalog = [
+            {
+                id: 'shield_streak',
+                name: '🛡️ Tarcza Serii',
+                desc: 'Automatycznie chroni przed 1 resetem serii przy porażce.',
+                cost: 60,
+                type: 'shield'
+            },
+            {
+                id: 'forgive_fail',
+                name: '📜 Dekret Oczyszczenia',
+                desc: 'Anuluje 1 aktywną porażkę dzisiaj i zwraca utracone XP.',
+                cost: 45,
+                type: 'cleanse'
+            },
+            {
+                id: 'real_hour',
+                name: '🎮 1h Rozrywki Bez Wyrzutów',
+                desc: 'Oficjalne pozwolenie Systemu na 1h gry/serialu w realu.',
+                cost: 50,
+                type: 'real'
+            },
+            {
+                id: 'real_cheat',
+                name: '🍔 Uczta Wojownika (Cheat Meal)',
+                desc: 'Jednorazowy posiłek poza dietą zatwierdzony przez System.',
+                cost: 90,
+                type: 'real'
+            },
+            {
+                id: 'real_free_day',
+                name: '👑 Dzień Regeneracji (Wolne)',
+                desc: 'Pełny dzień odpoczynku w realu bez utraty serii.',
+                cost: 180,
+                type: 'real'
+            }
+        ];
+
         const baseLevelReqs = [
             15, 18, 22, 27, 33, 40, 48, 57, 67, 78,
             89, 100, 111, 122, 133, 144, 155, 166, 177, 182,
@@ -466,7 +617,6 @@
             return 440;
         }
 
-        // 20 Tytułów co 5 poziomów (Solo Leveling / The Eminence in Shadow / Ghost of Tsushima)
         const titleMilestones = [
             { lvl: 5,   title: "Przebudzony Cień" },
             { lvl: 10,  title: "Kowal Woli" },
@@ -493,14 +643,11 @@
         function getRank(lvl) {
             let currentTitle = "Bez Twarzy";
             for (const m of titleMilestones) {
-                if (lvl >= m.lvl) {
-                    currentTitle = m.title;
-                }
+                if (lvl >= m.lvl) currentTitle = m.title;
             }
             return currentTitle;
         }
 
-        // Realistyczny wskaźnik populacji w skali 1 - 100 (przeciętny obywatel = Poziom 10-14)
         function getEgoPercentile(lvl) {
             if (lvl >= 100) return "Top 0.0001% (Poza Skalą — Absolut)";
             if (lvl >= 95)  return "Top 0.005% (Mityczna Jednostka)";
@@ -516,7 +663,6 @@
             return "Bottom 10% (Punkt Zerowy — Brak Kontroli)";
         }
 
-        // Domyślny zestaw zadań w 3 kategoriach
         const initialHabits = {
             sila: [
                 { id: 'dieta', name: 'Dieta', xpValue: 2, status: 'pending' },
@@ -535,13 +681,32 @@
             ]
         };
 
+        function pickRandomUrgentQuest(excludeIndex = -1) {
+            let idx;
+            do {
+                idx = Math.floor(Math.random() * urgentQuestsPool.length);
+            } while (idx === excludeIndex && urgentQuestsPool.length > 1);
+            return {
+                index: idx,
+                text: urgentQuestsPool[idx].text,
+                xpValue: urgentQuestsPool[idx].xp,
+                status: 'pending'
+            };
+        }
+
         let state = {
             xp: 0,
             totalXp: 0,
             level: 1,
+            coins: 0,
+            shields: 0,
+            daysCompleted: 0,
+            perfectDays: 0,
             habits: JSON.parse(JSON.stringify(initialHabits)),
+            urgentQuest: pickRandomUrgentQuest(),
             hardcoreHabit: null,
             categoryStreaks: { sila: 0, intelekt: 0, wola: 0 },
+            lastReport: null,
             logs: []
         };
 
@@ -549,14 +714,10 @@
             return raw.trim().toLowerCase().replace(/[^a-z0-9-_]/g, '');
         }
 
-        // Zmiana ID profilu do synchronizacji między urządzeniami
         window.changeProfileId = function() {
             const input = document.getElementById('profile-id-input');
             const cleaned = cleanId(input.value);
-            if (!cleaned) {
-                showNotification("Wpisz poprawny identyfikator profilu (np. poszuu)!");
-                return;
-            }
+            if (!cleaned) return showNotification("Wpisz poprawny identyfikator profilu!");
             profileId = cleaned;
             input.value = profileId;
             localStorage.setItem('rpg_architekt_id', profileId);
@@ -564,7 +725,6 @@
             showNotification(`Połączono z profilem w chmurze: "${profileId}"`);
         };
 
-        // Nasłuch na żywo (Firestore onSnapshot)
         function setupCloudSync() {
             if (!profileId || !db) return;
             document.getElementById('profile-id-input').value = profileId;
@@ -575,7 +735,6 @@
 
             unsubscribeDoc = onSnapshot(docRef, (docSnap) => {
                 document.getElementById('sync-indicator').className = "w-2.5 h-2.5 bg-emerald-400 rounded-full shadow-[0_0_8px_rgba(52,211,153,0.6)]";
-                document.getElementById('sync-indicator').title = `Zsynchronizowano z chmurą (${profileId})`;
 
                 if (docSnap.exists()) {
                     const cloudData = docSnap.data();
@@ -583,55 +742,57 @@
                     state = {
                         ...state,
                         ...cloudData,
+                        coins: cloudData.coins || 0,
+                        shields: cloudData.shields || 0,
+                        daysCompleted: cloudData.daysCompleted || 0,
+                        perfectDays: cloudData.perfectDays || 0,
                         habits: cloudData.habits || JSON.parse(JSON.stringify(initialHabits)),
+                        urgentQuest: cloudData.urgentQuest || pickRandomUrgentQuest(),
                         hardcoreHabit: cloudData.hardcoreHabit !== undefined ? cloudData.hardcoreHabit : null,
                         categoryStreaks: cloudData.categoryStreaks || { sila: 0, intelekt: 0, wola: 0 },
+                        lastReport: cloudData.lastReport || null,
                         logs: cloudData.logs || []
                     };
                     isRemoteUpdate = false;
                     render();
                 } else {
                     state = {
-                        xp: 0,
-                        totalXp: 0,
-                        level: 1,
+                        xp: 0, totalXp: 0, level: 1, coins: 0, shields: 0,
+                        daysCompleted: 0, perfectDays: 0,
                         habits: JSON.parse(JSON.stringify(initialHabits)),
+                        urgentQuest: pickRandomUrgentQuest(),
                         hardcoreHabit: null,
                         categoryStreaks: { sila: 0, intelekt: 0, wola: 0 },
+                        lastReport: null,
                         logs: []
                     };
-                    addLog(`Zainicjowano nowy profil w chmurze: "${profileId}".`, "info");
+                    addLog(`Zainicjowano profil w chmurze: "${profileId}".`, "info");
                     saveStateToCloud();
                     render();
                 }
-            }, (error) => {
-                console.error("Firestore error:", error);
+            }, () => {
                 document.getElementById('sync-indicator').className = "w-2.5 h-2.5 bg-rose-500 rounded-full";
-                addLog("Błąd połączenia z chmurą Firebase.", "danger");
             });
         }
 
         async function saveStateToCloud() {
             if (!profileId || !db || isRemoteUpdate) return;
             try {
-                const docRef = doc(db, 'architekt_profiles', profileId);
-                await setDoc(docRef, state);
+                await setDoc(doc(db, 'architekt_profiles', profileId), state);
             } catch (e) {
                 console.error("Cloud save error:", e);
-                document.getElementById('sync-indicator').className = "w-2.5 h-2.5 bg-rose-500 rounded-full";
             }
         }
 
         function addLog(message, type = 'info') {
-            const now = new Date();
-            const timeStr = now.toTimeString().split(' ')[0];
+            const timeStr = new Date().toTimeString().split(' ')[0];
             state.logs.unshift({ time: timeStr, message, type });
             if (state.logs.length > 45) state.logs.pop();
         }
 
         window.clearLogs = function() {
             state.logs = [];
-            addLog("Dziennik zdarzeń systemowych wyczyszczony.", "info");
+            addLog("Dziennik systemowy wyczyszczony.", "info");
             saveStateToCloud();
             render();
         };
@@ -645,7 +806,38 @@
             return 0;
         }
 
-        // Główna funkcja renderująca interfejs
+        // Sprawdza czy dana kategoria jest wykonana w 100% (uwzględniając zadania 3x w tyg.!)
+        function isCategory100Percent(catKey) {
+            const list = state.habits[catKey];
+            if (!list || list.length === 0) return false;
+            const anyFailed = list.some(h => h.status === 'failed');
+            if (anyFailed) return false;
+
+            return list.every(h => {
+                if (h.weeklyTarget) {
+                    // Misja tygodniowa liczy się jako zaliczona do 100% kategorii,
+                    // jeśli została wykonana dzisiaj LUB ma już wbite 3/3 w tym tygodniu!
+                    return h.status === 'done' || (h.weeklyDone || 0) >= h.weeklyTarget;
+                }
+                return h.status === 'done';
+            });
+        }
+
+        // Oblicza ile monet warta jest dana kategoria (2x XP za zadania wykonane lub zaliczone tygodniowo)
+        function calculateCategoryCoins(catKey) {
+            if (!isCategory100Percent(catKey)) return 0;
+            let xpSum = 0;
+            state.habits[catKey].forEach(h => {
+                if (h.status === 'done') {
+                    xpSum += h.xpValue;
+                } else if (h.weeklyTarget && (h.weeklyDone || 0) >= h.weeklyTarget) {
+                    // Jeśli limit 3/3 na tydzień już wbity wcześniej, dajemy pełną pulę XP kategorii do przelicznika monet
+                    xpSum += h.xpValue;
+                }
+            });
+            return xpSum * 2; // 2x więcej coinów niż XP!
+        }
+
         function render() {
             const currentReq = getReqForLevel(state.level);
             const currentRank = getRank(state.level);
@@ -654,31 +846,34 @@
             document.getElementById('header-rank').innerText = currentRank;
             document.getElementById('header-xp').innerText = state.xp;
             document.getElementById('header-next-xp').innerText = currentReq;
+            document.getElementById('header-coins').innerText = state.coins;
             
-            const progressPercent = state.level >= 100
-                ? 100
-                : Math.max(0, Math.min(100, Math.floor((state.xp / currentReq) * 100)));
+            const progressPercent = state.level >= 100 ? 100 : Math.max(0, Math.min(100, Math.floor((state.xp / currentReq) * 100)));
             document.getElementById('header-progress').style.width = progressPercent + '%';
 
             document.getElementById('stat-level').innerText = `${state.level} / 100`;
             document.getElementById('stat-rank').innerText = currentRank;
             document.getElementById('stat-xp').innerText = state.level >= 100 ? "MAX POZIOM" : `${state.xp} / ${currentReq} XP`;
             document.getElementById('stat-total-xp').innerText = `${state.totalXp} XP`;
+            document.getElementById('stat-coins').innerText = `${state.coins} ₵`;
             document.getElementById('stat-ego').innerText = getEgoPercentile(state.level);
+            document.getElementById('stat-shields').innerText = `${state.shields} szt.`;
+            document.getElementById('shop-balance').innerText = `${state.coins} ₵`;
 
             const totalBonus = getStreakBonus(state.categoryStreaks.sila) +
                                getStreakBonus(state.categoryStreaks.intelekt) +
                                getStreakBonus(state.categoryStreaks.wola);
             document.getElementById('stat-streak-bonus').innerText = `+${totalBonus} XP / dzień`;
 
+            renderUrgentQuest();
             renderHabitCategory('sila', 'habits-sila');
             renderHabitCategory('intelekt', 'habits-intelekt');
             renderHabitCategory('wola', 'habits-wola');
             renderHardcoreSection();
+            renderShop();
             renderTitlesList();
 
-            const logsContainer = document.getElementById('system-logs');
-            logsContainer.innerHTML = state.logs.map(log => {
+            document.getElementById('system-logs').innerHTML = state.logs.map(log => {
                 let colorClass = 'text-slate-300';
                 if (log.type === 'success') colorClass = 'text-emerald-400';
                 if (log.type === 'danger') colorClass = 'text-rose-400 font-semibold';
@@ -687,7 +882,120 @@
             }).join('');
         }
 
-        // Renderowanie sekcji Protokół Hardcore (Lvl 25+)
+        // Renderowanie Nagłej Misji Systemowej
+        function renderUrgentQuest() {
+            const container = document.getElementById('urgent-quest-container');
+            const uq = state.urgentQuest;
+            if (!uq) return;
+
+            const isDone = uq.status === 'done';
+            let style = 'bg-obsidian/85 border-fuchsia-500/30 hover:border-fuchsia-400/60';
+            if (isDone) style = 'bg-emerald-950/25 border-emerald-500/40';
+
+            container.innerHTML = `
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded border transition ${style}">
+                    <div>
+                        <div class="font-medium text-sm ${isDone ? 'line-through text-emerald-300' : 'text-fuchsia-100'}">
+                            ⚡ ${uq.text}
+                        </div>
+                        <div class="text-[11px] font-tech mt-1 text-slate-400">
+                            Nagroda za wykonanie: <span class="text-emerald-400 font-semibold">+${uq.xpValue} XP</span> & <span class="text-amber-300">+${uq.xpValue * 2} ₵</span>
+                            <span class="text-slate-600 ml-1">(Brak kary za pominięcie)</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 font-tech text-xs shrink-0">
+                        <button onclick="window.toggleUrgentQuest()" 
+                            class="px-3.5 py-1.5 rounded border transition flex items-center gap-1.5 ${isDone ? 'bg-emerald-600/80 text-white border-emerald-400 font-bold' : 'bg-panel hover:bg-fuchsia-950/60 text-fuchsia-300 border-fuchsia-500/40'}">
+                            ${isDone ? `✓ Ukończono (+${uq.xpValue} XP)` : `✓ Wykonaj Misję (+${uq.xpValue} XP)`}
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        window.toggleUrgentQuest = function() {
+            const uq = state.urgentQuest;
+            if (!uq) return;
+            if (uq.status === 'done') {
+                uq.status = 'pending';
+                adjustXP(-uq.xpValue);
+                state.coins = Math.max(0, state.coins - (uq.xpValue * 2));
+                addLog(`Cofnięto Nagłą Misję (-${uq.xpValue} XP, -${uq.xpValue * 2} ₵).`, "info");
+            } else {
+                uq.status = 'done';
+                adjustXP(uq.xpValue);
+                state.coins += (uq.xpValue * 2);
+                addLog(`⚡ NAGŁA MISJA UKOŃCZONA: "${uq.text}" (+${uq.xpValue} XP, +${uq.xpValue * 2} ₵)!`, "levelup");
+                showNotification(`Nagła Misja ukończona! +${uq.xpValue} XP oraz +${uq.xpValue * 2} ₵!`);
+            }
+            saveStateToCloud();
+            render();
+        };
+
+        // Renderowanie Sklepu Systemowego
+        function renderShop() {
+            const container = document.getElementById('shop-items');
+            container.innerHTML = shopCatalog.map(item => {
+                const canAfford = state.coins >= item.cost;
+                return `
+                    <div class="p-2.5 rounded bg-obsidian/85 border border-edge flex items-center justify-between gap-2.5">
+                        <div>
+                            <div class="font-semibold text-slate-200">${item.name}</div>
+                            <div class="text-[10px] text-slate-500 leading-tight mt-0.5">${item.desc}</div>
+                        </div>
+                        <button onclick="window.buyShopItem('${item.id}')" 
+                            class="px-2.5 py-1.5 rounded border text-[11px] font-bold shrink-0 transition ${canAfford ? 'bg-amber-500/15 hover:bg-amber-500/30 text-amber-300 border-amber-500/40' : 'bg-panel text-slate-600 border-edge cursor-not-allowed'}">
+                            ${item.cost} ₵
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        window.buyShopItem = function(itemId) {
+            const item = shopCatalog.find(i => i.id === itemId);
+            if (!item) return;
+
+            if (state.coins < item.cost) {
+                showNotification(`Brak wystarczających Kredytów Cienia (wymagane ${item.cost} ₵)!`);
+                return;
+            }
+
+            if (item.type === 'shield') {
+                state.coins -= item.cost;
+                state.shields += 1;
+                addLog(`🛒 ZAKUP W SKLEPIE: ${item.name} (-${item.cost} ₵). Posiadasz teraz ${state.shields} tarcz.`, "success");
+                showNotification(`Kupiono: ${item.name}! Chroni przed kolejnym resetem serii.`);
+            } else if (item.type === 'cleanse') {
+                // Szuka pierwszej aktywnej porażki i ją cofa
+                let foundFailed = false;
+                for (const k of ['sila', 'intelekt', 'wola']) {
+                    const failedH = state.habits[k].find(h => h.status === 'failed');
+                    if (failedH) {
+                        failedH.status = 'pending';
+                        adjustXP(failedH.xpValue);
+                        foundFailed = true;
+                        state.coins -= item.cost;
+                        addLog(`📜 DEKRET OCZYSZCZENIA: Anulowano porażkę w "${failedH.name}" i zwrócono +${failedH.xpValue} XP (-${item.cost} ₵).`, "levelup");
+                        showNotification(`Dekret użyty! Porażka w "${failedH.name}" anulowana.`);
+                        break;
+                    }
+                }
+                if (!foundFailed) {
+                    showNotification("Nie masz dzisiaj żadnej aktywnej porażki do oczyszczenia!");
+                    return;
+                }
+            } else {
+                // Nagroda w realu
+                state.coins -= item.cost;
+                addLog(`👑 NAGRODA REALNA ODBLOKOWANA: ${item.name} (-${item.cost} ₵). Zasłużyłeś!`, "levelup");
+                showNotification(`Odblokowano nagrodę w realu: ${item.name}!`);
+            }
+
+            saveStateToCloud();
+            render();
+        };
+
         function renderHardcoreSection() {
             const lockedDiv = document.getElementById('hardcore-locked');
             const unlockedDiv = document.getElementById('hardcore-unlocked');
@@ -698,7 +1006,6 @@
                 lockedDiv.classList.remove('hidden');
                 unlockedDiv.classList.add('hidden');
                 badge.innerText = "🔒 WYMAGANY POZIOM 25";
-                badge.className = "text-[11px] font-tech px-2.5 py-1 rounded bg-obsidian text-slate-400 border border-edge";
                 return;
             }
 
@@ -715,35 +1022,22 @@
             const h = state.hardcoreHabit;
             const isDone = h.status === 'done';
             const isFailed = h.status === 'failed';
-
-            let borderStyle = 'bg-obsidian/85 border-amber-500/30 hover:border-amber-500/50';
+            let borderStyle = 'bg-obsidian/85 border-amber-500/30';
             if (isDone) borderStyle = 'bg-emerald-950/20 border-emerald-500/40';
             if (isFailed) borderStyle = 'bg-rose-950/25 border-rose-500/40';
 
             container.innerHTML = `
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded border transition ${borderStyle}">
                     <div>
-                        <div class="font-medium text-sm flex items-center gap-2 ${isDone ? 'line-through text-emerald-300' : isFailed ? 'text-rose-300' : 'text-amber-200'}">
-                            <span>❖ ${h.name}</span>
-                        </div>
+                        <div class="font-medium text-sm ${isDone ? 'line-through text-emerald-300' : isFailed ? 'text-rose-300' : 'text-amber-200'}">❖ ${h.name}</div>
                         <div class="text-[11px] font-tech mt-1 text-slate-500">
-                            Wykonanie: <span class="text-emerald-400/90">+${h.xpValue} XP</span>
-                            <span class="mx-1.5 text-slate-700">|</span>
-                            Niewykonanie: <span class="text-rose-400/90">-${h.xpValue} XP</span>
+                            Wykonanie: <span class="text-emerald-400/90">+${h.xpValue} XP</span> | Niewykonanie: <span class="text-rose-400/90">-${h.xpValue} XP</span>
                         </div>
                     </div>
                     <div class="flex items-center gap-2 font-tech text-xs shrink-0">
-                        <button onclick="window.markHardcoreDone()" 
-                            class="px-3 py-1.5 rounded border transition flex items-center gap-1 ${isDone ? 'bg-emerald-600/80 text-white border-emerald-400 font-bold' : 'bg-panel hover:bg-emerald-950/60 text-emerald-400 border-edge hover:border-emerald-500/50'}">
-                            ✓ Wykonano (+${h.xpValue})
-                        </button>
-                        <button onclick="window.markHardcoreFailed()" 
-                            class="px-3 py-1.5 rounded border transition flex items-center gap-1 ${isFailed ? 'bg-rose-600/80 text-white border-rose-400 font-bold' : 'bg-panel hover:bg-rose-950/60 text-rose-400 border-edge hover:border-rose-500/50'}">
-                            ✗ Porażka (-${h.xpValue})
-                        </button>
-                        <button onclick="window.removeHardcoreHabit()" class="px-2.5 py-1.5 rounded bg-panel hover:bg-rose-950 text-slate-500 hover:text-rose-400 border border-edge transition" title="Usuń wyzwanie">
-                            ✕
-                        </button>
+                        <button onclick="window.markHardcoreDone()" class="px-3 py-1.5 rounded border transition ${isDone ? 'bg-emerald-600/80 text-white border-emerald-400 font-bold' : 'bg-panel hover:bg-emerald-950/60 text-emerald-400 border-edge'}">✓ (+${h.xpValue})</button>
+                        <button onclick="window.markHardcoreFailed()" class="px-3 py-1.5 rounded border transition ${isFailed ? 'bg-rose-600/80 text-white border-rose-400 font-bold' : 'bg-panel hover:bg-rose-950/60 text-rose-400 border-edge'}">✗ (-${h.xpValue})</button>
+                        <button onclick="window.removeHardcoreHabit()" class="px-2.5 py-1.5 rounded bg-panel hover:bg-rose-950 text-slate-500 hover:text-rose-400 border border-edge transition">✕</button>
                     </div>
                 </div>
             `;
@@ -751,117 +1045,79 @@
 
         window.saveHardcoreHabit = function() {
             if (state.level < 25) return;
-            const nameInput = document.getElementById('hardcore-name-input');
-            const xpInput = document.getElementById('hardcore-xp-input');
-            
-            const name = nameInput.value.trim();
-            const xpVal = parseInt(xpInput.value, 10);
-
-            if (!name) {
-                showNotification("Wpisz nazwę wyzwania Hardcore!");
-                return;
-            }
-            if (isNaN(xpVal) || xpVal < 1 || xpVal > 100) {
-                showNotification("Podaj poprawną liczbę punktów XP (1 - 100)!");
-                return;
-            }
-
-            state.hardcoreHabit = {
-                name: name,
-                xpValue: xpVal,
-                status: 'pending'
-            };
-
-            nameInput.value = '';
+            const name = document.getElementById('hardcore-name-input').value.trim();
+            const xpVal = parseInt(document.getElementById('hardcore-xp-input').value, 10);
+            if (!name || isNaN(xpVal) || xpVal < 1 || xpVal > 100) return showNotification("Podaj poprawną nazwę oraz XP (1 - 100)!");
+            state.hardcoreHabit = { name, xpValue: xpVal, status: 'pending' };
+            document.getElementById('hardcore-name-input').value = '';
             addLog(`❖ PROTOKÓŁ HARDCORE: Aktywowano wyzwanie "${name}" (${xpVal} XP).`, "levelup");
-            showNotification(`Aktywowano wyzwanie Hardcore: "${name}" (+${xpVal} XP).`);
-            saveStateToCloud();
-            render();
+            saveStateToCloud(); render();
         };
 
         window.removeHardcoreHabit = function() {
-            if (!state.hardcoreHabit) return;
-            const oldName = state.hardcoreHabit.name;
             state.hardcoreHabit = null;
-            addLog(`Usunięto wyzwanie Hardcore: "${oldName}".`, "info");
-            saveStateToCloud();
-            render();
+            saveStateToCloud(); render();
         };
 
         window.markHardcoreDone = function() {
             const h = state.hardcoreHabit;
             if (!h) return;
-
-            if (h.status === 'done') {
-                h.status = 'pending';
-                adjustXP(-h.xpValue);
-                addLog(`Cofnięto wykonanie Hardcore: "${h.name}" (-${h.xpValue} XP).`, "info");
-            } else {
-                if (h.status === 'failed') adjustXP(h.xpValue);
-                h.status = 'done';
-                adjustXP(h.xpValue);
-                addLog(`❖ ZALICZONO HARDCORE: "${h.name}" (+${h.xpValue} XP).`, "success");
-                showNotification(`Wyzwanie Hardcore zaliczone! +${h.xpValue} XP.`);
-            }
-            saveStateToCloud();
-            render();
+            if (h.status === 'done') { h.status = 'pending'; adjustXP(-h.xpValue); }
+            else { if (h.status === 'failed') adjustXP(h.xpValue); h.status = 'done'; adjustXP(h.xpValue); addLog(`❖ ZALICZONO HARDCORE: "${h.name}" (+${h.xpValue} XP).`, "success"); }
+            saveStateToCloud(); render();
         };
 
         window.markHardcoreFailed = function() {
             const h = state.hardcoreHabit;
             if (!h) return;
-
-            if (h.status === 'failed') {
-                h.status = 'pending';
-                adjustXP(h.xpValue);
-                addLog(`Cofnięto porażkę Hardcore: "${h.name}" (+${h.xpValue} XP).`, "info");
-            } else {
-                if (h.status === 'done') adjustXP(-h.xpValue);
-                h.status = 'failed';
-                adjustXP(-h.xpValue);
-                addLog(`⚠️ PORAŻKA HARDCORE: "${h.name}" (-${h.xpValue} XP).`, "danger");
-                showNotification(`Porażka w wyzwaniu Hardcore! -${h.xpValue} XP.`);
-            }
-            saveStateToCloud();
-            render();
+            if (h.status === 'failed') { h.status = 'pending'; adjustXP(h.xpValue); }
+            else { if (h.status === 'done') adjustXP(-h.xpValue); h.status = 'failed'; adjustXP(-h.xpValue); addLog(`⚠️ PORAŻKA HARDCORE: "${h.name}" (-${h.xpValue} XP).`, "danger"); }
+            saveStateToCloud(); render();
         };
 
-        // Renderowanie 20 tytułów co 5 poziomów
         function renderTitlesList() {
             const container = document.getElementById('titles-list');
             container.innerHTML = titleMilestones.map(m => {
                 const unlocked = state.level >= m.lvl;
-                const boxClass = unlocked 
-                    ? 'bg-violet-950/30 border-violet-500/40 text-slate-100' 
-                    : 'bg-obsidian/60 border-edge/60 text-slate-600';
-                const badgeClass = unlocked ? 'text-amber-300' : 'text-slate-600';
-                const statusIcon = unlocked ? '◆' : '🔒';
-
                 return `
-                    <div class="px-3 py-2 rounded border flex justify-between items-center transition ${boxClass}">
+                    <div class="px-3 py-2 rounded border flex justify-between items-center transition ${unlocked ? 'bg-violet-950/30 border-violet-500/40 text-slate-100' : 'bg-obsidian/60 border-edge/60 text-slate-600'}">
                         <div>
-                            <span class="${badgeClass} font-bold">LVL ${m.lvl}:</span>
+                            <span class="${unlocked ? 'text-amber-300' : 'text-slate-600'} font-bold">LVL ${m.lvl}:</span>
                             <span class="font-medium ml-1.5">${m.title}</span>
                         </div>
-                        <span class="text-xs">${statusIcon}</span>
+                        <span class="text-xs">${unlocked ? '◆' : '🔒'}</span>
                     </div>
                 `;
             }).join('');
         }
 
-        // Renderowanie kategorii zadań (Siła, Intelekt, Wola)
         function renderHabitCategory(catKey, containerId) {
             const container = document.getElementById(containerId);
             container.innerHTML = '';
 
             const streak = state.categoryStreaks[catKey];
             const bonus = getStreakBonus(streak);
+            const is100 = isCategory100Percent(catKey);
+            const potentialCoins = calculateCategoryCoins(catKey);
+
+            // Aktualizacja odznaki 100% w nagłówku kategorii
+            const badge100 = document.getElementById(`badge-100-${catKey}`);
+            if (badge100) {
+                if (is100) {
+                    badge100.innerText = `✓ 100% GOTOWE (+${potentialCoins} ₵)`;
+                    badge100.className = "text-[10px] font-tech px-2 py-0.5 rounded border border-emerald-500/50 bg-emerald-950/50 text-emerald-300 font-bold";
+                } else {
+                    const doneCount = state.habits[catKey].filter(h => h.status === 'done' || (h.weeklyTarget && (h.weeklyDone || 0) >= h.weeklyTarget)).length;
+                    badge100.innerText = `${doneCount}/${state.habits[catKey].length} ZROBIONE`;
+                    badge100.className = "text-[10px] font-tech px-2 py-0.5 rounded border border-edge bg-obsidian text-slate-500";
+                }
+            }
 
             const infoDiv = document.createElement('div');
             infoDiv.className = 'flex justify-between items-center text-[11px] font-tech bg-obsidian/85 px-3.5 py-2 rounded border border-edge mb-2.5';
             infoDiv.innerHTML = `
-                <span class="text-slate-400">CIĄGŁOŚĆ KATEGORII: <strong class="text-amber-300">${streak} / 10 DNI</strong></span>
-                <span class="text-violet-400 font-semibold">BONUS DNIA: +${bonus} XP</span>
+                <span class="text-slate-400">CIĄGŁOŚĆ: <strong class="text-amber-300">${streak} / 10 DNI</strong></span>
+                <span class="text-violet-400 font-semibold">BONUS: +${bonus} XP</span>
             `;
             container.appendChild(infoDiv);
 
@@ -876,10 +1132,11 @@
                 let weeklyBadge = '';
                 if (habit.weeklyTarget) {
                     const doneCount = habit.weeklyDone || 0;
-                    const badgeColor = doneCount >= habit.weeklyTarget
+                    const isWeeklyComplete = doneCount >= habit.weeklyTarget;
+                    const badgeColor = isWeeklyComplete
                         ? 'text-emerald-300 border-emerald-500/40 bg-emerald-950/40'
                         : 'text-sky-300 border-sky-500/30 bg-sky-950/30';
-                    weeklyBadge = `<span class="ml-2 px-2 py-0.5 text-[10px] font-tech rounded border ${badgeColor}">TYDZIEŃ: ${doneCount}/${habit.weeklyTarget}</span>`;
+                    weeklyBadge = `<span class="ml-2 px-2 py-0.5 text-[10px] font-tech rounded border ${badgeColor}">TYDZIEŃ: ${doneCount}/${habit.weeklyTarget} ${isWeeklyComplete ? '✓' : ''}</span>`;
                 }
 
                 const item = document.createElement('div');
@@ -893,8 +1150,10 @@
                         </div>
                         <div class="text-[11px] font-tech mt-1 text-slate-500">
                             Wykonanie: <span class="text-emerald-400/90">+${habit.xpValue} XP</span>
-                            <span class="mx-1.5 text-slate-700">|</span>
-                            Niewykonanie: <span class="text-rose-400/90">-${habit.xpValue} XP</span>
+                            <span class="mx-1 text-slate-700">|</span>
+                            Kara: <span class="text-rose-400/90">-${habit.xpValue} XP</span>
+                            <span class="mx-1 text-slate-700">|</span>
+                            Pula monet: <span class="text-amber-300/80">+${habit.xpValue * 2} ₵</span>
                         </div>
                     </div>
                     <div class="flex items-center gap-2 font-tech text-xs shrink-0">
@@ -921,18 +1180,12 @@
                 if (habit.weeklyTarget && habit.weeklyDone > 0) habit.weeklyDone--;
                 adjustXP(-habit.xpValue);
                 addLog(`Cofnięto wykonanie: "${habit.name}" (-${habit.xpValue} XP).`, "info");
-                showNotification(`Cofnięto zaliczenie zadania "${habit.name}".`);
             } else {
-                if (habit.status === 'failed') {
-                    adjustXP(habit.xpValue);
-                }
+                if (habit.status === 'failed') adjustXP(habit.xpValue);
                 habit.status = 'done';
-                if (habit.weeklyTarget) {
-                    habit.weeklyDone = (habit.weeklyDone || 0) + 1;
-                }
+                if (habit.weeklyTarget) habit.weeklyDone = (habit.weeklyDone || 0) + 1;
                 adjustXP(habit.xpValue);
                 addLog(`ZALICZONO: "${habit.name}" (+${habit.xpValue} XP).`, "success");
-                showNotification(`Zadanie "${habit.name}" zaliczone! +${habit.xpValue} XP.`);
             }
 
             saveStateToCloud();
@@ -947,19 +1200,24 @@
                 habit.status = 'pending';
                 adjustXP(habit.xpValue);
                 addLog(`Cofnięto porażkę: "${habit.name}" (+${habit.xpValue} XP przywrócone).`, "info");
-                showNotification(`Cofnięto porażkę dla "${habit.name}".`);
             } else {
                 if (habit.status === 'done') {
                     if (habit.weeklyTarget && habit.weeklyDone > 0) habit.weeklyDone--;
                     adjustXP(-habit.xpValue);
                 }
                 habit.status = 'failed';
-                state.categoryStreaks[catKey] = 0;
                 adjustXP(-habit.xpValue);
-                
-                const msg = `PORAŻKA: Nie wykonano "${habit.name}". Kara -${habit.xpValue} XP oraz reset serii w kategorii ${catKey.toUpperCase()}!`;
-                addLog(msg, "danger");
-                showNotification(`⚠️ ${msg}`);
+
+                // Sprawdzenie czy Tarcza Serii ratuje ciągłość!
+                if (state.shields > 0 && state.categoryStreaks[catKey] > 0) {
+                    state.shields -= 1;
+                    addLog(`🛡️ TARCZA SERII AKTYWOWANA! Uratowano serię (${state.categoryStreaks[catKey]} dni) w kategorii ${catKey.toUpperCase()} mimo porażki (-${habit.xpValue} XP).`, "levelup");
+                    showNotification(`🛡️ Tarcza uratowała Twoją serię w ${catKey.toUpperCase()}!`);
+                } else {
+                    state.categoryStreaks[catKey] = 0;
+                    addLog(`PORAŻKA: Nie wykonano "${habit.name}". Kara -${habit.xpValue} XP oraz reset serii w kategorii ${catKey.toUpperCase()}!`, "danger");
+                    showNotification(`⚠️ Porażka: -${habit.xpValue} XP oraz reset serii!`);
+                }
             }
 
             saveStateToCloud();
@@ -975,11 +1233,8 @@
                 state.xp -= currentReq;
                 state.level++;
                 const newRank = getRank(state.level);
-                const ego = getEgoPercentile(state.level);
-                addLog(`🎉 AWANS NA POZIOM ${state.level}! Tytuł: «${newRank}» | Populacja: ${ego}`, "levelup");
-                if (state.level === 25) {
-                    addLog(`❖ ODBLOKOWANO PROTOKÓŁ HARDCORE! Możesz dodać własne wyzwanie.`, "levelup");
-                }
+                addLog(`🎉 AWANS NA POZIOM ${state.level}! Tytuł: «${newRank}»`, "levelup");
+                if (state.level === 25) addLog(`❖ ODBLOKOWANO PROTOKÓŁ HARDCORE!`, "levelup");
                 showNotification(`🎉 AWANS NA POZIOM ${state.level}! Nowy tytuł: «${newRank}»`);
                 currentReq = getReqForLevel(state.level);
             }
@@ -988,30 +1243,46 @@
                 state.level--;
                 const prevReq = getReqForLevel(state.level);
                 state.xp = prevReq + state.xp;
-                const degradedRank = getRank(state.level);
-                const ego = getEgoPercentile(state.level);
-                addLog(`🔻 DEGRADACJA SYSTEMU! Spadek na Poziom ${state.level} («${degradedRank}»).`, "danger");
-                showNotification(`🔻 DEGRADACJA! Spadek na Poziom ${state.level}.`);
+                addLog(`🔻 DEGRADACJA SYSTEMU! Spadek na Poziom ${state.level}.`, "danger");
             }
 
-            if (state.level === 1 && state.xp < 0) {
-                state.xp = 0;
-            }
+            if (state.level === 1 && state.xp < 0) state.xp = 0;
         }
 
+        // ZAKOŃCZENIE CYKLU DNIA: Wypłata monet za 100% kategorii + Nowa Nagła Misja + Symulator Przewagi
         window.endDay = function() {
             let dailyBonusTotal = 0;
+            let coinsEarnedToday = 0;
+            let completedCategories = [];
+            let totalTasksCount = 0;
+            let completedTasksCount = 0;
 
             ['sila', 'intelekt', 'wola'].forEach(catKey => {
                 const habitsInCat = state.habits[catKey];
                 const anyFailed = habitsInCat.some(h => h.status === 'failed');
                 const anyDone = habitsInCat.some(h => h.status === 'done');
 
+                // Zliczanie zadań do analizy przewagi
+                habitsInCat.forEach(h => {
+                    totalTasksCount++;
+                    if (h.status === 'done' || (h.weeklyTarget && (h.weeklyDone || 0) >= h.weeklyTarget)) {
+                        completedTasksCount++;
+                    }
+                });
+
+                // Sprawdzenie 100% kategorii dla wypłaty Kredytów Cienia (2x XP)
+                if (isCategory100Percent(catKey)) {
+                    const catCoins = calculateCategoryCoins(catKey);
+                    coinsEarnedToday += catCoins;
+                    completedCategories.push(`${catKey.toUpperCase()} (+${catCoins} ₵)`);
+                }
+
+                // Aktualizacja serii
                 if (!anyFailed && anyDone) {
                     state.categoryStreaks[catKey] = Math.min(10, state.categoryStreaks[catKey] + 1);
                     const bonus = getStreakBonus(state.categoryStreaks[catKey]);
                     dailyBonusTotal += bonus;
-                } else if (anyFailed) {
+                } else if (anyFailed && state.shields === 0) {
                     state.categoryStreaks[catKey] = 0;
                 }
 
@@ -1022,17 +1293,117 @@
                 state.hardcoreHabit.status = 'pending';
             }
 
+            // Wypłata monet
+            if (coinsEarnedToday > 0) {
+                state.coins += coinsEarnedToday;
+                addLog(`🪙 WYPŁATA SKARBCOWA: Ukończono 100% w [${completedCategories.join(', ')}]. Otrzymano +${coinsEarnedToday} ₵!`, "levelup");
+            }
+
+            // Wypłata XP z serii
             if (dailyBonusTotal > 0) {
                 adjustXP(dailyBonusTotal);
-                addLog(`⏭️ ZAKOŃCZONO CYKL DNIA: Doliczono +${dailyBonusTotal} XP z tytułu aktywnych serii.`, "levelup");
-                showNotification(`Nowy cykl dnia! Zyskano +${dailyBonusTotal} XP bonusu za ciągłość.`);
-            } else {
-                addLog(`⏭️ ZAKOŃCZONO CYKL DNIA: Zadania zresetowane na nowy dzień.`, "info");
-                showNotification(`Rozpoczęto nowy cykl dnia. Zadania zresetowane.`);
+                addLog(`⏭️ BONUS SERII: Doliczono +${dailyBonusTotal} XP za utrzymanie ciągłości.`, "success");
             }
+
+            // Losowanie nowej Nagłej Misji z puli 100 zadań na kolejny dzień
+            const prevIdx = state.urgentQuest ? state.urgentQuest.index : -1;
+            state.urgentQuest = pickRandomUrgentQuest(prevIdx);
+            addLog(`⚡ NOWA NAGŁA MISJA NA JUTRO: "${state.urgentQuest.text}" (+${state.urgentQuest.xpValue} XP).`, "levelup");
+
+            // Statystyki do Symulatora Przewagi
+            state.daysCompleted += 1;
+            const completionRate = Math.round((completedTasksCount / totalTasksCount) * 100);
+            if (completionRate === 100) state.perfectDays += 1;
+
+            // Realistyczna analiza psychologiczna dystansu nad tłumem
+            const crowdQuitPercent = completionRate >= 80 ? (78 + Math.floor(Math.random() * 14)) : (45 + Math.floor(Math.random() * 20));
+            const distanceGained = Math.max(1, Math.round((completionRate / 10) + (dailyBonusTotal * 1.5)));
+            const peopleOvertaken = Math.round((completionRate * 14.5) + (state.level * 12));
+
+            state.lastReport = {
+                dayNumber: state.daysCompleted,
+                completionRate,
+                completedTasksCount,
+                totalTasksCount,
+                coinsEarnedToday,
+                completedCategories,
+                dailyBonusTotal,
+                crowdQuitPercent,
+                distanceGained,
+                peopleOvertaken,
+                nextUrgentQuest: state.urgentQuest
+            };
 
             saveStateToCloud();
             render();
+            openAdvantageModal();
+        };
+
+        // Wyświetlanie okna Symulatora Przewagi
+        window.openAdvantageModal = function() {
+            const modal = document.getElementById('advantage-modal');
+            const content = document.getElementById('advantage-content');
+            const rep = state.lastReport;
+
+            if (!rep) {
+                content.innerHTML = `
+                    <div class="p-4 bg-obsidian/80 rounded border border-edge text-slate-300 space-y-2">
+                        <div class="text-sky-400 font-bold">Brak zamkniętego cyklu dnia do analizy.</div>
+                        <p class="text-slate-400">Zaznacz wykonane zadania i kliknij <span class="text-sky-300">Zakończ Cykl Dnia</span>, aby System wygenerował pełny raport przewagi nad populacją, wypłacił monety i przydzielił nową Nagłą Misję.</p>
+                    </div>
+                `;
+            } else {
+                let verdictColor = "text-emerald-400";
+                let verdictText = "DOMINACJA SYSTEMOWA. Zrobiłeś to, na co 9 na 10 osób nie miało dzisiaj siły.";
+                if (rep.completionRate < 50) {
+                    verdictColor = "text-rose-400";
+                    verdictText = "OSTRZEŻENIE: Zbyt niska skuteczność. Tłum zaczyna Cię doganiać.";
+                } else if (rep.completionRate < 100) {
+                    verdictColor = "text-amber-300";
+                    verdictText = "SOLIDNY POSTĘP. Utrzymujesz tempo, ale pełna dominacja wymaga 100%.";
+                }
+
+                content.innerHTML = `
+                    <div class="bg-obsidian/90 p-4 rounded border border-edge space-y-3">
+                        <div class="flex justify-between items-center border-b border-edge pb-2">
+                            <span class="text-slate-400">SKUTECZNOŚĆ CYKLU #${rep.dayNumber}:</span>
+                            <span class="text-lg font-bold ${rep.completionRate === 100 ? 'text-emerald-400' : 'text-sky-300'}">${rep.completionRate}% (${rep.completedTasksCount}/${rep.totalTasksCount})</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-400">ODSETEK TŁUMU, KTÓRY DZISIAJ ODPUŚCIŁ:</span>
+                            <span class="text-rose-400 font-bold">${rep.crowdQuitPercent}% populacji</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-400">WYPRZEDZONE JEDNOSTKI W RANKINGU:</span>
+                            <span class="text-emerald-400 font-bold">+${rep.peopleOvertaken} osób</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-400">POWIĘKSZONY DYSTANS PRZEWAGI:</span>
+                            <span class="text-violet-300 font-bold">+${rep.distanceGained} pkt przewagi</span>
+                        </div>
+                        <div class="flex justify-between items-center pt-2 border-t border-edge">
+                            <span class="text-slate-400">WYPŁACONE KREDYTY CIENIA (2x XP):</span>
+                            <span class="text-amber-300 font-bold">+${rep.coinsEarnedToday} ₵</span>
+                        </div>
+                    </div>
+
+                    <div class="p-3.5 rounded bg-violet-950/30 border border-violet-500/40 space-y-1">
+                        <div class="text-[10px] text-fuchsia-300 font-bold uppercase tracking-wider">⚡ PRZYDZIELONO NAGŁĄ MISJĘ NA KOLEJNY DZIEŃ:</div>
+                        <div class="text-slate-100 font-semibold">${rep.nextUrgentQuest.text}</div>
+                        <div class="text-emerald-400 text-[11px]">Nagroda: +${rep.nextUrgentQuest.xpValue} XP oraz +${rep.nextUrgentQuest.xpValue * 2} ₵</div>
+                    </div>
+
+                    <div class="text-[11px] ${verdictColor} font-semibold leading-relaxed px-1">
+                        > ${verdictText}
+                    </div>
+                `;
+            }
+
+            modal.classList.remove('hidden');
+        };
+
+        window.closeAdvantageModal = function() {
+            document.getElementById('advantage-modal').classList.add('hidden');
         };
 
         window.resetWeeklyCounters = function() {
@@ -1047,29 +1418,25 @@
             render();
         };
 
-        window.openResetModal = function() {
-            document.getElementById('reset-modal').classList.remove('hidden');
-        };
-
-        window.closeResetModal = function() {
-            document.getElementById('reset-modal').classList.add('hidden');
-        };
+        window.openResetModal = function() { document.getElementById('reset-modal').classList.remove('hidden'); };
+        window.closeResetModal = function() { document.getElementById('reset-modal').classList.add('hidden'); };
 
         window.confirmHardReset = async function() {
             state = {
-                xp: 0,
-                totalXp: 0,
-                level: 1,
+                xp: 0, totalXp: 0, level: 1, coins: 0, shields: 0,
+                daysCompleted: 0, perfectDays: 0,
                 habits: JSON.parse(JSON.stringify(initialHabits)),
+                urgentQuest: pickRandomUrgentQuest(),
                 hardcoreHabit: null,
                 categoryStreaks: { sila: 0, intelekt: 0, wola: 0 },
+                lastReport: null,
                 logs: []
             };
-            addLog("System został całkowicie zresetowany w chmurze do Poziomu 1 (0 XP).", "info");
+            addLog("System został całkowicie zresetowany w chmurze do Poziomu 1.", "info");
             window.closeResetModal();
             await saveStateToCloud();
             render();
-            showNotification('System w chmurze został zresetowany do stanu początkowego.');
+            showNotification('System w chmurze został zresetowany.');
         };
 
         let notifTimeout;
@@ -1079,18 +1446,12 @@
             msg.innerText = text;
             banner.classList.remove('hidden');
             clearTimeout(notifTimeout);
-            notifTimeout = setTimeout(() => {
-                banner.classList.add('hidden');
-            }, 6000);
+            notifTimeout = setTimeout(() => banner.classList.add('hidden'), 6000);
         }
 
-        window.closeNotification = function() {
-            document.getElementById('system-notification').classList.add('hidden');
-        };
+        window.closeNotification = function() { document.getElementById('system-notification').classList.add('hidden'); };
 
-        window.onload = function() {
-            setupCloudSync();
-        };
+        window.onload = function() { setupCloudSync(); };
     </script>
 </body>
 </html>
