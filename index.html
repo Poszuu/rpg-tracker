@@ -54,7 +54,7 @@
 
         <!-- Kategorie i Zadania -->
         <div id="categories-container" class="space-y-4 mb-5">
-            <!-- Dynamicznie generowane kategorie -->
+            <!-- Generowane dynamicznie -->
         </div>
 
         <!-- Przyciski akcji -->
@@ -65,7 +65,6 @@
     </div>
 
     <script>
-        // Konfiguracja Firebase (z Twojego projektu)
         const firebaseConfig = {
             apiKey: "AIzaSyBSBby9FM33xW-O6b8w9u80PkbxV05UHq4",
             authDomain: "rpgg-597dd.firebaseapp.com",
@@ -79,7 +78,7 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // Tabela wymagań XP i rang do poziomu 50
+        // Tabela poziomów do 50
         const levelData = {
             1: { req: 15, title: "Początkujący Wędrowiec" },
             2: { req: 18, title: "Wędrowiec" },
@@ -144,18 +143,24 @@
                     streak: 0,
                     tasks: [
                         { id: 's1', text: 'Dieta', done: false },
-                        { id: 's2', text: 'Suplementy + ocet', done: false },
-                        { id: 's3', text: 'Trening siłowy (3x w tyg.)', done: false }
-                    ]
+                        { id: 's2', text: 'Suplementy + ocet', done: false }
+                    ],
+                    weeklyTask: {
+                        name: 'Trening siłowy (3x w tyg.)',
+                        sessions: [false, false, false]
+                    }
                 },
                 intelekt: {
                     name: "🔵 INTELEKT / ROZWÓJ (Umysł)",
                     streak: 0,
                     tasks: [
                         { id: 'i1', text: 'Nauka języka', done: false },
-                        { id: 'i2', text: 'Czytanie książki', done: false },
-                        { id: 'i3', text: 'Gra na pianinie (3x w tyg.)', done: false }
-                    ]
+                        { id: 'i2', text: 'Czytanie książki', done: false }
+                    ],
+                    weeklyTask: {
+                        name: 'Gra na pianinie (3x w tyg.)',
+                        sessions: [false, false, false]
+                    }
                 },
                 wola: {
                     name: "⚫ WOLA / DYSCYPLINA (Kontrola)",
@@ -181,7 +186,7 @@
         }
 
         function render() {
-            const currentLevelInfo = levelData[gameState.level] || { req: 100, title: "WOLNY" };
+            const currentLevelInfo = levelData[gameState.level] || { req: 300, title: "WOLNY" };
             
             document.getElementById('char-level').innerText = `Poziom ${gameState.level}`;
             document.getElementById('char-title').innerText = currentLevelInfo.title;
@@ -195,10 +200,11 @@
             container.innerHTML = '';
 
             for (const [catKey, catVal] of Object.entries(gameState.categories)) {
-                // Oblicz bonus z serii (+1 XP za każde 2 dni, maks do 10 dni czyli +5 XP)
+                // Bonus z serii: +1 XP za każde 2 dni, maks +5 XP (dla 10 dni)
                 const streakBonus = Math.min(5, Math.floor(catVal.streak / 2));
 
                 let tasksHtml = '';
+                // Codzienne zadania
                 catVal.tasks.forEach((task, tIndex) => {
                     tasksHtml += `
                         <div class="flex items-center justify-between bg-slate-900/80 p-2.5 rounded-lg border border-slate-800 mb-1.5">
@@ -209,6 +215,27 @@
                         </div>
                     `;
                 });
+
+                // Jeśli kategoria ma zadanie tygodniowe (3x w tyg)
+                if (catVal.weeklyTask) {
+                    let sessionsHtml = '';
+                    catVal.weeklyTask.sessions.forEach((done, sIndex) => {
+                        sessionsHtml += `
+                            <button onclick="toggleWeeklySession('${catKey}', ${sIndex})" class="px-2.5 py-1 rounded text-xs font-bold border transition ${done ? 'bg-indigo-600 text-white border-indigo-500 shadow' : 'bg-slate-900 text-slate-400 border-slate-700 hover:border-slate-500'}">
+                                Sesja ${sIndex + 1} ${done ? '✅' : ''}
+                            </button>
+                        `;
+                    });
+
+                    tasksHtml += `
+                        <div class="bg-slate-900/90 p-2.5 rounded-lg border border-slate-800 mb-1.5">
+                            <div class="text-xs text-indigo-300 font-medium mb-1.5">🎯 ${catVal.weeklyTask.name}</div>
+                            <div class="flex gap-2 flex-wrap">
+                                ${sessionsHtml}
+                            </div>
+                        </div>
+                    `;
+                }
 
                 container.innerHTML += `
                     <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 shadow">
@@ -235,27 +262,34 @@
             saveToCloud();
         }
 
-        // Zaliczenie całego dnia w kategorii (rośnie seria, dodaje XP + bonus)
+        function toggleWeeklySession(catKey, sIndex) {
+            const weekly = gameState.categories[catKey].weeklyTask;
+            weekly.sessions[sIndex] = !weekly.sessions[sIndex];
+            render();
+            saveToCloud();
+        }
+
+        // Zaliczenie dnia w kategorii -> rośnie seria, dodaje bazowe XP + bonus z serii
         function successCategory(catKey) {
             const cat = gameState.categories[catKey];
             cat.streak++;
-            if(cat.streak > 10) cat.streak = 10; // Cap do 10 dni
+            if(cat.streak > 10) cat.streak = 10; // Maksymalna seria to 10 dni
 
             const streakBonus = Math.min(5, Math.floor(cat.streak / 2));
-            const gainedXp = 5 + streakBonus; // bazowo 5 + bonus z serii
+            const gainedXp = 5 + streakBonus; // 5 bazowe + bonus z serii
 
             addXp(gainedXp);
             gameState.gold += 5;
             
-            // Oznacz zadania jako zrobione dla wygody
-            cat.tasks.forEach(t => t.done = true);
+            // Odznacz codzienne zadania dla wygody na kolejny dzień
+            cat.tasks.forEach(t => t.done = false);
 
             render();
             saveToCloud();
             alert(`✅ Zaliczone! Kategoria ${cat.name} zyskuje ${gainedXp} XP (${5} bazowe + ${streakBonus} za serię) oraz 🪙 5 złota!`);
         }
 
-        // Kara za błąd w kategorii (-6 XP i reset serii)
+        // Kara za błąd (-6 XP i reset serii)
         function failCategory(catKey) {
             if(!confirm("Czy na pewno chcesz naliczyć karę za błąd w tej kategorii (-6 XP i reset serii)?")) return;
             
@@ -273,13 +307,13 @@
 
         function addXp(amount) {
             gameState.xp += amount;
-            const currentLevelInfo = levelData[gameState.level] || { req: 100 };
+            let currentLevelInfo = levelData[gameState.level] || { req: 300 };
             
             while (gameState.xp >= currentLevelInfo.req && gameState.level < 50) {
                 gameState.xp -= currentLevelInfo.req;
                 gameState.level++;
                 alert(`🎉 AWANS! Twoja postać weszła na Poziom ${gameState.level}! Ranga: ${levelData[gameState.level].title}`);
-                currentLevelInfo = levelData[gameState.level] || { req: 100 };
+                currentLevelInfo = levelData[gameState.level] || { req: 300 };
             }
         }
 
