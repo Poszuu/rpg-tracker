@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>System RPG Architekt - Cloud Sync HUD</title>
+    <title>System RPG Architekt - Cloud Sync HUD (Lvl 100)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -39,6 +39,9 @@
         .glow-red {
             box-shadow: 0 0 15px rgba(239, 68, 68, 0.25);
         }
+        .glow-amber {
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.2);
+        }
         ::-webkit-scrollbar {
             width: 6px;
         }
@@ -58,16 +61,16 @@
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex items-center gap-3">
                 <div id="sync-indicator" class="w-3 h-3 bg-amber-500 rounded-full animate-pulse" title="Łączenie z chmurą..."></div>
-                <h1 class="font-mono-tech text-xl md:text-2xl tracking-wider text-blue-400 font-bold">SYSTEM ARCHITEKTUR CLOUD v3.0</h1>
+                <h1 class="font-mono-tech text-xl md:text-2xl tracking-wider text-blue-400 font-bold">SYSTEM ARCHITEKTUR CLOUD v4.0</h1>
             </div>
             
             <!-- Quick Status Bar & Sync Profile Input -->
             <div class="flex flex-wrap items-center justify-center gap-3 text-sm font-mono-tech">
                 <div class="bg-darkbg px-3 py-1.5 rounded border border-bordercol">
-                    Poziom: <span id="header-level" class="text-yellow-400 font-bold">1</span>
+                    Poziom: <span id="header-level" class="text-yellow-400 font-bold">1</span> / 100
                 </div>
                 <div class="bg-darkbg px-3 py-1.5 rounded border border-bordercol">
-                    Ranga: <span id="header-rank" class="text-blue-400 font-bold">Inicjowany</span>
+                    Tytuł: <span id="header-rank" class="text-blue-400 font-bold">Bez Twarzy</span>
                 </div>
                 <div class="bg-darkbg px-3 py-1.5 rounded border border-bordercol">
                     XP: <span id="header-xp" class="text-green-400 font-bold">0</span> / <span id="header-next-xp" class="text-slate-400">15</span>
@@ -140,6 +143,42 @@
                 </div>
             </div>
 
+            <!-- Category: PROTOKÓŁ HARDCORE (Odblokowywany na Poziomie 25) -->
+            <div id="hardcore-section" class="bg-cardbg border border-amber-500/40 rounded-xl p-5 glow-amber relative overflow-hidden">
+                <div class="flex justify-between items-center mb-3 border-b border-bordercol pb-2">
+                    <h2 class="text-amber-400 font-mono-tech font-bold text-base flex items-center gap-2">
+                        <span>🔥</span> PROTOKÓŁ HARDCORE (Dodatkowe Wyzwanie)
+                    </h2>
+                    <span id="hardcore-badge" class="text-xs font-mono-tech px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">
+                        🔒 Wymagany Poziom 25
+                    </span>
+                </div>
+
+                <!-- Widok zablokowany (Lvl < 25) -->
+                <div id="hardcore-locked" class="py-4 text-center font-mono-tech space-y-1">
+                    <div class="text-slate-400 text-sm">🔒 ZABLOKOWANE DO POZIOMU 25</div>
+                    <div class="text-xs text-slate-500">Osiągnij Poziom 25, aby zwiększyć poziom trudności i dodać własny nawyk z wybraną pulą XP.</div>
+                </div>
+
+                <!-- Widok odblokowany (Lvl >= 25) -->
+                <div id="hardcore-unlocked" class="hidden space-y-3">
+                    <!-- Formularz dodawania/edycji własnego zadania -->
+                    <div id="hardcore-form" class="flex flex-col sm:flex-row gap-2 bg-darkbg p-3 rounded-lg border border-bordercol">
+                        <input type="text" id="hardcore-name-input" placeholder="Nazwa dodatkowego wyzwania (np. Zimny prysznic)" class="flex-1 bg-slate-900 border border-slate-700 rounded px-3 py-1.5 text-xs font-mono-tech text-slate-200 focus:outline-none focus:border-amber-500">
+                        <div class="flex items-center gap-2">
+                            <input type="number" id="hardcore-xp-input" min="1" max="50" value="4" class="w-16 bg-slate-900 border border-slate-700 rounded px-2 py-1.5 text-xs font-mono-tech text-amber-400 text-center focus:outline-none focus:border-amber-500" title="Wartość XP">
+                            <span class="text-xs font-mono-tech text-slate-400">XP</span>
+                            <button onclick="saveHardcoreHabit()" class="bg-amber-600/30 hover:bg-amber-600/50 text-amber-300 border border-amber-500/50 px-3 py-1.5 rounded text-xs font-mono-tech font-bold transition whitespace-nowrap">
+                                Ustaw Wyzwanie
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Aktywne wyzwanie Hardcore -->
+                    <div id="hardcore-habit-container"></div>
+                </div>
+            </div>
+
             <!-- Daily & Weekly Actions Controls -->
             <div class="flex flex-wrap gap-4 pt-2">
                 <button onclick="endDay()" class="bg-blue-950/70 hover:bg-blue-900/80 text-blue-300 font-mono-tech px-4 py-2.5 rounded-lg border border-blue-700 text-sm transition flex items-center gap-2 glow-box">
@@ -164,23 +203,23 @@
             </div>
         </div>
 
-        <!-- Right Column: Stats, Progression & Milestones -->
+        <!-- Right Column: Stats, Progression & Titles -->
         <div class="space-y-6">
 
             <!-- Character Profile Card -->
             <div class="bg-cardbg border border-bordercol rounded-xl p-5 glow-box space-y-4">
                 <h3 class="font-mono-tech text-yellow-400 font-bold border-b border-bordercol pb-2 text-md flex items-center gap-2">
-                    <span>⚡</span> STATUS POSTACI & EGO
+                    <span>⚡</span> STATUS POSTACI & POPULACJA
                 </h3>
                 
                 <div class="space-y-3 text-sm font-mono-tech">
                     <div class="flex justify-between">
                         <span class="text-slate-400">Aktualny Poziom:</span>
-                        <span id="stat-level" class="text-yellow-400 font-bold">1</span>
+                        <span id="stat-level" class="text-yellow-400 font-bold">1 / 100</span>
                     </div>
                     <div class="flex justify-between">
-                        <span class="text-slate-400">Ranga / Kamień Milowy:</span>
-                        <span id="stat-rank" class="text-blue-400 font-bold">Inicjowany</span>
+                        <span class="text-slate-400">Aktywny Tytuł:</span>
+                        <span id="stat-rank" class="text-blue-400 font-bold">Bez Twarzy</span>
                     </div>
                     <div class="flex justify-between">
                         <span class="text-slate-400">Doświadczenie (Poziom):</span>
@@ -190,11 +229,11 @@
                         <span class="text-slate-400">Skumulowane XP:</span>
                         <span id="stat-total-xp" class="text-slate-200 font-bold">0 XP</span>
                     </div>
-                    <div class="flex justify-between">
-                        <span class="text-slate-400">Wskaźnik Ego (Populacja):</span>
-                        <span id="stat-ego" class="text-amber-400 font-bold">Top 50% (Średniak)</span>
+                    <div class="flex flex-col gap-1 pt-1 border-t border-slate-800/80">
+                        <span class="text-slate-400 text-xs">Pozycja w Populacji (Skala 1–100):</span>
+                        <span id="stat-ego" class="text-amber-400 font-bold text-xs sm:text-sm">Bottom 10% (Punkt Zerowy)</span>
                     </div>
-                    <div class="flex justify-between">
+                    <div class="flex justify-between pt-1 border-t border-slate-800/80">
                         <span class="text-slate-400">Aktywny Bonus Serii:</span>
                         <span id="stat-streak-bonus" class="text-purple-400 font-bold">+0 XP/dzień</span>
                     </div>
@@ -207,49 +246,14 @@
                 </div>
             </div>
 
-            <!-- Milestones & Ranks List -->
+            <!-- Titles Hierarchy List (Co 5 poziomów aż do 100) -->
             <div class="bg-cardbg border border-bordercol rounded-xl p-5 glow-box space-y-4">
                 <h3 class="font-mono-tech text-blue-400 font-bold border-b border-bordercol pb-2 text-md flex items-center gap-2">
-                    <span>🏆</span> RANGI I NAGRODY SYSTEMOWE
+                    <span>⚔️</span> HIERARCHIA TYTUŁÓW (CO 5 LVL)
                 </h3>
                 
-                <div class="space-y-2 text-xs font-mono-tech max-h-80 overflow-y-auto pr-1">
-                    <div class="p-2 rounded bg-darkbg border border-slate-800">
-                        <div class="text-yellow-400 font-bold">Poziom 4: Przebudzony</div>
-                        <div class="text-slate-400">Pierwsza stabilizacja struktur ego.</div>
-                    </div>
-                    <div class="p-2 rounded bg-darkbg border border-slate-800">
-                        <div class="text-yellow-400 font-bold">Poziom 9: Kowal Woli</div>
-                        <div class="text-slate-400 text-green-400">🎁 Nagroda: Tarcza Cienia (Bufor błędu).</div>
-                    </div>
-                    <div class="p-2 rounded bg-darkbg border border-slate-800">
-                        <div class="text-yellow-400 font-bold">Poziom 14: Wędrowiec</div>
-                        <div class="text-slate-400">Przejście przez opór materii.</div>
-                    </div>
-                    <div class="p-2 rounded bg-darkbg border border-slate-800">
-                        <div class="text-yellow-400 font-bold">Poziom 19: Rozjemca Losu</div>
-                        <div class="text-slate-400 text-green-400">🎁 Nagroda: Korekta nawyku (bezkosztowa wymiana).</div>
-                    </div>
-                    <div class="p-2 rounded bg-darkbg border border-slate-800">
-                        <div class="text-yellow-400 font-bold">Poziom 24: Mistrz Próby</div>
-                        <div class="text-slate-400 text-blue-400">⚙️ Odblokowanie Protokołu Hardcore (x2 XP).</div>
-                    </div>
-                    <div class="p-2 rounded bg-darkbg border border-slate-800">
-                        <div class="text-yellow-400 font-bold">Poziom 29: Wybraniec Ostrza</div>
-                        <div class="text-slate-400 text-green-400">🎁 Nagroda: Oddech Monolitu (szybsza regeneracja serii).</div>
-                    </div>
-                    <div class="p-2 rounded bg-darkbg border border-slate-800">
-                        <div class="text-yellow-400 font-bold">Poziom 34: Strażnik Rdzenia</div>
-                        <div class="text-slate-400">Metronom umysłu bez szumów tła.</div>
-                    </div>
-                    <div class="p-2 rounded bg-darkbg border border-slate-800">
-                        <div class="text-yellow-400 font-bold">Poziom 39: Archont Żelaza</div>
-                        <div class="text-slate-400 text-green-400">🎁 Nagroda: Złoty Pancerz Kary (redukcja kar).</div>
-                    </div>
-                    <div class="p-2 rounded bg-darkbg border border-slate-800">
-                        <div class="text-yellow-400 font-bold">Poziom 50: Wolny (Architekt)</div>
-                        <div class="text-slate-400 text-purple-400">✨ Oko Monolitu (Status Architekta / Pełny wgląd).</div>
-                    </div>
+                <div id="titles-list" class="space-y-2 text-xs font-mono-tech max-h-[420px] overflow-y-auto pr-1">
+                    <!-- Dynamicznie podświetlana lista 20 tytułów -->
                 </div>
             </div>
 
@@ -310,8 +314,8 @@
         let unsubscribeDoc = null;
         let isRemoteUpdate = false;
 
-        // Exact Level Requirements Table up to Level 50
-        const levelReqs = [
+        // Tabela wymagań XP do 50 poziomu (dalej rośnie o +3 XP na poziom aż do 100)
+        const baseLevelReqs = [
             15, 18, 22, 27, 33, 40, 48, 57, 67, 78,
             89, 100, 111, 122, 133, 144, 155, 166, 177, 182,
             187, 192, 197, 202, 207, 212, 217, 222, 227, 230,
@@ -320,31 +324,59 @@
         ];
 
         function getReqForLevel(lvl) {
-            if (lvl < 50) return levelReqs[lvl - 1];
-            return 287;
+            if (lvl <= 49) return baseLevelReqs[lvl - 1];
+            if (lvl < 100) return 287 + (lvl - 49) * 3;
+            return 440;
         }
+
+        // 20 Tytułów co 5 poziomów (Solo Leveling / Eminence in Shadow / Ghost of Tsushima)
+        const titleMilestones = [
+            { lvl: 5,   title: "Przebudzony Cień" },
+            { lvl: 10,  title: "Kowal Woli" },
+            { lvl: 15,  title: "Duch Cuszimy" },
+            { lvl: 20,  title: "Łowca Rang" },
+            { lvl: 25,  title: "Władca Cienia" },
+            { lvl: 30,  title: "Ostrze Pustki" },
+            { lvl: 35,  title: "Eminencja Cienia" },
+            { lvl: 40,  title: "Archont Żelaza" },
+            { lvl: 45,  title: "Szepty Otchłani" },
+            { lvl: 50,  title: "Krwawy Szogun" },
+            { lvl: 55,  title: "Nocny Suweren" },
+            { lvl: 60,  title: "Cesarz Cieni" },
+            { lvl: 65,  title: "Zwiastun Burzy" },
+            { lvl: 70,  title: "Demon Ostrza" },
+            { lvl: 75,  title: "Pan Otchłani" },
+            { lvl: 80,  title: "Niewidzialna Ręka" },
+            { lvl: 85,  title: "Monarcha Cieni" },
+            { lvl: 90,  title: "Bóg Wojny" },
+            { lvl: 95,  title: "Władca Przeznaczenia" },
+            { lvl: 100, title: "Wolny — Absolutny Architekt" }
+        ];
 
         function getRank(lvl) {
-            if (lvl >= 50) return "Wolny (Architekt)";
-            if (lvl >= 45) return "The People's Hope";
-            if (lvl >= 40) return "Archont Żelaza";
-            if (lvl >= 35) return "Strażnik Rdzenia";
-            if (lvl >= 30) return "Wybraniec Ostrza";
-            if (lvl >= 25) return "Mistrz Próby";
-            if (lvl >= 20) return "Rozjemca Losu";
-            if (lvl >= 15) return "Wędrowiec";
-            if (lvl >= 10) return "Kowal Woli";
-            if (lvl >= 4)  return "Przebudzony";
-            return "Inicjowany";
+            let currentTitle = "Bez Twarzy";
+            for (const m of titleMilestones) {
+                if (lvl >= m.lvl) {
+                    currentTitle = m.title;
+                }
+            }
+            return currentTitle;
         }
 
+        // Realistyczny rozkład populacji w skali 1 - 100 (przeciętny człowiek = ok. Poziom 10-14)
         function getEgoPercentile(lvl) {
-            if (lvl >= 45) return "Top 1% (Anomalia Systemowa)";
-            if (lvl >= 30) return "Top 3% (Elita Dyscypliny)";
-            if (lvl >= 20) return "Top 10% (Ponad Przeciętność)";
-            if (lvl >= 10) return "Top 25% (Strefa Aktywnych)";
-            if (lvl >= 4)  return "Top 40% (Wyjście z Tłumu)";
-            return "Top 50% (Strefa Średniaków)";
+            if (lvl >= 100) return "Top 0.0001% (Poza Skalą — Absolut)";
+            if (lvl >= 95)  return "Top 0.005% (Mityczna Jednostka)";
+            if (lvl >= 85)  return "Top 0.02% (Legenda Dyscypliny)";
+            if (lvl >= 75)  return "Top 0.1% (Anomalia Systemowa)";
+            if (lvl >= 65)  return "Top 0.3% (Żelazny Rygor)";
+            if (lvl >= 50)  return "Top 1.5% (Wąska Elita Woli)";
+            if (lvl >= 35)  return "Top 5% (Wyjście poza Schemat)";
+            if (lvl >= 25)  return "Top 15% (Konsekwentna Mniejszość)";
+            if (lvl >= 15)  return "Top 30% (Ponad Przeciętność)";
+            if (lvl >= 10)  return "Top 50% (Średnia Populacji — Przeciętny Obywatel)";
+            if (lvl >= 5)   return "Bottom 30% (Poniżej Średniej — Niestabilna Rutyna)";
+            return "Bottom 10% (Punkt Zerowy — Brak Kontroli)";
         }
 
         const initialHabits = {
@@ -370,6 +402,7 @@
             totalXp: 0,
             level: 1,
             habits: JSON.parse(JSON.stringify(initialHabits)),
+            hardcoreHabit: null, // Odblokowywane na 25 poziomie
             categoryStreaks: { sila: 0, intelekt: 0, wola: 0 },
             logs: []
         };
@@ -378,7 +411,6 @@
             return raw.trim().toLowerCase().replace(/[^a-z0-9-_]/g, '');
         }
 
-        // Zmiana ID profilu (synchronizacja między urządzeniami)
         window.changeProfileId = function() {
             const input = document.getElementById('profile-id-input');
             const cleaned = cleanId(input.value);
@@ -393,7 +425,6 @@
             showNotification(`Połączono z profilem w chmurze: "${profileId}"`);
         };
 
-        // Synchronizacja w czasie rzeczywistym z Firestore
         function setupCloudSync() {
             if (!profileId || !db) return;
             document.getElementById('profile-id-input').value = profileId;
@@ -414,18 +445,19 @@
                         ...state,
                         ...cloudData,
                         habits: cloudData.habits || JSON.parse(JSON.stringify(initialHabits)),
+                        hardcoreHabit: cloudData.hardcoreHabit !== undefined ? cloudData.hardcoreHabit : null,
                         categoryStreaks: cloudData.categoryStreaks || { sila: 0, intelekt: 0, wola: 0 },
                         logs: cloudData.logs || []
                     };
                     isRemoteUpdate = false;
                     render();
                 } else {
-                    // Nowy profil - inicjalizujemy stan początkowy w chmurze
                     state = {
                         xp: 0,
                         totalXp: 0,
                         level: 1,
                         habits: JSON.parse(JSON.stringify(initialHabits)),
+                        hardcoreHabit: null,
                         categoryStreaks: { sila: 0, intelekt: 0, wola: 0 },
                         logs: []
                     };
@@ -476,18 +508,19 @@
 
         function render() {
             const currentReq = getReqForLevel(state.level);
+            const currentRank = getRank(state.level);
             
             document.getElementById('header-level').innerText = state.level;
-            document.getElementById('header-rank').innerText = getRank(state.level);
+            document.getElementById('header-rank').innerText = currentRank;
             document.getElementById('header-xp').innerText = state.xp;
             document.getElementById('header-next-xp').innerText = currentReq;
             
-            const progressPercent = Math.max(0, Math.min(100, Math.floor((state.xp / currentReq) * 100)));
+            const progressPercent = state.level >= 100 ? 100 : Math.max(0, Math.min(100, Math.floor((state.xp / currentReq) * 100)));
             document.getElementById('header-progress').style.width = progressPercent + '%';
 
-            document.getElementById('stat-level').innerText = state.level;
-            document.getElementById('stat-rank').innerText = getRank(state.level);
-            document.getElementById('stat-xp').innerText = `${state.xp} / ${currentReq} XP`;
+            document.getElementById('stat-level').innerText = `${state.level} / 100`;
+            document.getElementById('stat-rank').innerText = currentRank;
+            document.getElementById('stat-xp').innerText = state.level >= 100 ? "MAX POZIOM" : `${state.xp} / ${currentReq} XP`;
             document.getElementById('stat-total-xp').innerText = `${state.totalXp} XP`;
             document.getElementById('stat-ego').innerText = getEgoPercentile(state.level);
 
@@ -499,6 +532,8 @@
             renderHabitCategory('sila', 'habits-sila');
             renderHabitCategory('intelekt', 'habits-intelekt');
             renderHabitCategory('wola', 'habits-wola');
+            renderHardcoreSection();
+            renderTitlesList();
 
             const logsContainer = document.getElementById('system-logs');
             logsContainer.innerHTML = state.logs.map(log => {
@@ -507,6 +542,167 @@
                 if (log.type === 'danger') colorClass = 'text-red-400 font-bold';
                 if (log.type === 'levelup') colorClass = 'text-yellow-400 font-bold';
                 return `<div class="${colorClass}"><span class="text-slate-500">[${log.time}]</span> ${log.message}</div>`;
+            }).join('');
+        }
+
+        function renderHardcoreSection() {
+            const lockedDiv = document.getElementById('hardcore-locked');
+            const unlockedDiv = document.getElementById('hardcore-unlocked');
+            const badge = document.getElementById('hardcore-badge');
+            const container = document.getElementById('hardcore-habit-container');
+
+            if (state.level < 25) {
+                lockedDiv.classList.remove('hidden');
+                unlockedDiv.classList.add('hidden');
+                badge.innerText = "🔒 Wymagany Poziom 25";
+                badge.className = "text-xs font-mono-tech px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700";
+                return;
+            }
+
+            // Odblokowane (Lvl >= 25)
+            lockedDiv.classList.add('hidden');
+            unlockedDiv.classList.remove('hidden');
+            badge.innerText = "🔓 AKTYWNY (POZIOM 25+)";
+            badge.className = "text-xs font-mono-tech px-2 py-0.5 rounded bg-amber-950/60 text-amber-400 border border-amber-500/40";
+
+            if (!state.hardcoreHabit) {
+                container.innerHTML = `<div class="text-xs font-mono-tech text-slate-400 italic px-1">Nie ustawiono jeszcze dodatkowego wyzwania. Wpisz nazwę i liczbę punktów powyżej.</div>`;
+                return;
+            }
+
+            const h = state.hardcoreHabit;
+            const isDone = h.status === 'done';
+            const isFailed = h.status === 'failed';
+
+            let borderStyle = 'bg-darkbg border-amber-500/30 hover:border-amber-500/60';
+            if (isDone) borderStyle = 'bg-green-950/20 border-green-500/40';
+            if (isFailed) borderStyle = 'bg-red-950/25 border-red-500/50';
+
+            container.innerHTML = `
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-lg border transition ${borderStyle}">
+                    <div>
+                        <div class="font-medium text-sm flex items-center gap-2 ${isDone ? 'line-through text-green-300' : isFailed ? 'text-red-300' : 'text-amber-200'}">
+                            <span>🔥 ${h.name}</span>
+                        </div>
+                        <div class="text-xs font-mono-tech mt-0.5">
+                            <span class="text-green-400">Wykonanie: +${h.xpValue} XP</span>
+                            <span class="text-slate-600 mx-1">|</span>
+                            <span class="text-red-400">Niewykonanie: -${h.xpValue} XP</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 font-mono-tech text-xs shrink-0">
+                        <button onclick="window.markHardcoreDone()" 
+                            class="px-3 py-1.5 rounded border transition flex items-center gap-1 ${isDone ? 'bg-green-600 text-white border-green-500 font-bold' : 'bg-slate-800 hover:bg-green-900/50 text-green-400 border-slate-700 hover:border-green-600'}">
+                            ✓ Wykonano (+${h.xpValue})
+                        </button>
+                        <button onclick="window.markHardcoreFailed()" 
+                            class="px-3 py-1.5 rounded border transition flex items-center gap-1 ${isFailed ? 'bg-red-600 text-white border-red-500 font-bold' : 'bg-slate-800 hover:bg-red-950/80 text-red-400 border-slate-700 hover:border-red-600'}">
+                            ✗ Porażka (-${h.xpValue})
+                        </button>
+                        <button onclick="window.removeHardcoreHabit()" class="px-2 py-1.5 rounded bg-slate-900 hover:bg-red-950 text-slate-500 hover:text-red-400 border border-slate-800 transition" title="Usuń wyzwanie">
+                            ✕
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        window.saveHardcoreHabit = function() {
+            if (state.level < 25) return;
+            const nameInput = document.getElementById('hardcore-name-input');
+            const xpInput = document.getElementById('hardcore-xp-input');
+            
+            const name = nameInput.value.trim();
+            const xpVal = parseInt(xpInput.value, 10);
+
+            if (!name) {
+                showNotification("Wpisz nazwę wyzwania Hardcore!");
+                return;
+            }
+            if (isNaN(xpVal) || xpVal < 1 || xpVal > 100) {
+                showNotification("Podaj poprawną liczbę punktów XP (1 - 100)!");
+                return;
+            }
+
+            state.hardcoreHabit = {
+                name: name,
+                xpValue: xpVal,
+                status: 'pending'
+            };
+
+            nameInput.value = '';
+            addLog(`🔥 PROTOKÓŁ HARDCORE: Dodano wyzwanie "${name}" (${xpVal} XP).`, "levelup");
+            showNotification(`Ustawiono wyzwanie Hardcore: "${name}" (+${xpVal} XP).`);
+            saveStateToCloud();
+            render();
+        };
+
+        window.removeHardcoreHabit = function() {
+            if (!state.hardcoreHabit) return;
+            const oldName = state.hardcoreHabit.name;
+            state.hardcoreHabit = null;
+            addLog(`Usunięto wyzwanie Hardcore: "${oldName}".`, "info");
+            saveStateToCloud();
+            render();
+        };
+
+        window.markHardcoreDone = function() {
+            const h = state.hardcoreHabit;
+            if (!h) return;
+
+            if (h.status === 'done') {
+                h.status = 'pending';
+                adjustXP(-h.xpValue);
+                addLog(`Cofnięto wykonanie Hardcore: "${h.name}" (-${h.xpValue} XP).`, "info");
+            } else {
+                if (h.status === 'failed') adjustXP(h.xpValue);
+                h.status = 'done';
+                adjustXP(h.xpValue);
+                addLog(`🔥 ZALICZONO HARDCORE: "${h.name}" (+${h.xpValue} XP).`, "success");
+                showNotification(`Wyzwanie Hardcore zaliczone! +${h.xpValue} XP.`);
+            }
+            saveStateToCloud();
+            render();
+        };
+
+        window.markHardcoreFailed = function() {
+            const h = state.hardcoreHabit;
+            if (!h) return;
+
+            if (h.status === 'failed') {
+                h.status = 'pending';
+                adjustXP(h.xpValue);
+                addLog(`Cofnięto porażkę Hardcore: "${h.name}" (+${h.xpValue} XP).`, "info");
+            } else {
+                if (h.status === 'done') adjustXP(-h.xpValue);
+                h.status = 'failed';
+                adjustXP(-h.xpValue);
+                addLog(`⚠️ PORAŻKA HARDCORE: "${h.name}" (-${h.xpValue} XP).`, "danger");
+                showNotification(`Porażka w wyzwaniu Hardcore! -${h.xpValue} XP.`);
+            }
+            saveStateToCloud();
+            render();
+        };
+
+        function renderTitlesList() {
+            const container = document.getElementById('titles-list');
+            container.innerHTML = titleMilestones.map(m => {
+                const unlocked = state.level >= m.lvl;
+                const boxClass = unlocked 
+                    ? 'bg-blue-950/30 border-blue-500/50 text-slate-100' 
+                    : 'bg-darkbg border-slate-800/80 text-slate-500';
+                const badgeClass = unlocked ? 'text-yellow-400' : 'text-slate-600';
+                const statusIcon = unlocked ? '✓' : '🔒';
+
+                return `
+                    <div class="p-2.5 rounded border flex justify-between items-center transition ${boxClass}">
+                        <div>
+                            <span class="${badgeClass} font-bold">Poziom ${m.lvl}:</span>
+                            <span class="font-semibold ml-1">${m.title}</span>
+                        </div>
+                        <span class="text-xs">${statusIcon}</span>
+                    </div>
+                `;
             }).join('');
         }
 
@@ -533,7 +729,6 @@
                 if (isDone) borderStyle = 'bg-green-950/20 border-green-500/40';
                 if (isFailed) borderStyle = 'bg-red-950/25 border-red-500/50';
 
-                // Etykieta postępu tygodniowego dla misji 3x w tyg.
                 let weeklyBadge = '';
                 if (habit.weeklyTarget) {
                     const doneCount = habit.weeklyDone || 0;
@@ -630,13 +825,16 @@
             state.xp += delta;
 
             let currentReq = getReqForLevel(state.level);
-            while (state.xp >= currentReq) {
+            while (state.xp >= currentReq && state.level < 100) {
                 state.xp -= currentReq;
                 state.level++;
                 const newRank = getRank(state.level);
                 const ego = getEgoPercentile(state.level);
-                addLog(`🎉 AWANS NA POZIOM ${state.level}! Ranga: ${newRank} | Status Ego: ${ego}`, "levelup");
-                showNotification(`🎉 AWANS NA POZIOM ${state.level}! Nowa ranga: ${newRank}`);
+                addLog(`🎉 AWANS NA POZIOM ${state.level}! Tytuł: ${newRank} | Populacja: ${ego}`, "levelup");
+                if (state.level === 25) {
+                    addLog(`🔥 ODBLOKOWANO PROTOKÓŁ HARDCORE! Możesz dodać dodatkowe wyzwanie.`, "levelup");
+                }
+                showNotification(`🎉 AWANS NA POZIOM ${state.level}! Tytuł: ${newRank}`);
                 currentReq = getReqForLevel(state.level);
             }
 
@@ -646,7 +844,7 @@
                 state.xp = prevReq + state.xp;
                 const degradedRank = getRank(state.level);
                 const ego = getEgoPercentile(state.level);
-                addLog(`🔻 DEGRADACJA SYSTEMU! Spadek na Poziom ${state.level} (${degradedRank}). Ego: ${ego}.`, "danger");
+                addLog(`🔻 DEGRADACJA SYSTEMU! Spadek na Poziom ${state.level} (${degradedRank}). Populacja: ${ego}.`, "danger");
                 showNotification(`🔻 DEGRADACJA! Utraciłeś poziom i spadłeś na Poziom ${state.level}.`);
             }
 
@@ -671,9 +869,13 @@
                     state.categoryStreaks[catKey] = 0;
                 }
 
-                // Resetujemy status dzienny zadań, zachowując licznik tygodniowy (0/3)
                 habitsInCat.forEach(h => h.status = 'pending');
             });
+
+            // Resetujemy też dzienny status zadania Hardcore, jeśli istnieje
+            if (state.hardcoreHabit) {
+                state.hardcoreHabit.status = 'pending';
+            }
 
             if (dailyBonusTotal > 0) {
                 adjustXP(dailyBonusTotal);
@@ -714,6 +916,7 @@
                 totalXp: 0,
                 level: 1,
                 habits: JSON.parse(JSON.stringify(initialHabits)),
+                hardcoreHabit: null,
                 categoryStreaks: { sila: 0, intelekt: 0, wola: 0 },
                 logs: []
             };
@@ -740,7 +943,6 @@
             document.getElementById('system-notification').classList.add('hidden');
         }
 
-        // Start połączenia z bazą Firebase od razu po załadowaniu strony
         window.onload = function() {
             setupCloudSync();
         };
