@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>System RPG Architekt - Cloud Sync HUD (Lvl 100)</title>
+    <title>SYSTEM ARCHITEKTUR // Shadow Interface v5.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -11,292 +11,429 @@
             theme: {
                 extend: {
                     colors: {
-                        darkbg: '#090d16',
-                        cardbg: '#111827',
-                        bordercol: '#1f293d',
-                        neonred: '#ef4444',
-                        neonblue: '#3b82f6',
-                        neongreen: '#10b981',
-                        neonamber: '#f59e0b',
+                        obsidian: '#06080f',
+                        panel: '#0b0f1a',
+                        panelalt: '#101625',
+                        edge: '#1c253b',
+                        shadowviolet: '#8b5cf6',
+                        systemcyan: '#38bdf8',
+                        crimsonsoft: '#f87171',
+                        emeraldsoft: '#34d399',
+                        ambersoft: '#fbbf24',
                     }
                 }
             }
         }
     </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap');
+
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #090d16;
-            color: #f3f4f6;
+            background-color: #06080f;
+            color: #e2e8f0;
+            background-image:
+                radial-gradient(circle at 50% 0%, rgba(139, 92, 246, 0.07) 0%, transparent 55%),
+                radial-gradient(circle at 85% 90%, rgba(56, 189, 248, 0.04) 0%, transparent 45%),
+                linear-gradient(rgba(28, 37, 59, 0.22) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(28, 37, 59, 0.22) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 32px 32px, 32px 32px;
         }
-        .font-mono-tech {
-            font-family: 'Share Tech Mono', monospace;
+
+        .font-anime {
+            font-family: 'Rajdhani', sans-serif;
+            letter-spacing: 0.05em;
         }
-        .glow-box {
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.15);
+
+        .font-tech {
+            font-family: 'JetBrains Mono', monospace;
         }
-        .glow-red {
-            box-shadow: 0 0 15px rgba(239, 68, 68, 0.25);
+
+        /* Holograficzne okna Systemu z anime */
+        .system-window {
+            background: linear-gradient(180deg, rgba(16, 22, 37, 0.88) 0%, rgba(11, 15, 26, 0.94) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid #1c253b;
+            position: relative;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.04);
         }
-        .glow-amber {
-            box-shadow: 0 0 15px rgba(245, 158, 11, 0.2);
+
+        /* Narożniki taktyczne HUD */
+        .system-window::before,
+        .system-window::after {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            pointer-events: none;
+            transition: all 0.3s ease;
         }
+
+        .system-window::before {
+            top: -1px;
+            left: -1px;
+            border-top: 2px solid #38bdf8;
+            border-left: 2px solid #38bdf8;
+        }
+
+        .system-window::after {
+            bottom: -1px;
+            right: -1px;
+            border-bottom: 2px solid #8b5cf6;
+            border-right: 2px solid #8b5cf6;
+        }
+
+        .system-window:hover::before {
+            border-color: #7dd3fc;
+            width: 16px;
+            height: 16px;
+        }
+
+        .system-window:hover::after {
+            border-color: #a78bfa;
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Wariant dla sekcji Hardcore */
+        .system-window-hardcore {
+            border-color: rgba(245, 158, 11, 0.25);
+        }
+        .system-window-hardcore::before {
+            border-color: #f59e0b;
+        }
+        .system-window-hardcore::after {
+            border-color: #d97706;
+        }
+
+        /* Subtelna linia skanująca pod nagłówkiem */
+        .header-scanline {
+            background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.4), rgba(139, 92, 246, 0.4), transparent);
+            height: 1px;
+        }
+
+        /* Pasek XP z miękkim połyskiem */
+        @keyframes xpShimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .xp-bar-fill {
+            background: linear-gradient(90deg, #0284c7, #7c3aed, #38bdf8, #0284c7);
+            background-size: 200% 100%;
+            animation: xpShimmer 6s linear infinite;
+        }
+
+        /* Własny scrollbar */
         ::-webkit-scrollbar {
             width: 6px;
+            height: 6px;
         }
         ::-webkit-scrollbar-track {
-            background: #090d16;
+            background: #06080f;
         }
         ::-webkit-scrollbar-thumb {
-            background: #1f293d;
+            background: #1c253b;
             border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #2e3d61;
         }
     </style>
 </head>
-<body class="min-h-screen pb-12">
+<body class="min-h-screen pb-14 selection:bg-violet-500/30 selection:text-violet-200">
 
-    <!-- Top System Header -->
-    <header class="border-b border-bordercol bg-cardbg/80 backdrop-blur sticky top-0 z-50 px-4 py-3 shadow-lg">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="flex items-center gap-3">
-                <div id="sync-indicator" class="w-3 h-3 bg-amber-500 rounded-full animate-pulse" title="Łączenie z chmurą..."></div>
-                <h1 class="font-mono-tech text-xl md:text-2xl tracking-wider text-blue-400 font-bold">SYSTEM ARCHITEKTUR CLOUD v4.0</h1>
+    <!-- Górny Panel Systemu (HUD Header) -->
+    <header class="bg-panel/90 backdrop-blur-md sticky top-0 z-50 shadow-2xl border-b border-edge">
+        <div class="max-w-7xl mx-auto px-4 py-3.5 flex flex-col md:flex-row justify-between items-center gap-4">
+            
+            <!-- Tytuł Systemu i Status Połączenia -->
+            <div class="flex items-center gap-3.5">
+                <div class="relative flex items-center justify-center">
+                    <div id="sync-indicator" class="w-2.5 h-2.5 bg-amber-400 rounded-full animate-pulse"></div>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-[10px] font-tech uppercase tracking-[0.2em] text-sky-400/90">[SYSTEM POWiadomień // SHADOW OS]</span>
+                    </div>
+                    <h1 class="font-anime text-2xl md:text-[26px] tracking-wider text-slate-100 font-bold leading-tight">
+                        ARCHITEKT RZECZYWISTOŚCI
+                    </h1>
+                </div>
             </div>
             
-            <!-- Quick Status Bar & Sync Profile Input -->
-            <div class="flex flex-wrap items-center justify-center gap-3 text-sm font-mono-tech">
-                <div class="bg-darkbg px-3 py-1.5 rounded border border-bordercol">
-                    Poziom: <span id="header-level" class="text-yellow-400 font-bold">1</span> / 100
+            <!-- Pasek Statusu Gracza & Synchronizacja ID -->
+            <div class="flex flex-wrap items-center justify-center gap-2.5 text-xs font-tech">
+                <div class="bg-obsidian/90 px-3.5 py-2 rounded border border-edge flex items-center gap-1.5">
+                    <span class="text-slate-500">POZIOM</span>
+                    <span id="header-level" class="text-amber-300 font-bold text-sm">1</span>
+                    <span class="text-slate-600">/ 100</span>
                 </div>
-                <div class="bg-darkbg px-3 py-1.5 rounded border border-bordercol">
-                    Tytuł: <span id="header-rank" class="text-blue-400 font-bold">Bez Twarzy</span>
+
+                <div class="bg-obsidian/90 px-3.5 py-2 rounded border border-violet-500/30 text-violet-300 flex items-center gap-1.5">
+                    <span class="text-violet-500">«</span>
+                    <span id="header-rank" class="font-semibold tracking-wide">Bez Twarzy</span>
+                    <span class="text-violet-500">»</span>
                 </div>
-                <div class="bg-darkbg px-3 py-1.5 rounded border border-bordercol">
-                    XP: <span id="header-xp" class="text-green-400 font-bold">0</span> / <span id="header-next-xp" class="text-slate-400">15</span>
+
+                <div class="bg-obsidian/90 px-3.5 py-2 rounded border border-edge flex items-center gap-1.5">
+                    <span class="text-slate-500">XP</span>
+                    <span id="header-xp" class="text-emerald-400 font-bold">0</span>
+                    <span class="text-slate-600">/</span>
+                    <span id="header-next-xp" class="text-slate-400">15</span>
                 </div>
                 
-                <!-- Pole do synchronizacji między urządzeniami -->
-                <div class="flex items-center bg-darkbg rounded border border-blue-500/40 overflow-hidden">
-                    <span class="px-2 text-xs text-slate-400">ID:</span>
-                    <input type="text" id="profile-id-input" placeholder="np. poszuu" class="bg-transparent text-blue-300 text-xs px-1 py-1.5 w-28 focus:outline-none">
-                    <button onclick="changeProfileId()" class="bg-blue-600/30 hover:bg-blue-600/60 text-blue-200 px-2.5 py-1.5 text-xs border-l border-blue-500/40 transition">
-                        Połącz
+                <!-- Pole synchronizacji profilu w chmurze -->
+                <div class="flex items-center bg-obsidian rounded border border-sky-500/30 overflow-hidden">
+                    <span class="px-2.5 text-slate-500 select-none">ID:</span>
+                    <input type="text" id="profile-id-input" placeholder="poszuu" class="bg-transparent text-sky-300 px-1 py-2 w-24 focus:outline-none">
+                    <button onclick="changeProfileId()" class="bg-sky-500/15 hover:bg-sky-500/30 text-sky-300 px-3 py-2 border-l border-sky-500/30 transition font-semibold">
+                        Sync
                     </button>
                 </div>
             </div>
         </div>
-        <!-- Progress bar line -->
-        <div class="w-full bg-slate-800 h-1 mt-3">
-            <div id="header-progress" class="bg-blue-500 h-1 transition-all duration-500" style="width: 0%"></div>
+
+        <!-- Pasek Postępu Doświadczenia (XP Bar) -->
+        <div class="w-full bg-obsidian h-1.5 relative overflow-hidden">
+            <div id="header-progress" class="xp-bar-fill h-full transition-all duration-500" style="width: 0%"></div>
         </div>
+        <div class="header-scanline w-full"></div>
     </header>
 
-    <!-- Main Container -->
-    <main class="max-w-7xl mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Główny Kontener Aplikacji -->
+    <main class="max-w-7xl mx-auto px-4 py-7 grid grid-cols-1 lg:grid-cols-3 gap-7">
 
-        <!-- Left 2 Columns: Habit Dashboard -->
+        <!-- Lewa Sekcja (2 kolumny): Zadania Dzienne, Tygodniowe i Protokół Hardcore -->
         <div class="lg:col-span-2 space-y-6">
 
-            <!-- Notification Banner -->
-            <div id="system-notification" class="hidden bg-blue-950/50 border border-blue-500/50 text-blue-200 px-4 py-3 rounded-lg text-sm font-mono-tech flex items-center justify-between">
-                <span id="notification-text">Synchronizacja chmurowa nawiązana.</span>
-                <button onclick="closeNotification()" class="text-blue-400 hover:text-white">&times;</button>
+            <!-- Komunikat Systemowy (Powiadomienia) -->
+            <div id="system-notification" class="hidden bg-panelalt border-l-4 border-l-sky-400 border border-edge text-slate-200 px-4 py-3.5 rounded-r text-xs font-tech flex items-center justify-between shadow-lg">
+                <div class="flex items-center gap-2.5">
+                    <span class="text-sky-400 font-bold">[SYSTEM]</span>
+                    <span id="notification-text">Synchronizacja z bazą danych aktywna.</span>
+                </div>
+                <button onclick="closeNotification()" class="text-slate-500 hover:text-slate-200 text-base leading-none ml-4">&times;</button>
             </div>
 
-            <!-- Category: SIŁA -->
-            <div class="bg-cardbg border border-bordercol rounded-xl p-5 glow-box">
-                <div class="flex justify-between items-center mb-4 border-b border-bordercol pb-2">
-                    <h2 class="text-red-400 font-mono-tech font-bold text-lg flex items-center gap-2">
-                        <span>🔴</span> SIŁA (Fizyczność)
-                    </h2>
-                    <span class="text-xs text-slate-400 font-mono-tech">Dieta (+2) | Suplementy (+1) | Trening (+5)</span>
+            <!-- KATEGORIA 1: SIŁA -->
+            <section class="system-window rounded-lg p-5 sm:p-6">
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 mb-4 border-b border-edge pb-3">
+                    <div class="flex items-center gap-2.5">
+                        <span class="w-2 h-2 rotate-45 bg-rose-400 inline-block"></span>
+                        <h2 class="text-rose-400 font-anime font-bold text-xl tracking-wider uppercase">
+                            ATRYBUT: SIŁA
+                        </h2>
+                        <span class="text-[11px] font-tech text-slate-500 px-2 py-0.5 bg-obsidian rounded border border-edge">FIZYCZNOŚĆ</span>
+                    </div>
+                    <span class="text-[11px] text-slate-400 font-tech">Dieta +2 | Suplementy +1 | Trening +5</span>
                 </div>
                 <div id="habits-sila" class="space-y-3">
-                    <!-- Dynamic Habits -->
+                    <!-- Dynamicznie renderowane zadania -->
                 </div>
-            </div>
+            </section>
 
-            <!-- Category: INTELEKT -->
-            <div class="bg-cardbg border border-bordercol rounded-xl p-5 glow-box">
-                <div class="flex justify-between items-center mb-4 border-b border-bordercol pb-2">
-                    <h2 class="text-blue-400 font-mono-tech font-bold text-lg flex items-center gap-2">
-                        <span>🔵</span> INTELEKT / ROZWÓJ (Umysł)
-                    </h2>
-                    <span class="text-xs text-slate-400 font-mono-tech">Język (+2) | Książka (+2) | Pianino (+3)</span>
+            <!-- KATEGORIA 2: INTELEKT -->
+            <section class="system-window rounded-lg p-5 sm:p-6">
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 mb-4 border-b border-edge pb-3">
+                    <div class="flex items-center gap-2.5">
+                        <span class="w-2 h-2 rotate-45 bg-sky-400 inline-block"></span>
+                        <h2 class="text-sky-400 font-anime font-bold text-xl tracking-wider uppercase">
+                            ATRYBUT: INTELEKT
+                        </h2>
+                        <span class="text-[11px] font-tech text-slate-500 px-2 py-0.5 bg-obsidian rounded border border-edge">UMYSŁ</span>
+                    </div>
+                    <span class="text-[11px] text-slate-400 font-tech">Język +2 | Książka +2 | Pianino +3</span>
                 </div>
                 <div id="habits-intelekt" class="space-y-3">
-                    <!-- Dynamic Habits -->
+                    <!-- Dynamicznie renderowane zadania -->
                 </div>
-            </div>
+            </section>
 
-            <!-- Category: WOLA -->
-            <div class="bg-cardbg border border-bordercol rounded-xl p-5 glow-box">
-                <div class="flex justify-between items-center mb-4 border-b border-bordercol pb-2">
-                    <h2 class="text-purple-400 font-mono-tech font-bold text-lg flex items-center gap-2">
-                        <span>⚫</span> WOLA / DYSCYPLINA (Kontrola)
-                    </h2>
-                    <span class="text-xs text-slate-400 font-mono-tech">Czysty dzień (+3) | Telefon (+2) | Medytacja (+1)</span>
+            <!-- KATEGORIA 3: WOLA -->
+            <section class="system-window rounded-lg p-5 sm:p-6">
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 mb-4 border-b border-edge pb-3">
+                    <div class="flex items-center gap-2.5">
+                        <span class="w-2 h-2 rotate-45 bg-violet-400 inline-block"></span>
+                        <h2 class="text-violet-400 font-anime font-bold text-xl tracking-wider uppercase">
+                            ATRYBUT: WOLA
+                        </h2>
+                        <span class="text-[11px] font-tech text-slate-500 px-2 py-0.5 bg-obsidian rounded border border-edge">DYSCYPLINA</span>
+                    </div>
+                    <span class="text-[11px] text-slate-400 font-tech">Czysty dzień +3 | Telefon +2 | Medytacja +1</span>
                 </div>
                 <div id="habits-wola" class="space-y-3">
-                    <!-- Dynamic Habits -->
+                    <!-- Dynamicznie renderowane zadania -->
                 </div>
-            </div>
+            </section>
 
-            <!-- Category: PROTOKÓŁ HARDCORE (Odblokowywany na Poziomie 25) -->
-            <div id="hardcore-section" class="bg-cardbg border border-amber-500/40 rounded-xl p-5 glow-amber relative overflow-hidden">
-                <div class="flex justify-between items-center mb-3 border-b border-bordercol pb-2">
-                    <h2 class="text-amber-400 font-mono-tech font-bold text-base flex items-center gap-2">
-                        <span>🔥</span> PROTOKÓŁ HARDCORE (Dodatkowe Wyzwanie)
-                    </h2>
-                    <span id="hardcore-badge" class="text-xs font-mono-tech px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">
-                        🔒 Wymagany Poziom 25
+            <!-- KATEGORIA SPECJALNA: PROTOKÓŁ HARDCORE (ODBLOKOWYWANY NA POZIOMIE 25) -->
+            <section class="system-window system-window-hardcore rounded-lg p-5 sm:p-6">
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-4 border-b border-edge pb-3">
+                    <div class="flex items-center gap-2.5">
+                        <span class="w-2 h-2 rotate-45 bg-amber-400 inline-block"></span>
+                        <h2 class="text-amber-300 font-anime font-bold text-xl tracking-wider uppercase">
+                            PROTOKÓŁ HARDCORE
+                        </h2>
+                        <span class="text-[11px] font-tech text-amber-400/80 px-2 py-0.5 bg-amber-950/30 rounded border border-amber-500/20">MODUŁ DODATKOWY</span>
+                    </div>
+                    <span id="hardcore-badge" class="text-[11px] font-tech px-2.5 py-1 rounded bg-obsidian text-slate-400 border border-edge">
+                        🔒 WYMAGANY POZIOM 25
                     </span>
                 </div>
 
-                <!-- Widok zablokowany (Lvl < 25) -->
-                <div id="hardcore-locked" class="py-4 text-center font-mono-tech space-y-1">
-                    <div class="text-slate-400 text-sm">🔒 ZABLOKOWANE DO POZIOMU 25</div>
-                    <div class="text-xs text-slate-500">Osiągnij Poziom 25, aby zwiększyć poziom trudności i dodać własny nawyk z wybraną pulą XP.</div>
+                <!-- Widok zablokowany (Poziom < 25) -->
+                <div id="hardcore-locked" class="py-5 text-center font-tech space-y-1.5 bg-obsidian/50 rounded border border-edge/60">
+                    <div class="text-slate-300 text-xs tracking-wider">[DOSTĘP ZABLOKOWANY — WYMAGANY POZIOM 25]</div>
+                    <div class="text-[11px] text-slate-500 max-w-md mx-auto">
+                        Po osiągnięciu Poziomu 25 system odblokuje możliwość zdefiniowania dodatkowego, własnego wyzwania z wybraną pulą punktów XP.
+                    </div>
                 </div>
 
-                <!-- Widok odblokowany (Lvl >= 25) -->
-                <div id="hardcore-unlocked" class="hidden space-y-3">
-                    <!-- Formularz dodawania/edycji własnego zadania -->
-                    <div id="hardcore-form" class="flex flex-col sm:flex-row gap-2 bg-darkbg p-3 rounded-lg border border-bordercol">
-                        <input type="text" id="hardcore-name-input" placeholder="Nazwa dodatkowego wyzwania (np. Zimny prysznic)" class="flex-1 bg-slate-900 border border-slate-700 rounded px-3 py-1.5 text-xs font-mono-tech text-slate-200 focus:outline-none focus:border-amber-500">
+                <!-- Widok odblokowany (Poziom >= 25) -->
+                <div id="hardcore-unlocked" class="hidden space-y-3.5">
+                    <div class="flex flex-col sm:flex-row gap-2.5 bg-obsidian/90 p-3 rounded border border-edge">
+                        <input type="text" id="hardcore-name-input" placeholder="Nazwa dodatkowego wyzwania (np. Zimny prysznic rano)" class="flex-1 bg-panel border border-edge rounded px-3 py-2 text-xs font-tech text-slate-200 focus:outline-none focus:border-amber-400/50">
                         <div class="flex items-center gap-2">
-                            <input type="number" id="hardcore-xp-input" min="1" max="50" value="4" class="w-16 bg-slate-900 border border-slate-700 rounded px-2 py-1.5 text-xs font-mono-tech text-amber-400 text-center focus:outline-none focus:border-amber-500" title="Wartość XP">
-                            <span class="text-xs font-mono-tech text-slate-400">XP</span>
-                            <button onclick="saveHardcoreHabit()" class="bg-amber-600/30 hover:bg-amber-600/50 text-amber-300 border border-amber-500/50 px-3 py-1.5 rounded text-xs font-mono-tech font-bold transition whitespace-nowrap">
-                                Ustaw Wyzwanie
+                            <input type="number" id="hardcore-xp-input" min="1" max="100" value="4" class="w-16 bg-panel border border-edge rounded px-2 py-2 text-xs font-tech text-amber-300 text-center focus:outline-none focus:border-amber-400/50" title="Stawka XP">
+                            <span class="text-xs font-tech text-slate-400">XP</span>
+                            <button onclick="saveHardcoreHabit()" class="bg-amber-500/15 hover:bg-amber-500/25 text-amber-200 border border-amber-500/40 px-3.5 py-2 rounded text-xs font-tech font-semibold transition whitespace-nowrap">
+                                Aktywuj Wyzwanie
                             </button>
                         </div>
                     </div>
-
-                    <!-- Aktywne wyzwanie Hardcore -->
-                    <div id="hardcore-habit-container"></div>
+                    <div id="hardcore-habit-container">
+                        <!-- Aktywne wyzwanie Hardcore -->
+                    </div>
                 </div>
+            </section>
+
+            <!-- Przyciski Zarządzania Cyklem -->
+            <div class="flex flex-wrap gap-3.5 pt-1">
+                <button onclick="endDay()" class="bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 font-tech px-4 py-2.5 rounded border border-sky-500/40 text-xs transition flex items-center gap-2 shadow">
+                    <span>⏭️</span> Zakończ Cykl Dnia (Dolicz bonus serii i zresetuj zadania)
+                </button>
+                <button onclick="resetWeeklyCounters()" class="bg-panelalt hover:bg-slate-800 text-slate-300 font-tech px-4 py-2.5 rounded border border-edge text-xs transition flex items-center gap-2">
+                    <span>🔄</span> Nowy Tydzień (Wyzeruj liczniki 0/3)
+                </button>
             </div>
 
-            <!-- Daily & Weekly Actions Controls -->
-            <div class="flex flex-wrap gap-4 pt-2">
-                <button onclick="endDay()" class="bg-blue-950/70 hover:bg-blue-900/80 text-blue-300 font-mono-tech px-4 py-2.5 rounded-lg border border-blue-700 text-sm transition flex items-center gap-2 glow-box">
-                    ⏭️ Zakończ Dzień (Dolicz bonus serii i zresetuj zadania)
-                </button>
-                <button onclick="resetWeeklyCounters()" class="bg-slate-800/80 hover:bg-slate-700 text-slate-300 font-mono-tech px-4 py-2.5 rounded-lg border border-slate-600 text-sm transition flex items-center gap-2">
-                    🔄 Nowy Tydzień (Wyzeruj liczniki 0/3)
-                </button>
-            </div>
-
-            <!-- System Log -->
-            <div class="bg-cardbg border border-bordercol rounded-xl p-5 glow-box">
-                <div class="flex justify-between items-center mb-3 border-b border-bordercol pb-2">
-                    <h3 class="font-mono-tech text-slate-300 font-bold text-sm flex items-center gap-2">
-                        <span>📟</span> LOG ZDARZEŃ SYSTEMOWYCH (CHMURA)
+            <!-- Dziennik Zdarzeń Systemowych -->
+            <section class="system-window rounded-lg p-5">
+                <div class="flex justify-between items-center mb-3 border-b border-edge pb-2.5">
+                    <h3 class="font-anime text-slate-300 font-bold text-base tracking-wider uppercase flex items-center gap-2">
+                        <span>📟</span> DZIENNIK ZDARZEŃ SYSTEMOWYCH
                     </h3>
-                    <button onclick="clearLogs()" class="text-xs text-slate-500 hover:text-slate-300 font-mono-tech">Wyczyść log</button>
+                    <button onclick="clearLogs()" class="text-[11px] text-slate-500 hover:text-slate-300 font-tech transition">Wyczyść log</button>
                 </div>
-                <div id="system-logs" class="space-y-1.5 max-h-48 overflow-y-auto font-mono-tech text-xs pr-1">
-                    <!-- Dynamic Logs -->
+                <div id="system-logs" class="space-y-1.5 max-h-48 overflow-y-auto font-tech text-xs pr-1">
+                    <!-- Dynamiczne logi -->
                 </div>
-            </div>
+            </section>
         </div>
 
-        <!-- Right Column: Stats, Progression & Titles -->
+        <!-- Prawa Sekcja (1 kolumna): Karta Statusu Postaci, Hierarchia Tytułów i Zarządzanie -->
         <div class="space-y-6">
 
-            <!-- Character Profile Card -->
-            <div class="bg-cardbg border border-bordercol rounded-xl p-5 glow-box space-y-4">
-                <h3 class="font-mono-tech text-yellow-400 font-bold border-b border-bordercol pb-2 text-md flex items-center gap-2">
-                    <span>⚡</span> STATUS POSTACI & POPULACJA
-                </h3>
+            <!-- Karta Statusu Postaci -->
+            <section class="system-window rounded-lg p-5 sm:p-6 space-y-4">
+                <div class="flex items-center justify-between border-b border-edge pb-3">
+                    <h3 class="font-anime text-sky-400 font-bold text-xl tracking-wider uppercase flex items-center gap-2">
+                        <span>⚡</span> KARTA STATUSU
+                    </h3>
+                    <span class="text-[10px] font-tech text-slate-500">PROFIL GRACZA</span>
+                </div>
                 
-                <div class="space-y-3 text-sm font-mono-tech">
-                    <div class="flex justify-between">
-                        <span class="text-slate-400">Aktualny Poziom:</span>
-                        <span id="stat-level" class="text-yellow-400 font-bold">1 / 100</span>
+                <div class="space-y-3 text-xs font-tech">
+                    <div class="flex justify-between items-center">
+                        <span class="text-slate-400">POZIOM POSTACI:</span>
+                        <span id="stat-level" class="text-amber-300 font-bold text-sm">1 / 100</span>
                     </div>
-                    <div class="flex justify-between">
-                        <span class="text-slate-400">Aktywny Tytuł:</span>
-                        <span id="stat-rank" class="text-blue-400 font-bold">Bez Twarzy</span>
+                    <div class="flex justify-between items-center">
+                        <span class="text-slate-400">AKTYWNY TYTUŁ:</span>
+                        <span id="stat-rank" class="text-violet-300 font-bold">Bez Twarzy</span>
                     </div>
-                    <div class="flex justify-between">
-                        <span class="text-slate-400">Doświadczenie (Poziom):</span>
-                        <span id="stat-xp" class="text-green-400 font-bold">0 / 15 XP</span>
+                    <div class="flex justify-between items-center">
+                        <span class="text-slate-400">POSTĘP POZIOMU:</span>
+                        <span id="stat-xp" class="text-emerald-400 font-bold">0 / 15 XP</span>
                     </div>
-                    <div class="flex justify-between">
-                        <span class="text-slate-400">Skumulowane XP:</span>
+                    <div class="flex justify-between items-center">
+                        <span class="text-slate-400">SKUMULOWANE XP:</span>
                         <span id="stat-total-xp" class="text-slate-200 font-bold">0 XP</span>
                     </div>
-                    <div class="flex flex-col gap-1 pt-1 border-t border-slate-800/80">
-                        <span class="text-slate-400 text-xs">Pozycja w Populacji (Skala 1–100):</span>
-                        <span id="stat-ego" class="text-amber-400 font-bold text-xs sm:text-sm">Bottom 10% (Punkt Zerowy)</span>
+
+                    <div class="pt-2.5 border-t border-edge space-y-1">
+                        <span class="text-slate-500 text-[11px] block">POZYCJA W POPULACJI (SKALA 1–100):</span>
+                        <span id="stat-ego" class="text-amber-300/90 font-semibold block leading-snug">Bottom 10% (Punkt Zerowy)</span>
                     </div>
-                    <div class="flex justify-between pt-1 border-t border-slate-800/80">
-                        <span class="text-slate-400">Aktywny Bonus Serii:</span>
-                        <span id="stat-streak-bonus" class="text-purple-400 font-bold">+0 XP/dzień</span>
+
+                    <div class="flex justify-between items-center pt-2.5 border-t border-edge">
+                        <span class="text-slate-400">BONUS CIĄGŁOŚCI:</span>
+                        <span id="stat-streak-bonus" class="text-violet-400 font-bold">+0 XP / dzień</span>
                     </div>
                 </div>
 
-                <div class="bg-darkbg p-3 rounded border border-bordercol text-xs text-slate-300 font-mono-tech space-y-1">
-                    <div class="text-yellow-400 font-bold mb-1">Zasady Serii & Kar:</div>
-                    <div>• Co kolejne 2 dni: +1 XP (Max cap 10 dni = +5 XP)</div>
-                    <div class="text-red-400 mt-1">• Porażka w zadaniu: kara równa wartości zadania (-X XP) i reset serii w kategorii!</div>
+                <!-- Okienko z zasadami mechaniki -->
+                <div class="bg-obsidian/90 p-3.5 rounded border border-edge text-[11px] text-slate-400 font-tech space-y-1.5 leading-relaxed">
+                    <div class="text-sky-400 font-semibold tracking-wider">[ZASADY SYSTEMU]</div>
+                    <div>• Co każde 2 dni serii: <span class="text-slate-200">+1 XP</span> (limit 10 dni = <span class="text-slate-200">+5 XP</span>)</div>
+                    <div class="text-rose-400/90">• Porażka w zadaniu: kara równa wartości zadania (-X XP) oraz reset serii kategorii</div>
                 </div>
-            </div>
+            </section>
 
-            <!-- Titles Hierarchy List (Co 5 poziomów aż do 100) -->
-            <div class="bg-cardbg border border-bordercol rounded-xl p-5 glow-box space-y-4">
-                <h3 class="font-mono-tech text-blue-400 font-bold border-b border-bordercol pb-2 text-md flex items-center gap-2">
-                    <span>⚔️</span> HIERARCHIA TYTUŁÓW (CO 5 LVL)
-                </h3>
+            <!-- Hierarchia Tytułów (Co 5 poziomów aż do 100) -->
+            <section class="system-window rounded-lg p-5 sm:p-6 space-y-4">
+                <div class="flex items-center justify-between border-b border-edge pb-3">
+                    <h3 class="font-anime text-violet-400 font-bold text-xl tracking-wider uppercase flex items-center gap-2">
+                        <span>⚔️</span> HIERARCHIA TYTUŁÓW
+                    </h3>
+                    <span class="text-[10px] font-tech text-slate-500">CO 5 POZIOMÓW</span>
+                </div>
                 
-                <div id="titles-list" class="space-y-2 text-xs font-mono-tech max-h-[420px] overflow-y-auto pr-1">
-                    <!-- Dynamicznie podświetlana lista 20 tytułów -->
+                <div id="titles-list" class="space-y-1.5 text-xs font-tech max-h-[440px] overflow-y-auto pr-1">
+                    <!-- Dynamicznie renderowana lista 20 tytułów -->
                 </div>
-            </div>
+            </section>
 
-            <!-- Danger Zone / Data Management -->
-            <div class="bg-cardbg border border-bordercol rounded-xl p-5 glow-box space-y-3">
-                <h3 class="font-mono-tech text-red-400 font-bold border-b border-bordercol pb-2 text-md">
-                    ZARZĄDZANIE DANYMI
+            <!-- Strefa Zarządzania Danymi -->
+            <section class="system-window rounded-lg p-5 space-y-3">
+                <h3 class="font-anime text-slate-400 font-bold text-sm tracking-wider uppercase border-b border-edge pb-2">
+                    ZARZĄDZANIE PAMIĘCIĄ SYSTEMU
                 </h3>
-                <button onclick="openResetModal()" class="w-full bg-red-950/40 hover:bg-red-900/60 text-red-400 font-mono-tech py-2 px-3 rounded border border-red-800 text-xs transition">
-                    🗑️ Resetuj Cały Postęp w Chmurze
+                <button onclick="openResetModal()" class="w-full bg-rose-950/25 hover:bg-rose-950/50 text-rose-400 font-tech py-2.5 px-3 rounded border border-rose-500/30 text-xs transition">
+                    🗑️ Inicjalizuj Reset Postępu w Chmurze
                 </button>
-            </div>
+            </section>
 
         </div>
-
     </main>
 
-    <!-- Custom Reset Confirmation Modal -->
+    <!-- Okno Modalne Potwierdzenia Resetu -->
     <div id="reset-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-cardbg border border-red-500/50 rounded-xl p-6 max-w-md w-full glow-red space-y-4">
-            <h3 class="font-mono-tech text-red-400 font-bold text-lg flex items-center gap-2">
-                <span>⚠️</span> INICJALIZACJA SYSTEMU OD ZERA
+        <div class="system-window rounded-lg p-6 max-w-md w-full space-y-4">
+            <h3 class="font-anime text-rose-400 font-bold text-xl tracking-wide flex items-center gap-2">
+                <span>⚠️</span> OSTRZEŻENIE SYSTEMOWE
             </h3>
-            <p class="text-sm text-slate-300 font-mono-tech">
-                Czy na pewno chcesz bezpowrotnie usunąć cały postęp, poziomy, skumulowane XP oraz serie na tym koncie w chmurze?
+            <p class="text-xs text-slate-300 font-tech leading-relaxed">
+                Czy na pewno chcesz bezpowrotnie wyzerować wszystkie poziomy, odblokowane tytuły, punkty XP oraz serie zapisane w chmurze dla tego profilu?
             </p>
             <div class="pt-2 flex justify-end gap-3">
-                <button onclick="closeResetModal()" class="bg-slate-700 hover:bg-slate-600 text-white text-xs font-mono-tech px-4 py-2 rounded">
+                <button onclick="closeResetModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-tech px-4 py-2 rounded border border-edge">
                     Anuluj
                 </button>
-                <button onclick="confirmHardReset()" class="bg-red-600 hover:bg-red-500 text-white text-xs font-mono-tech px-4 py-2 rounded font-bold">
+                <button onclick="confirmHardReset()" class="bg-rose-600/80 hover:bg-rose-600 text-white text-xs font-tech px-4 py-2 rounded font-bold">
                     Potwierdzam Reset
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Firebase SDK Imports & Cloud App Logic -->
+    <!-- Logika Aplikacji i Synchronizacja Firebase Firestore -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Twoja konfiguracja Firebase
+        // Konfiguracja Firebase projektu rpgg-597dd
         const firebaseConfig = {
             apiKey: "AIzaSyBSBby9FM33xW-O6b8w9u80PkbxV05UHq4",
             authDomain: "rpgg-597dd.firebaseapp.com",
@@ -314,7 +451,7 @@
         let unsubscribeDoc = null;
         let isRemoteUpdate = false;
 
-        // Tabela wymagań XP do 50 poziomu (dalej rośnie o +3 XP na poziom aż do 100)
+        // Tabela wymagań XP na poziomy 1..49 (od 50 poziomu rośnie o +3 XP na poziom aż do 100)
         const baseLevelReqs = [
             15, 18, 22, 27, 33, 40, 48, 57, 67, 78,
             89, 100, 111, 122, 133, 144, 155, 166, 177, 182,
@@ -329,7 +466,7 @@
             return 440;
         }
 
-        // 20 Tytułów co 5 poziomów (Solo Leveling / Eminence in Shadow / Ghost of Tsushima)
+        // 20 Tytułów co 5 poziomów (Solo Leveling / The Eminence in Shadow / Ghost of Tsushima)
         const titleMilestones = [
             { lvl: 5,   title: "Przebudzony Cień" },
             { lvl: 10,  title: "Kowal Woli" },
@@ -363,7 +500,7 @@
             return currentTitle;
         }
 
-        // Realistyczny rozkład populacji w skali 1 - 100 (przeciętny człowiek = ok. Poziom 10-14)
+        // Realistyczny wskaźnik populacji w skali 1 - 100 (przeciętny obywatel = Poziom 10-14)
         function getEgoPercentile(lvl) {
             if (lvl >= 100) return "Top 0.0001% (Poza Skalą — Absolut)";
             if (lvl >= 95)  return "Top 0.005% (Mityczna Jednostka)";
@@ -379,6 +516,7 @@
             return "Bottom 10% (Punkt Zerowy — Brak Kontroli)";
         }
 
+        // Domyślny zestaw zadań w 3 kategoriach
         const initialHabits = {
             sila: [
                 { id: 'dieta', name: 'Dieta', xpValue: 2, status: 'pending' },
@@ -402,7 +540,7 @@
             totalXp: 0,
             level: 1,
             habits: JSON.parse(JSON.stringify(initialHabits)),
-            hardcoreHabit: null, // Odblokowywane na 25 poziomie
+            hardcoreHabit: null,
             categoryStreaks: { sila: 0, intelekt: 0, wola: 0 },
             logs: []
         };
@@ -411,11 +549,12 @@
             return raw.trim().toLowerCase().replace(/[^a-z0-9-_]/g, '');
         }
 
+        // Zmiana ID profilu do synchronizacji między urządzeniami
         window.changeProfileId = function() {
             const input = document.getElementById('profile-id-input');
             const cleaned = cleanId(input.value);
             if (!cleaned) {
-                showNotification("Wpisz poprawny identyfikator (np. poszuu)!");
+                showNotification("Wpisz poprawny identyfikator profilu (np. poszuu)!");
                 return;
             }
             profileId = cleaned;
@@ -425,18 +564,18 @@
             showNotification(`Połączono z profilem w chmurze: "${profileId}"`);
         };
 
+        // Nasłuch na żywo (Firestore onSnapshot)
         function setupCloudSync() {
             if (!profileId || !db) return;
             document.getElementById('profile-id-input').value = profileId;
-            document.getElementById('sync-indicator').className = "w-3 h-3 bg-amber-500 rounded-full animate-pulse";
+            document.getElementById('sync-indicator').className = "w-2.5 h-2.5 bg-amber-400 rounded-full animate-pulse";
 
             const docRef = doc(db, 'architekt_profiles', profileId);
-            
             if (unsubscribeDoc) unsubscribeDoc();
 
             unsubscribeDoc = onSnapshot(docRef, (docSnap) => {
-                document.getElementById('sync-indicator').className = "w-3 h-3 bg-green-500 rounded-full";
-                document.getElementById('sync-indicator').title = `Połączono z chmurą (${profileId})`;
+                document.getElementById('sync-indicator').className = "w-2.5 h-2.5 bg-emerald-400 rounded-full shadow-[0_0_8px_rgba(52,211,153,0.6)]";
+                document.getElementById('sync-indicator').title = `Zsynchronizowano z chmurą (${profileId})`;
 
                 if (docSnap.exists()) {
                     const cloudData = docSnap.data();
@@ -461,13 +600,13 @@
                         categoryStreaks: { sila: 0, intelekt: 0, wola: 0 },
                         logs: []
                     };
-                    addLog(`Utworzono nowy profil w chmurze: "${profileId}".`, "info");
+                    addLog(`Zainicjowano nowy profil w chmurze: "${profileId}".`, "info");
                     saveStateToCloud();
                     render();
                 }
             }, (error) => {
-                console.error("Firestore snapshot error:", error);
-                document.getElementById('sync-indicator').className = "w-3 h-3 bg-red-500 rounded-full";
+                console.error("Firestore error:", error);
+                document.getElementById('sync-indicator').className = "w-2.5 h-2.5 bg-rose-500 rounded-full";
                 addLog("Błąd połączenia z chmurą Firebase.", "danger");
             });
         }
@@ -479,7 +618,7 @@
                 await setDoc(docRef, state);
             } catch (e) {
                 console.error("Cloud save error:", e);
-                document.getElementById('sync-indicator').className = "w-3 h-3 bg-red-500 rounded-full";
+                document.getElementById('sync-indicator').className = "w-2.5 h-2.5 bg-rose-500 rounded-full";
             }
         }
 
@@ -487,15 +626,15 @@
             const now = new Date();
             const timeStr = now.toTimeString().split(' ')[0];
             state.logs.unshift({ time: timeStr, message, type });
-            if (state.logs.length > 40) state.logs.pop();
+            if (state.logs.length > 45) state.logs.pop();
         }
 
         window.clearLogs = function() {
             state.logs = [];
-            addLog("Dziennik zdarzeń wyczyszczony.", "info");
+            addLog("Dziennik zdarzeń systemowych wyczyszczony.", "info");
             saveStateToCloud();
             render();
-        }
+        };
 
         function getStreakBonus(streakDays) {
             if (streakDays >= 10) return 5;
@@ -506,6 +645,7 @@
             return 0;
         }
 
+        // Główna funkcja renderująca interfejs
         function render() {
             const currentReq = getReqForLevel(state.level);
             const currentRank = getRank(state.level);
@@ -515,7 +655,9 @@
             document.getElementById('header-xp').innerText = state.xp;
             document.getElementById('header-next-xp').innerText = currentReq;
             
-            const progressPercent = state.level >= 100 ? 100 : Math.max(0, Math.min(100, Math.floor((state.xp / currentReq) * 100)));
+            const progressPercent = state.level >= 100
+                ? 100
+                : Math.max(0, Math.min(100, Math.floor((state.xp / currentReq) * 100)));
             document.getElementById('header-progress').style.width = progressPercent + '%';
 
             document.getElementById('stat-level').innerText = `${state.level} / 100`;
@@ -524,10 +666,10 @@
             document.getElementById('stat-total-xp').innerText = `${state.totalXp} XP`;
             document.getElementById('stat-ego').innerText = getEgoPercentile(state.level);
 
-            const totalBonus = getStreakBonus(state.categoryStreaks.sila) + 
-                               getStreakBonus(state.categoryStreaks.intelekt) + 
+            const totalBonus = getStreakBonus(state.categoryStreaks.sila) +
+                               getStreakBonus(state.categoryStreaks.intelekt) +
                                getStreakBonus(state.categoryStreaks.wola);
-            document.getElementById('stat-streak-bonus').innerText = `+${totalBonus} XP/dzień`;
+            document.getElementById('stat-streak-bonus').innerText = `+${totalBonus} XP / dzień`;
 
             renderHabitCategory('sila', 'habits-sila');
             renderHabitCategory('intelekt', 'habits-intelekt');
@@ -538,13 +680,14 @@
             const logsContainer = document.getElementById('system-logs');
             logsContainer.innerHTML = state.logs.map(log => {
                 let colorClass = 'text-slate-300';
-                if (log.type === 'success') colorClass = 'text-green-400';
-                if (log.type === 'danger') colorClass = 'text-red-400 font-bold';
-                if (log.type === 'levelup') colorClass = 'text-yellow-400 font-bold';
-                return `<div class="${colorClass}"><span class="text-slate-500">[${log.time}]</span> ${log.message}</div>`;
+                if (log.type === 'success') colorClass = 'text-emerald-400';
+                if (log.type === 'danger') colorClass = 'text-rose-400 font-semibold';
+                if (log.type === 'levelup') colorClass = 'text-amber-300 font-semibold';
+                return `<div class="${colorClass}"><span class="text-slate-600">[${log.time}]</span> ${log.message}</div>`;
             }).join('');
         }
 
+        // Renderowanie sekcji Protokół Hardcore (Lvl 25+)
         function renderHardcoreSection() {
             const lockedDiv = document.getElementById('hardcore-locked');
             const unlockedDiv = document.getElementById('hardcore-unlocked');
@@ -554,19 +697,18 @@
             if (state.level < 25) {
                 lockedDiv.classList.remove('hidden');
                 unlockedDiv.classList.add('hidden');
-                badge.innerText = "🔒 Wymagany Poziom 25";
-                badge.className = "text-xs font-mono-tech px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700";
+                badge.innerText = "🔒 WYMAGANY POZIOM 25";
+                badge.className = "text-[11px] font-tech px-2.5 py-1 rounded bg-obsidian text-slate-400 border border-edge";
                 return;
             }
 
-            // Odblokowane (Lvl >= 25)
             lockedDiv.classList.add('hidden');
             unlockedDiv.classList.remove('hidden');
-            badge.innerText = "🔓 AKTYWNY (POZIOM 25+)";
-            badge.className = "text-xs font-mono-tech px-2 py-0.5 rounded bg-amber-950/60 text-amber-400 border border-amber-500/40";
+            badge.innerText = "🔓 MODUŁ AKTYWNY (LVL 25+)";
+            badge.className = "text-[11px] font-tech px-2.5 py-1 rounded bg-amber-500/15 text-amber-300 border border-amber-500/40";
 
             if (!state.hardcoreHabit) {
-                container.innerHTML = `<div class="text-xs font-mono-tech text-slate-400 italic px-1">Nie ustawiono jeszcze dodatkowego wyzwania. Wpisz nazwę i liczbę punktów powyżej.</div>`;
+                container.innerHTML = `<div class="text-xs font-tech text-slate-500 italic px-1">Nie ustawiono jeszcze dodatkowego wyzwania. Wpisz nazwę i liczbę punktów powyżej.</div>`;
                 return;
             }
 
@@ -574,32 +716,32 @@
             const isDone = h.status === 'done';
             const isFailed = h.status === 'failed';
 
-            let borderStyle = 'bg-darkbg border-amber-500/30 hover:border-amber-500/60';
-            if (isDone) borderStyle = 'bg-green-950/20 border-green-500/40';
-            if (isFailed) borderStyle = 'bg-red-950/25 border-red-500/50';
+            let borderStyle = 'bg-obsidian/85 border-amber-500/30 hover:border-amber-500/50';
+            if (isDone) borderStyle = 'bg-emerald-950/20 border-emerald-500/40';
+            if (isFailed) borderStyle = 'bg-rose-950/25 border-rose-500/40';
 
             container.innerHTML = `
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-lg border transition ${borderStyle}">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded border transition ${borderStyle}">
                     <div>
-                        <div class="font-medium text-sm flex items-center gap-2 ${isDone ? 'line-through text-green-300' : isFailed ? 'text-red-300' : 'text-amber-200'}">
-                            <span>🔥 ${h.name}</span>
+                        <div class="font-medium text-sm flex items-center gap-2 ${isDone ? 'line-through text-emerald-300' : isFailed ? 'text-rose-300' : 'text-amber-200'}">
+                            <span>❖ ${h.name}</span>
                         </div>
-                        <div class="text-xs font-mono-tech mt-0.5">
-                            <span class="text-green-400">Wykonanie: +${h.xpValue} XP</span>
-                            <span class="text-slate-600 mx-1">|</span>
-                            <span class="text-red-400">Niewykonanie: -${h.xpValue} XP</span>
+                        <div class="text-[11px] font-tech mt-1 text-slate-500">
+                            Wykonanie: <span class="text-emerald-400/90">+${h.xpValue} XP</span>
+                            <span class="mx-1.5 text-slate-700">|</span>
+                            Niewykonanie: <span class="text-rose-400/90">-${h.xpValue} XP</span>
                         </div>
                     </div>
-                    <div class="flex items-center gap-2 font-mono-tech text-xs shrink-0">
+                    <div class="flex items-center gap-2 font-tech text-xs shrink-0">
                         <button onclick="window.markHardcoreDone()" 
-                            class="px-3 py-1.5 rounded border transition flex items-center gap-1 ${isDone ? 'bg-green-600 text-white border-green-500 font-bold' : 'bg-slate-800 hover:bg-green-900/50 text-green-400 border-slate-700 hover:border-green-600'}">
+                            class="px-3 py-1.5 rounded border transition flex items-center gap-1 ${isDone ? 'bg-emerald-600/80 text-white border-emerald-400 font-bold' : 'bg-panel hover:bg-emerald-950/60 text-emerald-400 border-edge hover:border-emerald-500/50'}">
                             ✓ Wykonano (+${h.xpValue})
                         </button>
                         <button onclick="window.markHardcoreFailed()" 
-                            class="px-3 py-1.5 rounded border transition flex items-center gap-1 ${isFailed ? 'bg-red-600 text-white border-red-500 font-bold' : 'bg-slate-800 hover:bg-red-950/80 text-red-400 border-slate-700 hover:border-red-600'}">
+                            class="px-3 py-1.5 rounded border transition flex items-center gap-1 ${isFailed ? 'bg-rose-600/80 text-white border-rose-400 font-bold' : 'bg-panel hover:bg-rose-950/60 text-rose-400 border-edge hover:border-rose-500/50'}">
                             ✗ Porażka (-${h.xpValue})
                         </button>
-                        <button onclick="window.removeHardcoreHabit()" class="px-2 py-1.5 rounded bg-slate-900 hover:bg-red-950 text-slate-500 hover:text-red-400 border border-slate-800 transition" title="Usuń wyzwanie">
+                        <button onclick="window.removeHardcoreHabit()" class="px-2.5 py-1.5 rounded bg-panel hover:bg-rose-950 text-slate-500 hover:text-rose-400 border border-edge transition" title="Usuń wyzwanie">
                             ✕
                         </button>
                     </div>
@@ -631,8 +773,8 @@
             };
 
             nameInput.value = '';
-            addLog(`🔥 PROTOKÓŁ HARDCORE: Dodano wyzwanie "${name}" (${xpVal} XP).`, "levelup");
-            showNotification(`Ustawiono wyzwanie Hardcore: "${name}" (+${xpVal} XP).`);
+            addLog(`❖ PROTOKÓŁ HARDCORE: Aktywowano wyzwanie "${name}" (${xpVal} XP).`, "levelup");
+            showNotification(`Aktywowano wyzwanie Hardcore: "${name}" (+${xpVal} XP).`);
             saveStateToCloud();
             render();
         };
@@ -658,7 +800,7 @@
                 if (h.status === 'failed') adjustXP(h.xpValue);
                 h.status = 'done';
                 adjustXP(h.xpValue);
-                addLog(`🔥 ZALICZONO HARDCORE: "${h.name}" (+${h.xpValue} XP).`, "success");
+                addLog(`❖ ZALICZONO HARDCORE: "${h.name}" (+${h.xpValue} XP).`, "success");
                 showNotification(`Wyzwanie Hardcore zaliczone! +${h.xpValue} XP.`);
             }
             saveStateToCloud();
@@ -684,21 +826,22 @@
             render();
         };
 
+        // Renderowanie 20 tytułów co 5 poziomów
         function renderTitlesList() {
             const container = document.getElementById('titles-list');
             container.innerHTML = titleMilestones.map(m => {
                 const unlocked = state.level >= m.lvl;
                 const boxClass = unlocked 
-                    ? 'bg-blue-950/30 border-blue-500/50 text-slate-100' 
-                    : 'bg-darkbg border-slate-800/80 text-slate-500';
-                const badgeClass = unlocked ? 'text-yellow-400' : 'text-slate-600';
-                const statusIcon = unlocked ? '✓' : '🔒';
+                    ? 'bg-violet-950/30 border-violet-500/40 text-slate-100' 
+                    : 'bg-obsidian/60 border-edge/60 text-slate-600';
+                const badgeClass = unlocked ? 'text-amber-300' : 'text-slate-600';
+                const statusIcon = unlocked ? '◆' : '🔒';
 
                 return `
-                    <div class="p-2.5 rounded border flex justify-between items-center transition ${boxClass}">
+                    <div class="px-3 py-2 rounded border flex justify-between items-center transition ${boxClass}">
                         <div>
-                            <span class="${badgeClass} font-bold">Poziom ${m.lvl}:</span>
-                            <span class="font-semibold ml-1">${m.title}</span>
+                            <span class="${badgeClass} font-bold">LVL ${m.lvl}:</span>
+                            <span class="font-medium ml-1.5">${m.title}</span>
                         </div>
                         <span class="text-xs">${statusIcon}</span>
                     </div>
@@ -706,6 +849,7 @@
             }).join('');
         }
 
+        // Renderowanie kategorii zadań (Siła, Intelekt, Wola)
         function renderHabitCategory(catKey, containerId) {
             const container = document.getElementById(containerId);
             container.innerHTML = '';
@@ -714,10 +858,10 @@
             const bonus = getStreakBonus(streak);
 
             const infoDiv = document.createElement('div');
-            infoDiv.className = 'flex justify-between items-center text-xs font-mono-tech bg-darkbg p-2 rounded border border-bordercol mb-2';
+            infoDiv.className = 'flex justify-between items-center text-[11px] font-tech bg-obsidian/85 px-3.5 py-2 rounded border border-edge mb-2.5';
             infoDiv.innerHTML = `
-                <span class="text-slate-300">Seria kategorii: <strong class="text-yellow-400">${streak} dni</strong> (Max 10)</span>
-                <span class="text-purple-400">Bonus dnia: +${bonus} XP</span>
+                <span class="text-slate-400">CIĄGŁOŚĆ KATEGORII: <strong class="text-amber-300">${streak} / 10 DNI</strong></span>
+                <span class="text-violet-400 font-semibold">BONUS DNIA: +${bonus} XP</span>
             `;
             container.appendChild(infoDiv);
 
@@ -725,39 +869,41 @@
                 const isDone = habit.status === 'done';
                 const isFailed = habit.status === 'failed';
 
-                let borderStyle = 'bg-darkbg border-bordercol hover:border-slate-600';
-                if (isDone) borderStyle = 'bg-green-950/20 border-green-500/40';
-                if (isFailed) borderStyle = 'bg-red-950/25 border-red-500/50';
+                let borderStyle = 'bg-obsidian/80 border-edge hover:border-slate-600';
+                if (isDone) borderStyle = 'bg-emerald-950/20 border-emerald-500/40';
+                if (isFailed) borderStyle = 'bg-rose-950/20 border-rose-500/40';
 
                 let weeklyBadge = '';
                 if (habit.weeklyTarget) {
                     const doneCount = habit.weeklyDone || 0;
-                    const badgeColor = doneCount >= habit.weeklyTarget ? 'text-green-400 border-green-500/50 bg-green-950/40' : 'text-blue-300 border-blue-500/40 bg-blue-950/30';
-                    weeklyBadge = `<span class="ml-2 px-1.5 py-0.5 text-[11px] font-mono-tech rounded border ${badgeColor}">Tydzień: ${doneCount}/${habit.weeklyTarget}</span>`;
+                    const badgeColor = doneCount >= habit.weeklyTarget
+                        ? 'text-emerald-300 border-emerald-500/40 bg-emerald-950/40'
+                        : 'text-sky-300 border-sky-500/30 bg-sky-950/30';
+                    weeklyBadge = `<span class="ml-2 px-2 py-0.5 text-[10px] font-tech rounded border ${badgeColor}">TYDZIEŃ: ${doneCount}/${habit.weeklyTarget}</span>`;
                 }
 
                 const item = document.createElement('div');
-                item.className = `flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-lg border transition ${borderStyle}`;
+                item.className = `flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded border transition ${borderStyle}`;
                 
                 item.innerHTML = `
                     <div>
-                        <div class="font-medium text-sm flex items-center flex-wrap ${isDone ? 'line-through text-green-300' : isFailed ? 'text-red-300' : 'text-slate-200'}">
+                        <div class="font-medium text-sm flex items-center flex-wrap ${isDone ? 'line-through text-emerald-300' : isFailed ? 'text-rose-300' : 'text-slate-200'}">
                             <span>${habit.name}</span>
                             ${weeklyBadge}
                         </div>
-                        <div class="text-xs font-mono-tech mt-0.5">
-                            <span class="text-green-400">Wykonanie: +${habit.xpValue} XP</span>
-                            <span class="text-slate-600 mx-1">|</span>
-                            <span class="text-red-400">Niewykonanie: -${habit.xpValue} XP</span>
+                        <div class="text-[11px] font-tech mt-1 text-slate-500">
+                            Wykonanie: <span class="text-emerald-400/90">+${habit.xpValue} XP</span>
+                            <span class="mx-1.5 text-slate-700">|</span>
+                            Niewykonanie: <span class="text-rose-400/90">-${habit.xpValue} XP</span>
                         </div>
                     </div>
-                    <div class="flex items-center gap-2 font-mono-tech text-xs shrink-0">
+                    <div class="flex items-center gap-2 font-tech text-xs shrink-0">
                         <button onclick="window.markHabitDone('${catKey}', '${habit.id}')" 
-                            class="px-3 py-1.5 rounded border transition flex items-center gap-1 ${isDone ? 'bg-green-600 text-white border-green-500 font-bold' : 'bg-slate-800 hover:bg-green-900/50 text-green-400 border-slate-700 hover:border-green-600'}">
+                            class="px-3 py-1.5 rounded border transition flex items-center gap-1 ${isDone ? 'bg-emerald-600/80 text-white border-emerald-400 font-bold' : 'bg-panel hover:bg-emerald-950/50 text-emerald-400 border-edge hover:border-emerald-500/50'}">
                             ✓ Wykonano (+${habit.xpValue})
                         </button>
                         <button onclick="window.markHabitFailed('${catKey}', '${habit.id}')" 
-                            class="px-3 py-1.5 rounded border transition flex items-center gap-1 ${isFailed ? 'bg-red-600 text-white border-red-500 font-bold' : 'bg-slate-800 hover:bg-red-950/80 text-red-400 border-slate-700 hover:border-red-600'}">
+                            class="px-3 py-1.5 rounded border transition flex items-center gap-1 ${isFailed ? 'bg-rose-600/80 text-white border-rose-400 font-bold' : 'bg-panel hover:bg-rose-950/50 text-rose-400 border-edge hover:border-rose-500/50'}">
                             ✗ Porażka (-${habit.xpValue})
                         </button>
                     </div>
@@ -791,7 +937,7 @@
 
             saveStateToCloud();
             render();
-        }
+        };
 
         window.markHabitFailed = function(catKey, habitId) {
             const habit = state.habits[catKey].find(h => h.id === habitId);
@@ -818,7 +964,7 @@
 
             saveStateToCloud();
             render();
-        }
+        };
 
         function adjustXP(delta) {
             state.totalXp = Math.max(0, state.totalXp + delta);
@@ -830,11 +976,11 @@
                 state.level++;
                 const newRank = getRank(state.level);
                 const ego = getEgoPercentile(state.level);
-                addLog(`🎉 AWANS NA POZIOM ${state.level}! Tytuł: ${newRank} | Populacja: ${ego}`, "levelup");
+                addLog(`🎉 AWANS NA POZIOM ${state.level}! Tytuł: «${newRank}» | Populacja: ${ego}`, "levelup");
                 if (state.level === 25) {
-                    addLog(`🔥 ODBLOKOWANO PROTOKÓŁ HARDCORE! Możesz dodać dodatkowe wyzwanie.`, "levelup");
+                    addLog(`❖ ODBLOKOWANO PROTOKÓŁ HARDCORE! Możesz dodać własne wyzwanie.`, "levelup");
                 }
-                showNotification(`🎉 AWANS NA POZIOM ${state.level}! Tytuł: ${newRank}`);
+                showNotification(`🎉 AWANS NA POZIOM ${state.level}! Nowy tytuł: «${newRank}»`);
                 currentReq = getReqForLevel(state.level);
             }
 
@@ -844,8 +990,8 @@
                 state.xp = prevReq + state.xp;
                 const degradedRank = getRank(state.level);
                 const ego = getEgoPercentile(state.level);
-                addLog(`🔻 DEGRADACJA SYSTEMU! Spadek na Poziom ${state.level} (${degradedRank}). Populacja: ${ego}.`, "danger");
-                showNotification(`🔻 DEGRADACJA! Utraciłeś poziom i spadłeś na Poziom ${state.level}.`);
+                addLog(`🔻 DEGRADACJA SYSTEMU! Spadek na Poziom ${state.level} («${degradedRank}»).`, "danger");
+                showNotification(`🔻 DEGRADACJA! Spadek na Poziom ${state.level}.`);
             }
 
             if (state.level === 1 && state.xp < 0) {
@@ -872,23 +1018,22 @@
                 habitsInCat.forEach(h => h.status = 'pending');
             });
 
-            // Resetujemy też dzienny status zadania Hardcore, jeśli istnieje
             if (state.hardcoreHabit) {
                 state.hardcoreHabit.status = 'pending';
             }
 
             if (dailyBonusTotal > 0) {
                 adjustXP(dailyBonusTotal);
-                addLog(`⏭️ ZAKOŃCZONO DZIEŃ: Doliczono +${dailyBonusTotal} XP z tytułu aktywnych serii.`, "levelup");
-                showNotification(`Nowy dzień! Zyskano +${dailyBonusTotal} XP bonusu za ciągłość serii.`);
+                addLog(`⏭️ ZAKOŃCZONO CYKL DNIA: Doliczono +${dailyBonusTotal} XP z tytułu aktywnych serii.`, "levelup");
+                showNotification(`Nowy cykl dnia! Zyskano +${dailyBonusTotal} XP bonusu za ciągłość.`);
             } else {
-                addLog(`⏭️ ZAKOŃCZONO DZIEŃ: Zadania zresetowane na nowy cykl.`, "info");
+                addLog(`⏭️ ZAKOŃCZONO CYKL DNIA: Zadania zresetowane na nowy dzień.`, "info");
                 showNotification(`Rozpoczęto nowy cykl dnia. Zadania zresetowane.`);
             }
 
             saveStateToCloud();
             render();
-        }
+        };
 
         window.resetWeeklyCounters = function() {
             ['sila', 'intelekt', 'wola'].forEach(catKey => {
@@ -900,15 +1045,15 @@
             showNotification("Wyzerowano liczniki misji tygodniowych.");
             saveStateToCloud();
             render();
-        }
+        };
 
         window.openResetModal = function() {
             document.getElementById('reset-modal').classList.remove('hidden');
-        }
+        };
 
         window.closeResetModal = function() {
             document.getElementById('reset-modal').classList.add('hidden');
-        }
+        };
 
         window.confirmHardReset = async function() {
             state = {
@@ -925,7 +1070,7 @@
             await saveStateToCloud();
             render();
             showNotification('System w chmurze został zresetowany do stanu początkowego.');
-        }
+        };
 
         let notifTimeout;
         function showNotification(text) {
@@ -941,7 +1086,7 @@
 
         window.closeNotification = function() {
             document.getElementById('system-notification').classList.add('hidden');
-        }
+        };
 
         window.onload = function() {
             setupCloudSync();
