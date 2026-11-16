@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SYSTEM ARCHITEKTUR // Shadow Interface v7.0</title>
+    <title>SYSTEM ARCHITEKTUR // Shadow Interface v8.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -96,6 +96,10 @@
         .system-window-hardcore::before { border-color: #f59e0b; }
         .system-window-hardcore::after { border-color: #d97706; }
 
+        .system-window-perfect { border-color: rgba(52, 211, 153, 0.28); }
+        .system-window-perfect::before { border-color: #34d399; }
+        .system-window-perfect::after { border-color: #059669; }
+
         .header-scanline {
             background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.4), rgba(139, 92, 246, 0.4), transparent);
             height: 1px;
@@ -154,21 +158,18 @@
                     <span id="header-next-xp" class="text-slate-400">15</span>
                 </div>
 
-                <!-- Kredyty Cienia -->
                 <div class="bg-obsidian/90 px-3 py-2 rounded border border-amber-500/30 flex items-center gap-1.5" title="Kredyty Cienia">
                     <span class="text-amber-400">🪙</span>
                     <span id="header-coins" class="text-amber-300 font-bold">0</span>
                     <span class="text-slate-500 text-[10px]">₵</span>
                 </div>
 
-                <!-- Punkty Przewagi (Szybki dostęp do tabeli) -->
-                <button onclick="openLeaderboardModal()" class="bg-obsidian/90 hover:bg-sky-950/50 px-3 py-2 rounded border border-sky-500/40 flex items-center gap-1.5 transition" title="Otwórz Tabelę Rankingu Przewagi">
+                <button onclick="openLeaderboardModal()" class="bg-obsidian/90 hover:bg-sky-950/50 px-3 py-2 rounded border border-sky-500/40 flex items-center gap-1.5 transition" title="Otwórz Ranking Top 100">
                     <span class="text-sky-400">🏆</span>
                     <span id="header-advantage" class="text-sky-300 font-bold">100</span>
                     <span class="text-slate-500 text-[10px]">PKT</span>
                 </button>
                 
-                <!-- Synchronizacja ID -->
                 <div class="flex items-center bg-obsidian rounded border border-sky-500/30 overflow-hidden">
                     <span class="px-2 text-slate-500 select-none">ID:</span>
                     <input type="text" id="profile-id-input" placeholder="poszuu" class="bg-transparent text-sky-300 px-1 py-2 w-24 focus:outline-none">
@@ -200,24 +201,37 @@
                 <button onclick="closeNotification()" class="text-slate-500 hover:text-slate-200 text-base leading-none ml-4">&times;</button>
             </div>
 
-            <!-- BOSS TYGODNIOWY (LOŻA / DUNGEON) -->
+            <!-- BOSS TYGODNIOWY (ODBLOKOWYWANY OD POZIOMU 7) -->
             <section class="system-window system-window-boss rounded-lg p-5 sm:p-6">
                 <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-3.5 border-b border-edge pb-3">
                     <div class="flex items-center gap-2.5">
                         <span class="w-2.5 h-2.5 rotate-45 bg-rose-500 inline-block"></span>
-                        <h2 id="boss-title" class="text-rose-400 font-anime font-bold text-xl tracking-wider uppercase">
-                            BOSS TYGODNIOWY: ŁADOWANIE...
+                        <h2 id="boss-header-title" class="text-rose-400 font-anime font-bold text-xl tracking-wider uppercase">
+                            BOSS TYGODNIOWY [LOŻA]
                         </h2>
+                        <span id="boss-category-badge" class="hidden text-[10px] font-tech px-2 py-0.5 rounded bg-rose-950/50 text-rose-200 border border-rose-500/30">KATEGORIA</span>
                     </div>
-                    <span id="boss-reward-badge" class="text-[11px] font-tech px-2.5 py-0.5 rounded bg-rose-950/40 text-rose-300 border border-rose-500/30">
-                        NAGRODA: +15 XP & +30 ₵
+                    <span id="boss-reward-badge" class="text-[11px] font-tech px-2.5 py-0.5 rounded bg-obsidian text-slate-400 border border-edge">
+                        🔒 WYMAGANY POZIOM 7
                     </span>
                 </div>
-                <p id="boss-desc" class="text-xs font-tech text-slate-400 mb-3">
-                    Wykonaj wszystkie 3 próby w ciągu tygodnia, aby pokonać Bossa. Reset następuje przy kliknięciu „Nowy Tydzień”.
-                </p>
-                <div id="boss-tasks-container" class="space-y-2">
-                    <!-- Dynamicznie renderowane 3 etapy Bossa -->
+
+                <!-- Widok zablokowany (Poziom < 7) -->
+                <div id="boss-locked" class="py-4 text-center font-tech space-y-1.5 bg-obsidian/50 rounded border border-edge/60">
+                    <div class="text-slate-300 text-xs tracking-wider">[BRAMA LOŻY ZAPIECZĘTOWANA — WYMAGANY POZIOM 7]</div>
+                    <div class="text-[11px] text-slate-500 max-w-lg mx-auto">
+                        Pierwsze 6 poziomów służy rozgrzewce i budowie fundamentów. Na Poziomie 7 otworzą się bramy 50 tematycznych Loż z tygodniowymi Bossami (Nagroda: +15 XP / Kara za porażkę: -10 XP).
+                    </div>
+                </div>
+
+                <!-- Widok odblokowany (Poziom >= 7) -->
+                <div id="boss-unlocked" class="hidden space-y-3">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                        <div id="boss-title" class="font-anime text-lg font-bold text-rose-300 tracking-wide"></div>
+                        <div class="text-[11px] font-tech text-slate-400">Nagroda: <span class="text-emerald-400">+15 XP & +30 ₵</span> | Kara: <span class="text-rose-400">-10 XP & -25 PKT</span></div>
+                    </div>
+                    <p id="boss-desc" class="text-xs font-tech text-slate-400"></p>
+                    <div id="boss-tasks-container" class="space-y-2"></div>
                 </div>
             </section>
 
@@ -318,13 +332,46 @@
                 </div>
             </section>
 
+            <!-- MODUŁ REZONANSU: PERFEKCYJNY DZIEŃ 9/9 (LVL 30+) -->
+            <section class="system-window system-window-perfect rounded-lg p-5 sm:p-6">
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-3.5 border-b border-edge pb-3">
+                    <div class="flex items-center gap-2.5">
+                        <span class="w-2 h-2 rotate-45 bg-emerald-400 inline-block"></span>
+                        <h2 class="text-emerald-300 font-anime font-bold text-xl tracking-wider uppercase">
+                            REZONANS ABSOLUTNY [9/9 PERFECT DAY]
+                        </h2>
+                        <span class="text-[10px] font-tech text-emerald-300 px-2 py-0.5 bg-emerald-950/40 rounded border border-emerald-500/30">MNOŻNIK</span>
+                    </div>
+                    <span id="perfect-badge" class="text-[11px] font-tech px-2.5 py-1 rounded bg-obsidian text-slate-400 border border-edge">
+                        🔒 WYMAGANY POZIOM 30
+                    </span>
+                </div>
+
+                <!-- Widok zablokowany (Poziom < 30) -->
+                <div id="perfect-locked" class="py-4 text-center font-tech space-y-1 bg-obsidian/50 rounded border border-edge/60">
+                    <div class="text-slate-300 text-xs tracking-wider">[DOSTĘP ZABLOKOWANY — WYMAGANY POZIOM 30]</div>
+                    <div class="text-[11px] text-slate-500 max-w-lg mx-auto">
+                        Po osiągnięciu Poziomu 30 odblokujesz pasywny rezonans: każde zamknięcie cyklu dnia ze skutecznością 9/9 (100% planu) automatycznie wygeneruje bonusowe +2 XP.
+                    </div>
+                </div>
+
+                <!-- Widok odblokowany (Poziom >= 30) -->
+                <div id="perfect-unlocked" class="hidden bg-obsidian/85 p-3.5 rounded border border-emerald-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-2 font-tech text-xs">
+                    <div>
+                        <div class="text-emerald-300 font-semibold">⚡ Status Dzisiejszego Rezonansu: <span id="perfect-today-counter" class="text-white">0 / 9</span> zadań</div>
+                        <div class="text-[11px] text-slate-400 mt-0.5">Gdy zamkniesz dzień z wynikiem 9/9, System dopisze dodatkowe <span class="text-emerald-400 font-bold">+2 XP</span>.</div>
+                    </div>
+                    <span id="perfect-today-status" class="px-2.5 py-1 rounded bg-panel border border-edge text-slate-400 text-[11px] shrink-0">W TOKU</span>
+                </div>
+            </section>
+
             <!-- Przyciski Zarządzania Cyklem -->
             <div class="flex flex-wrap gap-3.5 pt-1">
                 <button onclick="endDay()" class="bg-gradient-to-r from-sky-600/25 to-violet-600/25 hover:from-sky-500/35 hover:to-violet-500/35 text-sky-200 font-tech px-5 py-3 rounded border border-sky-400/50 text-xs font-semibold transition flex items-center gap-2 shadow-lg">
                     <span>⏭️</span> Zakończ Cykl Dnia (Niezrobione = Porażka + Analiza Przewagi)
                 </button>
                 <button onclick="resetWeeklyCounters()" class="bg-panelalt hover:bg-slate-800 text-slate-300 font-tech px-4 py-3 rounded border border-edge text-xs transition flex items-center gap-2">
-                    <span>🔄</span> Nowy Tydzień (Reset 0/3 + Nowy Boss)
+                    <span>🔄</span> Nowy Tydzień (Reset 0/3 + Rozliczenie Bossa)
                 </button>
             </div>
 
@@ -351,7 +398,7 @@
                     </h3>
                     <div class="flex gap-1.5">
                         <button onclick="openLeaderboardModal()" class="text-[10px] font-tech bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 px-2 py-1 rounded border border-amber-500/30 transition">
-                            🏆 Ranking
+                            🏆 Top 100
                         </button>
                         <button onclick="openAdvantageModal()" class="text-[10px] font-tech bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 px-2 py-1 rounded border border-sky-500/30 transition">
                             📊 Raport
@@ -377,20 +424,12 @@
                         <span id="stat-total-xp" class="text-slate-200 font-bold">0 XP</span>
                     </div>
                     <div class="flex justify-between items-center">
-                        <span class="text-slate-400">PUNKTY PRZEWAGI:</span>
-                        <span id="stat-advantage" class="text-sky-300 font-bold">100 PKT</span>
+                        <span class="text-slate-400">RANKING TOP 100:</span>
+                        <span id="stat-advantage" class="text-sky-300 font-bold">100 PKT (#96/100)</span>
                     </div>
                     <div class="flex justify-between items-center">
                         <span class="text-slate-400">SKARBIEC (MONETY):</span>
                         <span id="stat-coins" class="text-amber-300 font-bold">0 ₵</span>
-                    </div>
-
-                    <!-- Moduł Boostu Perfekcyjnego Dnia 9/9 (Lvl 30+) -->
-                    <div class="pt-2 border-t border-edge">
-                        <div class="flex justify-between items-center">
-                            <span class="text-slate-400">BOOST 9/9 (+2 XP):</span>
-                            <span id="stat-perfect-boost" class="text-[11px] font-bold text-slate-500">🔒 LVL 30</span>
-                        </div>
                     </div>
 
                     <div class="pt-2 border-t border-edge space-y-1">
@@ -444,28 +483,27 @@
         </div>
     </main>
 
-    <!-- OKNO MODALNE: TABELA RANKINGU PRZEWAGI -->
+    <!-- OKNO MODALNE: TABELA RANKINGU PRZEWAGI (TOP 100) -->
     <div id="leaderboard-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-        <div class="system-window rounded-lg p-6 max-w-xl w-full space-y-4 shadow-2xl">
+        <div class="system-window rounded-lg p-6 max-w-2xl w-full space-y-4 shadow-2xl">
             <div class="flex justify-between items-start border-b border-edge pb-3">
                 <div>
-                    <div class="text-[10px] font-tech text-amber-300 tracking-widest uppercase">[KLASYFIKACJA GLOBALNA // DYNAMICZNY RANKING]</div>
-                    <h3 class="font-anime text-2xl text-slate-100 font-bold tracking-wider">TABELA PUNKTÓW PRZEWAGI</h3>
+                    <div class="text-[10px] font-tech text-amber-300 tracking-widest uppercase">[KLASYFIKACJA GLOBALNA // TOP 100]</div>
+                    <h3 class="font-anime text-2xl text-slate-100 font-bold tracking-wider">RANKING PUNKTÓW PRZEWAGI (100 MIEJSC)</h3>
                 </div>
                 <button onclick="closeLeaderboardModal()" class="text-slate-400 hover:text-white text-xl leading-none">&times;</button>
             </div>
 
-            <p class="text-[11px] font-tech text-slate-400 leading-relaxed">
-                Punkty Przewagi rosną za wysoką skuteczność i serie, ale <span class="text-rose-400">spadają przy porażkach i zaniedbaniach</span>. Jeśli odpuścisz, rywale z tabeli ponownie Cię wyprzedzą.
-            </p>
-
-            <div id="leaderboard-list" class="space-y-1.5 max-h-[380px] overflow-y-auto pr-1 font-tech text-xs">
-                <!-- Generowana dynamicznie tabela z pozycją gracza i rywali -->
+            <div class="flex flex-wrap justify-between items-center gap-2 text-[11px] font-tech bg-obsidian/80 px-3 py-2 rounded border border-edge">
+                <span class="text-slate-400">Twoja pozycja: <strong id="modal-player-rank" class="text-sky-300">#96 / 100</strong></span>
+                <span class="text-slate-400">Twoje punkty: <strong id="modal-player-pts" class="text-amber-300">100 PKT</strong></span>
             </div>
+
+            <div id="leaderboard-list" class="space-y-1.5 max-h-[400px] overflow-y-auto pr-1 font-tech text-xs"></div>
 
             <div class="pt-2 flex justify-end">
                 <button onclick="closeLeaderboardModal()" class="w-full bg-amber-500/15 hover:bg-amber-500/25 text-amber-200 border border-amber-500/40 font-tech py-2.5 px-4 rounded font-bold transition">
-                    Zamknij Ranking
+                    Zamknij Ranking Top 100
                 </button>
             </div>
         </div>
@@ -486,7 +524,7 @@
 
             <div class="pt-2 flex gap-2.5">
                 <button onclick="closeAdvantageModal(); openLeaderboardModal();" class="flex-1 bg-amber-500/15 hover:bg-amber-500/25 text-amber-200 border border-amber-500/40 font-tech py-2.5 px-3 rounded font-bold transition">
-                    🏆 Zobacz Tabelę Rankingu
+                    🏆 Zobacz Ranking Top 100
                 </button>
                 <button onclick="closeAdvantageModal()" class="flex-1 bg-sky-500/20 hover:bg-sky-500/30 text-sky-200 border border-sky-400/50 font-tech py-2.5 px-3 rounded font-bold transition">
                     Zamknij
@@ -533,70 +571,309 @@
         let unsubscribeDoc = null;
         let isRemoteUpdate = false;
 
-        // PULA BOSSÓW TYGODNIOWYCH (Każdy Boss ma 3 konkretne zadania do zrobienia w dowolnym momencie tygodnia)
+        // =========================================================================
+        // 50 UNIKALNYCH BOSSÓW TYGODNIOWYCH (6 KATEGORII TEMATYCZNYCH)
+        // Zero dublowania z codziennymi zadaniami (brak diety, supli, treningu siłowego,
+        // czytania książki, nauki języka, pianina, medytacji czy zwykłego detoksu telefonu)
+        // =========================================================================
         const weeklyBossesPool = [
-            {
-                name: "IGRIS — KRWAWY RYCERZ CIENIA",
-                desc: "Próba wytrzymałości fizycznej i żelaznej konsekwencji w trakcie 7 dni.",
-                tasks: [
-                    { id: 'b1', text: "Wykonaj łącznie 150 pompek w tym tygodniu", done: false },
-                    { id: 'b2', text: "Utrzymaj zero przetworzonego cukru przez 4 pełne dni", done: false },
-                    { id: 'b3', text: "Zrób minimum 2 sesje rozciągania / mobilności (po 15 min)", done: false }
-                ]
-            },
-            {
-                name: "BERU — KRÓL MRÓWEK (WŁADCA UMYSŁU)",
-                desc: "Egzamin głębokiego skupienia, nauki i eliminacji rozpraszaczy.",
-                tasks: [
-                    { id: 'b1', text: "Przeczytaj łącznie 70 stron książki w tym tygodniu", done: false },
-                    { id: 'b2', text: "Zrób 3 sesje głębokiej pracy (45 min bez telefonu)", done: false },
-                    { id: 'b3', text: "Powtórz i zapisz 25 nowych słówek lub zwrotów z języka", done: false }
-                ]
-            },
-            {
-                name: "KARGALGAN — WIELKI SZAMAN WOLI",
-                desc: "Test kontroli nad impulsami i czystości umysłu.",
-                tasks: [
-                    { id: 'b1', text: "Weź 4 zimne prysznice (min. 60 sek.) w tym tygodniu", done: false },
-                    { id: 'b2', text: "Zrób 3 pełne dni bez mediów społecznościowych", done: false },
-                    { id: 'b3', text: "Wstań od razu po pierwszym budziku przez 5 dni", done: false }
-                ]
-            },
-            {
-                name: "BARAN — KRÓL DEMONÓW BIAŁYCH PŁOMIENI",
-                desc: "Wszechstronna próba łącząca siłę ciała, dyscyplinę i rozwój.",
-                tasks: [
-                    { id: 'b1', text: "Wykonaj łącznie 200 przysiadów w ciągu tygodnia", done: false },
-                    { id: 'b2', text: "Wypij min. 2.5 litra wody przez 5 dni w tygodniu", done: false },
-                    { id: 'b3', text: "Przeznacz 60 minut na dodatkowy rozwój / własny projekt", done: false }
-                ]
-            },
-            {
-                name: "KHAN — DUCH PÓŁNOCY (SZLAK SAMURAJA)",
-                desc: "Próba opanowania, ciszy i bezbłędnej rutyny.",
-                tasks: [
-                    { id: 'b1', text: "Zrób łącznie 10 minut deski (plank) w trakcie tygodnia", done: false },
-                    { id: 'b2', text: "Zjedz wszystkie posiłki przez 4 dni bez patrzenia w ekran", done: false },
-                    { id: 'b3', text: "Zrób 3 spacery po minimum 30 minut na świeżym powietrzu", done: false }
-                ]
-            }
+            // --- KATEGORIA 1: SZLAK BUSHIDO & JAPONIA (9 Bossów) ---
+            { category: "SZLAK BUSHIDO", name: "MIYAMOTO MUSASHI — MISTRZ DWÓCH MIECZY", desc: "Droga strategii, precyzji ruchu i estetyki samuraja.", tasks: [
+                { id: 'b1', text: "Poświęć 30 min na kaligrafię, szkicowanie lub rysunek odręczny", done: false },
+                { id: 'b2', text: "Wykonaj łącznie 200 przysiadów w pozycji szerokiej (Kiba-dachi / Sumo)", done: false },
+                { id: 'b3', text: "Przez 4 dni jedz posiłki w całkowitej ciszy, skupiając się na smaku", done: false }
+            ]},
+            { category: "SZLAK BUSHIDO", name: "ODA NOBUNAGA — DEMONICZNY STRATEG", desc: "Bezwzględna decyzyjność i przełamywanie starych schematów.", tasks: [
+                { id: 'b1', text: "Podejmij i zrealizuj 3 trudne decyzje, które odkładałeś od dawna", done: false },
+                { id: 'b2', text: "Rozegraj 5 partii szachów lub zaawansowanych łamigłówek taktycznych", done: false },
+                { id: 'b3', text: "Zrób gruntowny porządek w swoim otoczeniu i wyrzuć min. 10 zbędnych rzeczy", done: false }
+            ]},
+            { category: "SZLAK BUSHIDO", name: "HATTORI HANZO — CIEŃ Z IGA", desc: "Sztuka skradania, równowagi i panowania nad oddechem.", tasks: [
+                { id: 'b1', text: "Ćwicz równowagę: łącznie 10 min stania na jednej nodze z zamkniętymi oczami", done: false },
+                { id: 'b2', text: "Zrób 3 spacery po zmroku (min. 25 min) bez muzyki i słuchawek", done: false },
+                { id: 'b3', text: "Przez 5 dni poruszaj się i wykonuj czynności bez pośpiechu i hałasu", done: false }
+            ]},
+            { category: "SZLAK BUSHIDO", name: "JIN SAKAI — DUCH CUSZIMY", desc: "Honor, adaptacja i ochrona własnego kodeksu.", tasks: [
+                { id: 'b1', text: "Spisz własny Kodeks 7 Zasad, których nigdy nie złamiesz", done: false },
+                { id: 'b2', text: "Weź 4 zimne prysznice (min. 60 sek.) bez zawahania", done: false },
+                { id: 'b3', text: "Wykonaj łącznie 15 minut głębokiego rozciągania bioder i barków", done: false }
+            ]},
+            { category: "SZLAK BUSHIDO", name: "SEN NO RIKYU — MISTRZ CEREMONII", desc: "Uważność, minimalizm i harmonia w prostych czynnościach.", tasks: [
+                { id: 'b1', text: "Zaparz i wypij herbatę liściastą 4 razy bez żadnego pośpiechu i ekranów", done: false },
+                { id: 'b2', text: "Utrzymaj idealny porządek na biurku przez pełne 7 dni", done: false },
+                { id: 'b3', text: "Zrób 20-minutowy spacer obserwując wyłącznie detale architektury i natury", done: false }
+            ]},
+            { category: "SZLAK BUSHIDO", name: "TAKEDA SHINGEN — TYGRYS Z KAI", desc: "Niewzruszony jak góra, szybki jak wiatr.", tasks: [
+                { id: 'b1', text: "Utrzymaj krzesełko przy ścianie (wall-sit) łącznie przez 6 minut w tygodniu", done: false },
+                { id: 'b2', text: "Wstań natychmiast po pierwszym sygnale budzika przez 5 dni", done: false },
+                { id: 'b3', text: "Zrób 3 sesje sprintów lub szybkiego marszu pod górę (po 15 min)", done: false }
+            ]},
+            { category: "SZLAK BUSHIDO", name: "UESUGI KENSHIN — BÓG WOJNY ECHIGO", desc: "Czystość intencji i żelazna samokontrola.", tasks: [
+                { id: 'b1', text: "Zero narzekania, krytykowania i wymówek przez 5 pełnych dni", done: false },
+                { id: 'b2', text: "Wykonaj łącznie 12 minut deski (plank) w dowolnych seriach", done: false },
+                { id: 'b3', text: "Zrób 30-minutową analizę swoich celów na najbliższe 6 miesięcy", done: false }
+            ]},
+            { category: "SZLAK BUSHIDO", name: "TOMOE GOZEN — NIEUSTĘPLIWA WOJOWNICZKA", desc: "Zwinność, koordynacja i precyzja uderzenia.", tasks: [
+                { id: 'b1', text: "Poświęć 30 min na naukę żonglowania lub ćwiczenia koordynacji ręka-oko", done: false },
+                { id: 'b2', text: "Wykonaj łącznie 150 wykroków w trakcie tygodnia", done: false },
+                { id: 'b3', text: "Zrób 3 sesje ćwiczeń mobilności kręgosłupa (po 10 min)", done: false }
+            ]},
+            { category: "SZLAK BUSHIDO", name: "TOKUGAWA IEYASU — ARCHITEKT POKOJU", desc: "Cierpliwość, długofalowe planowanie i panowanie nad emocjami.", tasks: [
+                { id: 'b1', text: "Zaplanuj szczegółowo budżet i oszczędności na cały następny miesiąc", done: false },
+                { id: 'b2', text: "Przez 4 dni odczekaj 10 sekund przed każdą odpowiedzią w dyskusji", done: false },
+                { id: 'b3', text: "Uporządkuj wszystkie dokumenty, notatki i pliki w komputerze", done: false }
+            ]},
+
+            // --- KATEGORIA 2: STOICYZM & FILOZOFIA (8 Bossów) ---
+            { category: "STOICYZM", name: "MAREK AURELIUSZ — CESARZ FILOZOF", desc: "Władza nad własnym umysłem mimo zewnętrznego chaosu.", tasks: [
+                { id: 'b1', text: "Prowadź wieczorny dziennik stoicki (5 min refleksji) przez 5 dni", done: false },
+                { id: 'b2', text: "Przez 4 dni świadomie wybierz dyskomfort (np. brak poduszki lub chłodny pokój)", done: false },
+                { id: 'b3', text: "Zrób bezinteresownie 2 konkretne przysługi dla innych osób", done: false }
+            ]},
+            { category: "STOICYZM", name: "SENEKA — MISTRZ CZASU", desc: "Odzyskiwanie kontroli nad każdą minutą życia.", tasks: [
+                { id: 'b1', text: "Przez 3 dni zapisuj dokładnie, na co poszła każda godzina Twojego dnia", done: false },
+                { id: 'b2', text: "Usuń z telefonu i komputera 5 największych pożeraczy czasu", done: false },
+                { id: 'b3', text: "Spędź 1 pełny wieczór (3h) bez żadnego dostępu do internetu", done: false }
+            ]},
+            { category: "STOICYZM", name: "EPIKTET — WOLNY NIEWOLNIK", desc: "Rozróżnianie tego, na co masz wpływ, od tego, co niezależne.", tasks: [
+                { id: 'b1', text: "Wypisz 10 rzeczy, które Cię stresują i podziel je na zależne i niezależne od Ciebie", done: false },
+                { id: 'b2', text: "Przez 5 dni nie reaguj złością na żadną przeszkodę ani opóźnienie", done: false },
+                { id: 'b3', text: "Zrób 24-godzinny post od kupowania czegokolwiek (Zero wydatków)", done: false }
+            ]},
+            { category: "STOICYZM", name: "DIOGENES — CYNIK Z BECZKI", desc: "Całkowita niezależność od wygód i opinii tłumu.", tasks: [
+                { id: 'b1', text: "Przez 3 dni pij wyłącznie czystą wodę (zero innych napojów)", done: false },
+                { id: 'b2', text: "Zrób 2 długie spacery (po 40 min) w deszczu, chłodzie lub wietrze", done: false },
+                { id: 'b3', text: "Oddaj lub wyrzuć 5 rzeczy, do których byłeś niepotrzebnie przywiązany", done: false }
+            ]},
+            { category: "STOICYZM", name: "SOKRATES — PYTAJĄCY UMYSŁ", desc: "Podważanie własnych założeń i szukanie prawdy.", tasks: [
+                { id: 'b1', text: "Przeprowadź 2 głębokie, wartościowe rozmowy bez zerkania na zegarek", done: false },
+                { id: 'b2', text: "Napisz na kartce argumenty przeciwko swojemu największemu przekonaniu", done: false },
+                { id: 'b3', text: "Wysłuchaj 2 wykładów akademickich lub filozoficznych (min. 30 min każdy)", done: false }
+            ]},
+            { category: "STOICYZM", name: "ZENON Z KITION — ZAŁOŻYCIEL STOI", desc: "Hart ducha po utracie wszystkiego.", tasks: [
+                { id: 'b1', text: "Weź 5 zimnych pryszniców w ciągu tego tygodnia", done: false },
+                { id: 'b2', text: "Przez 4 dni jedz bardzo proste, skromne posiłki bez przypraw i dodatków", done: false },
+                { id: 'b3', text: "Zrób 3 sesje ćwiczeń oddechowych po 15 minut", done: false }
+            ]},
+            { category: "STOICYZM", name: "KATON MŁODSZY — ŻELAZNA INTEGRALNOŚĆ", desc: "Niezłomność charakteru w obliczu pokus.", tasks: [
+                { id: 'b1', text: "Dotrzymaj 100% małych obietnic danych sobie i innym przez 7 dni", done: false },
+                { id: 'b2', text: "Przez 5 dni pilnuj idealnie wyprostowanej postawy ciała przy siedzeniu i chodzeniu", done: false },
+                { id: 'b3', text: "Wykonaj łącznie 150 pompek w trakcie tygodnia", done: false }
+            ]},
+            { category: "STOICYZM", name: "HERAKLIT — OGIEŃ ZMIANY", desc: "Akceptacja ciągłego ruchu i przekraczanie własnych granic.", tasks: [
+                { id: 'b1', text: "Zrób 3 rzeczy w tym tygodniu, których nigdy wcześniej w życiu nie robiłeś", done: false },
+                { id: 'b2', text: "Zmień trasę codziennego spaceru/powrotu 4 razy", done: false },
+                { id: 'b3', text: "Wykonaj łącznie 200 pajacyków lub skoków na skakance", done: false }
+            ]},
+
+            // --- KATEGORIA 3: SPARTA & WYTRZYMAŁOŚĆ (9 Bossów) ---
+            { category: "SPARTA", name: "LEONIDAS — KRÓL TERMOPILE", desc: "Utrzymanie pozycji mimo przytłaczającej przewagi wroga.", tasks: [
+                { id: 'b1', text: "Wykonaj łącznie 250 przysiadów w ciągu tygodnia", done: false },
+                { id: 'b2', text: "Zrób łącznie 5 minut maksymalnego zwisu na drążku (dead hang)", done: false },
+                { id: 'b3', text: "Wchodź wyłącznie po schodach (zero wind i schodów ruchomych) przez 7 dni", done: false }
+            ]},
+            { category: "SPARTA", name: "ACHILLES — NIEUCHWYTNY WOJOWNIK", desc: "Eksplozywność, szybkość i lekkość kroku.", tasks: [
+                { id: 'b1', text: "Wykonaj łącznie 300 wspięć na palce (łydki) w trakcie tygodnia", done: false },
+                { id: 'b2', text: "Zrób 2 sesje interwałów biegowych lub sprintów (po 15 min)", done: false },
+                { id: 'b3', text: "Poświęć 30 min na rolowanie lub automasaż nóg i stóp", done: false }
+            ]},
+            { category: "SPARTA", name: "HERAKLES — DWANAŚCIE PRAC", desc: "Czysta siła chwytu, wytrzymałość i determinacja.", tasks: [
+                { id: 'b1', text: "Wykonaj łącznie 100 burpees (padnij-powstań) rozłożonych na cały tydzień", done: false },
+                { id: 'b2', text: "Zrób 3 sesje ćwiczeń przedramion i chwytu (po 10 min)", done: false },
+                { id: 'b3', text: "Przejdź pieszo minimum 35 kilometrów łącznie w ciągu 7 dni", done: false }
+            ]},
+            { category: "SPARTA", name: "SPARTAKUS — WÓDZ BUNTOWNIKÓW", desc: "Hartowanie ciała bez dostępu do luksusów.", tasks: [
+                { id: 'b1', text: "Wykonaj łącznie 200 brzuszków lub wznosów nóg w trakcie tygodnia", done: false },
+                { id: 'b2', text: "Zrób 4 sesje porannego rozruchu stawów (po 10 min tuż po wstaniu)", done: false },
+                { id: 'b3', text: "Przez 5 dni śpij w całkowicie wywietrzonym, chłodnym pomieszczeniu", done: false }
+            ]},
+            { category: "SPARTA", name: "FILIPIDES — MARATOŃCZYK Z ATEN", desc: "Nieskończona wydolność tlenowa i odporność psychiczna.", tasks: [
+                { id: 'b1', text: "Wykonaj 2 długie sesje cardio (bieg, rower lub szybki marsz min. 45 min)", done: false },
+                { id: 'b2', text: "Ćwicz oddychanie wyłącznie przez nos podczas 3 spacerów", done: false },
+                { id: 'b3', text: "Zrób łącznie 150 wykroków chodzonych", done: false }
+            ]},
+            { category: "SPARTA", name: "MILON Z KROTONY — MISTRZ PROGRESJI", desc: "Codzienne dokładanie cegiełki do własnej siły.", tasks: [
+                { id: 'b1', text: "Codziennie przez 7 dni rób o 2 pompki więcej niż dnia poprzedniego (start od 15)", done: false },
+                { id: 'b2', text: "Utrzymaj pozycję deski bocznej po 4 minuty na każdą stronę łącznie", done: false },
+                { id: 'b3', text: "Zrób 20 minut rozciągania klatki piersiowej i barków", done: false }
+            ]},
+            { category: "SPARTA", name: "HEKTOR — OBROŃCA TROI", desc: "Odpowiedzialność i twarda obrona własnych granic.", tasks: [
+                { id: 'b1', text: "Wykonaj łącznie 120 dipów (pompek odwrotnych na krześle lub poręczach)", done: false },
+                { id: 'b2', text: "Przez 5 dni nie odkładaj żadnego drobnego obowiązku (zasada 2 minut)", done: false },
+                { id: 'b3', text: "Zrób 3 sesje ćwiczeń stabilizacji korpusu (po 10 min)", done: false }
+            ]},
+            { category: "SPARTA", name: "TEMISTOKLES — WŁADCA MÓRZ", desc: "Przewidywanie ruchów przeciwnika i chłodna kalkulacja.", tasks: [
+                { id: 'b1', text: "Zrób 4 zimne kąpiele lub prysznice po 90 sekund", done: false },
+                { id: 'b2', text: "Wykonaj łącznie 300 spinaczy (mountain climbers) w tygodniu", done: false },
+                { id: 'b3', text: "Zaplanuj logistykę całego następnego tygodnia w niedzielę wieczorem", done: false }
+            ]},
+            { category: "SPARTA", name: "ODYSEUSZ — MISTRZ PRZETRWANIA", desc: "Spryt i odporność na pokusy syren.", tasks: [
+                { id: 'b1', text: "Całkowite zero słodyczy, fast-foodów i słodkich napojów przez 6 dni", done: false },
+                { id: 'b2', text: "Zrób 2 długie marsze z obciążonym plecakiem (rucking min. 30 min)", done: false },
+                { id: 'b3', text: "Rozwiąż 10 zagadek logicznych lub zadań matematycznych w pamięci", done: false }
+            ]},
+
+            // --- KATEGORIA 4: MISTRZOWIE UMYSŁU & STRATEGIA (8 Bossów) ---
+            { category: "STRATEGIA", name: "LEONARDO DA VINCI — CZŁOWIEK RENESANSU", desc: "Ciekawość świata, obserwacja i łączenie różnych dziedzin.", tasks: [
+                { id: 'b1', text: "Naszkicuj w zeszycie 3 przedmioty lub mechanizmy z natury", done: false },
+                { id: 'b2', text: "Przez 3 dni wykonuj proste czynności (mycie zębów, jedzenie) niedominującą ręką", done: false },
+                { id: 'b3', text: "Zapisz w notesie 15 oryginalnych pomysłów lub usprawnień", done: false }
+            ]},
+            { category: "STRATEGIA", name: "NIKOLA TESLA — ARCHITEKT WIZUALIZACJI", desc: "Budowanie całych konstrukcji wyłącznie w wyobraźni.", tasks: [
+                { id: 'b1', text: "Poświęć łącznie 40 min na trening pamięci i wizualizacji przestrzennej", done: false },
+                { id: 'b2', text: "Przeprowadź 3 sesje pracy nad własnym projektem w kompletnej ciszy (po 45 min)", done: false },
+                { id: 'b3', text: "Zrób 3 długie spacery w samotności poświęcone wyłącznie myśleniu (po 30 min)", done: false }
+            ]},
+            { category: "STRATEGIA", name: "BOBBY FISCHER — ARCYMISTRZ SZACHOWNICY", desc: "Liczenie wariantów na 10 ruchów do przodu.", tasks: [
+                { id: 'b1', text: "Rozwiąż 30 zadań szachowych (taktyka / mat w 2-3 ruchach)", done: false },
+                { id: 'b2', text: "Przeanalizuj 3 swoje błędy z przeszłości i zapisz wnioski strategiczne", done: false },
+                { id: 'b3', text: "Ćwicz koncentrację: patrz w jeden punkt bez rozpraszania myśli przez 5 min (x3)", done: false }
+            ]},
+            { category: "STRATEGIA", name: "SUN TZU — AUTOR SZTUKI WOJNY", desc: "Zwycięstwo bez walki dzięki perfekcyjnemu przygotowaniu.", tasks: [
+                { id: 'b1', text: "Przygotuj wieczorem ubranie, posiłki i listę zadań na kolejny dzień (5 razy)", done: false },
+                { id: 'b2', text: "Zidentyfikuj i wyeliminuj 3 główne źródła chaosu w swoim tygodniu", done: false },
+                { id: 'b3', text: "Przez 4 dni nie podejmuj żadnej decyzji pod wpływem emocji (odczekaj 1h)", done: false }
+            ]},
+            { category: "STRATEGIA", name: "RICHARD FEYNMAN — MISTRZ PROSTOTY", desc: "Zrozumiesz coś dopiero wtedy, gdy potrafisz to prosto wyjaśnić.", tasks: [
+                { id: 'b1', text: "Wytłumacz na kartce własnymi słowami 2 złożone zagadnienia (Technika Feynmana)", done: false },
+                { id: 'b2', text: "Obejrzyj 2 dokumenty naukowe lub historyczne i wypisz z nich 5 faktów", done: false },
+                { id: 'b3', text: "Poświęć 30 min na naukę nowej umiejętności manualnej lub technicznej", done: false }
+            ]},
+            { category: "STRATEGIA", name: "SHERLOCK HOLMES — DEDUKCJA I OBSERWACJA", desc: "Dostrzeganie szczegółów, obok których inni przechodzą obojętnie.", tasks: [
+                { id: 'b1', text: "Po wejściu do nowego miejsca zapamiętaj 10 detali i odtwórz je z pamięci (4 razy)", done: false },
+                { id: 'b2', text: "Rozwiąż 5 trudnych zagadek detektywistycznych lub logicznych", done: false },
+                { id: 'b3', text: "Przez 3 dni słuchaj rozmówców w 100% uważnie, bez przerywania", done: false }
+            ]},
+            { category: "STRATEGIA", name: "BENJAMIN FRANKLIN — MISTRZ CNÓT", desc: "Systematyczny pomiar własnego charakteru.", tasks: [
+                { id: 'b1', text: "Wstawaj o stałej godzinie i wykonaj poranną rutynę przez 5 dni", done: false },
+                { id: 'b2', text: "Przejrzyj wszystkie swoje subskrypcje i wydatki, usuwając zbędne koszty", done: false },
+                { id: 'b3', text: "Napisz list lub wiadomość z podziękowaniem do osoby, która Ci kiedyś pomogła", done: false }
+            ]},
+            { category: "STRATEGIA", name: "NICCOLO MACHIAVELLI — REALISTA WŁADZY", desc: "Chłodna ocena rzeczywistości bez złudzeń.", tasks: [
+                { id: 'b1', text: "Przeanalizuj swoje otoczenie i zapisz, kto ciągnie Cię w górę, a kto w dół", done: false },
+                { id: 'b2', text: "Wyćwicz asertywność: odmów 2 razy rzeczy, na które nie masz czasu ani ochoty", done: false },
+                { id: 'b3', text: "Zrób 45-minutową sesję planowania swojej ścieżki kariery / rozwoju", done: false }
+            ]},
+
+            // --- KATEGORIA 5: MNICH & WYCISZENIE (8 Bossów) ---
+            { category: "SZLAK MNICHA", name: "BODHIDHARMA — ZAŁOŻYCIEL SHAOLIN", desc: "Niewzruszona postawa i jedność ciała z umysłem.", tasks: [
+                { id: 'b1', text: "Utrzymaj pozycję jeźdźca (horse stance) łącznie przez 8 minut w tygodniu", done: false },
+                { id: 'b2', text: "Zrób 4 sesje świadomego, głębokiego oddychania przeponowego (po 10 min)", done: false },
+                { id: 'b3', text: "Przez 4 dni jedz wolno, przeżuwając każdy kęs minimum 20 razy", done: false }
+            ]},
+            { category: "SZLAK MNICHA", name: "THICH NHAT HANH — MISTRZ UWAŻNOŚCI", desc: "Pełna obecność w teraźniejszości.", tasks: [
+                { id: 'b1', text: "Zrób 3 powolne, uważne spacery (min. 20 min) skupiając się wyłącznie na krokach", done: false },
+                { id: 'b2', text: "Przez 3 dni zmywaj naczynia i sprzątaj bez muzyki, podcastów i pośpiechu", done: false },
+                { id: 'b3', text: "Zapisz 15 rzeczy, za które jesteś wdzięczny w swoim życiu", done: false }
+            ]},
+            { category: "SZLAK MNICHA", name: "WIM HOF — CZŁOWIEK LODU", desc: "Kontrola układu nerwowego poprzez zimno i oddech.", tasks: [
+                { id: 'b1', text: "Wykonaj 4 rundy oddechowe metodą Wima Hofa (4 razy w tygodniu)", done: false },
+                { id: 'b2', text: "Zakończ każdy prysznic w tym tygodniu 60 sekundami lodowatej wody", done: false },
+                { id: 'b3', text: "Wyjdź na 15-minutowy spacer w lekkim ubraniu dla hartowania organizmu", done: false }
+            ]},
+            { category: "SZLAK MNICHA", name: "LAO TSY — MISTRZ TAO", desc: "Działanie bez wysiłku (Wu Wei) i płynięcie z nurtem.", tasks: [
+                { id: 'b1', text: "Spędź łącznie 2 godziny na łonie natury (las, park, woda) bez elektroniki", done: false },
+                { id: 'b2', text: "Przez 4 dni odpuść kontrolę nad drobiazgami, które nie mają znaczenia", done: false },
+                { id: 'b3', text: "Zrób 20 minut łagodnego rozciągania całego ciała przed snem (3 razy)", done: false }
+            ]},
+            { category: "SZLAK MNICHA", name: "MILAREPA — ASCETA TYBETU", desc: "Wytrwałość w surowych warunkach i hart ducha.", tasks: [
+                { id: 'b1', text: "Zastosuj post przerywany (okno żywieniowe 8h) przez 4 dni w tygodniu", done: false },
+                { id: 'b2', text: "Przez 5 dni nie włączaj żadnej muzyki ani wideo w tle podczas codziennych spraw", done: false },
+                { id: 'b3', text: "Połóż się spać przed godziną 23:00 minimum 4 razy w tygodniu", done: false }
+            ]},
+            { category: "SZLAK MNICHA", name: "DOGEN — MISTRZ ZAZEN", desc: "Czysta dyscyplina siedzenia i obserwacji myśli.", tasks: [
+                { id: 'b1', text: "Siedź w bezruchu z prostymi plecami przez 10 min dziennie (4 razy w tygodniu)", done: false },
+                { id: 'b2', text: "Uporządkuj swoją sypialnię do poziomu minimalistycznej celi mnicha", done: false },
+                { id: 'b3', text: "Przez 3 dni unikaj sztucznego światła i ekranów na 60 min przed snem", done: false }
+            ]},
+            { category: "SZLAK MNICHA", name: "RYOKAN — POETA PUSTELNIK", desc: "Prostota życia i radość z małych rzeczy.", tasks: [
+                { id: 'b1', text: "Napisz 3 krótkie wiersze, haiku lub przemyślenia na papierze", done: false },
+                { id: 'b2', text: "Przez 3 dni zrezygnuj z wszelkich rozrywek cyfrowych po godzinie 20:00", done: false },
+                { id: 'b3', text: "Zrób 30-minutowy spacer o wschodzie lub zachodzie słońca", done: false }
+            ]},
+            { category: "SZLAK MNICHA", name: "PADMASAMBHAVA — POGROMCA ILUZJI", desc: "Przecinanie własnych lęków i wymówek.", tasks: [
+                { id: 'b1', text: "Zrób 2 rzeczy w tym tygodniu, które budzą w Tobie lekki dyskomfort lub opór", done: false },
+                { id: 'b2', text: "Przez 5 dni nie używaj słów 'nie chce mi się' ani 'nie mam czasu'", done: false },
+                { id: 'b3', text: "Zrób 3 sesje ćwiczeń wzroku (patrzenie w dal, relaksacja oczu po 10 min)", done: false }
+            ]},
+
+            // --- KATEGORIA 6: ARCHITEKT NOWOCZESNOŚCI (8 Bossów) ---
+            { category: "ARCHITEKT", name: "CAL NEWPORT — MISTRZ GŁĘBOKIEJ PRACY", desc: "Zdolność do pełnej koncentracji w rozproszonym świecie.", tasks: [
+                { id: 'b1', text: "Wykonaj 4 bloki Deep Work (po 50 min) z wyłączonym internetem/powiadomieniami", done: false },
+                { id: 'b2', text: "Sprawdzaj wiadomości i powiadomienia tylko w 2 wyznaczonych oknach dziennie (4 dni)", done: false },
+                { id: 'b3', text: "Zrób pełny audyt swojego środowiska pracy i usuń wszystkie rozpraszacze", done: false }
+            ]},
+            { category: "ARCHITEKT", name: "DAVID GOGGINS — NIEZNISZCZALNY UMYSŁ", desc: "Przekraczanie bariery 40% możliwości organizmu.", tasks: [
+                { id: 'b1', text: "Zrób 1 naprawdę ciężką sesję wytrzymałościową (np. 100 burpees lub 10 km marszu/biegu)", done: false },
+                { id: 'b2', text: "Wypisz na lustrze swoje największe słabości i codziennie rano na nie patrz", done: false },
+                { id: 'b3', text: "Wykonaj łącznie 200 pompek w trakcie tego tygodnia", done: false }
+            ]},
+            { category: "ARCHITEKT", name: "JAMES CLEAR — ARCHITEKT ATOMOWYCH NAWYKÓW", desc: "Optymalizacja otoczenia, aby dobre nawyki działy się same.", tasks: [
+                { id: 'b1', text: "Zaprojektuj 3 konkretne usprawnienia w pokoju ułatwiające Twoje dobre nawyki", done: false },
+                { id: 'b2', text: "Zastosuj zasadę 'Nigdy nie opuszczaj dwa razy' dla każdej czynności w tygodniu", done: false },
+                { id: 'b3', text: "Zrób przegląd swoich postępów z ostatnich 30 dni i skoryguj plan", done: false }
+            ]},
+            { category: "ARCHITEKT", name: "JOCKO WILLINK — EKSTREMALNA ODPOWIEDZIALNOŚĆ", desc: "Zero wymówek. Wszystko, co dzieje się w Twoim życiu, zależy od Ciebie.", tasks: [
+                { id: 'b1', text: "Wstań o 6:00 rano (lub 45 min wcześniej niż zwykle) minimum 4 razy w tygodniu", done: false },
+                { id: 'b2', text: "Przez 5 dni za każdy problem bierz 100% odpowiedzialności bez obwiniania nikogo", done: false },
+                { id: 'b3', text: "Wykonaj łącznie 150 przysiadów i 100 brzuszków w trakcie tygodnia", done: false }
+            ]},
+            { category: "ARCHITEKT", name: "ANDREW HUBERMAN — OPTYMALIZATOR BIOLOGII", desc: "Wykorzystanie światła, snu i neurobiologii na swoją korzyść.", tasks: [
+                { id: 'b1', text: "Wyjdź na naturalne światło dzienne na 10-15 min tuż po przebudzeniu (5 razy)", done: false },
+                { id: 'b2', text: "Odstaw kofeinę na 90 min po przebudzeniu i po godz. 14:00 przez 5 dni", done: false },
+                { id: 'b3', text: "Zrób 3 sesje protokołu NSDR / głębokiego relaksu (po 15 min)", done: false }
+            ]},
+            { category: "ARCHITEKT", name: "NAVAL RAVIKANT — DŹWIGNIA I SPOKÓJ", desc: "Budowanie długoterminowej wartości i wewnętrznego spokoju.", tasks: [
+                { id: 'b1', text: "Poświęć 60 min na naukę umiejętności o wysokiej dźwigni (kod, sprzedaż, pisanie)", done: false },
+                { id: 'b2', text: "Zrób 3 długie spacery bez celu i bez telefonu (po 30 min)", done: false },
+                { id: 'b3', text: "Zapisz 5 najważniejszych lekcji życiowych, jakie wyciągnąłeś w tym roku", done: false }
+            ]},
+            { category: "ARCHITEKT", name: "ELON MUSK — PIERWSZE ZASADY", desc: "Rozkładanie problemów na czynniki pierwsze i szybka iteracja.", tasks: [
+                { id: 'b1', text: "Rozłóż swój największy obecny problem na czynniki pierwsze na kartce", done: false },
+                { id: 'b2', text: "Zoptymalizuj 2 codzienne procesy, aby zaoszczędzić minimum 30 min dziennie", done: false },
+                { id: 'b3', text: "Zrób 2 sesje intensywnego sprintu zadaniowego (60 min bez żadnej przerwy)", done: false }
+            ]},
+            { category: "ARCHITEKT", name: "SUNG JIN-WOO — MONARCHA CIENI", desc: "Ostateczny test: samotne przekraczanie własnych granic każdego dnia.", tasks: [
+                { id: 'b1', text: "Wykonaj łącznie 200 pompek, 200 przysiadów i 200 brzuszków w ciągu tygodnia", done: false },
+                { id: 'b2', text: "Przebiegnij lub przejdź szybkim marszem łącznie 25 km w tym tygodniu", done: false },
+                { id: 'b3', text: "Zrealizuj 100% wszystkich Nagłych Misji Systemowych przez 4 dni w tygodniu", done: false }
+            ]}
         ];
 
-        // RYWALE W RANKINGU PUNKTÓW PRZEWAGI (Tabela porównawcza)
-        const rankingRivals = [
-            { name: "Śpiący Obywatel (Dryfujący w Tłumie)", pts: 50, tag: "Bottom 10%" },
-            { name: "Niedzielny Marzyciel (Słomiany Zapał)", pts: 120, tag: "Bottom 30%" },
-            { name: "Przeciętny Etatowiec (Strefa Komfortu)", pts: 210, tag: "Top 50%" },
-            { name: "Ambitny Adept (Początek Rutyny)", pts: 340, tag: "Top 35%" },
-            { name: "Zdyscyplinowany Uczeń", pts: 520, tag: "Top 20%" },
-            { name: "Łowca Rangi C (Konsekwentny)", pts: 780, tag: "Top 12%" },
-            { name: "Wojownik Cuszimy (Żelazny Nawyk)", pts: 1150, tag: "Top 6%" },
-            { name: "Łowca Rangi A (Elita Woli)", pts: 1650, tag: "Top 2.5%" },
-            { name: "Cień Eminencji (Mistrz Rygoru)", pts: 2350, tag: "Top 0.8%" },
-            { name: "Archont Żelaza (Anomalia)", pts: 3300, tag: "Top 0.2%" },
-            { name: "Monarcha Cieni (Legenda)", pts: 4600, tag: "Top 0.02%" },
-            { name: "Absolutny Architekt (Poza Skalą)", pts: 6500, tag: "Top 0.001%" }
+        // =========================================================================
+        // 99 RYWALI W RANKINGU TOP 100 (Razem z Graczem = dokładnie 100 miejsc!)
+        // =========================================================================
+        const rivalPrefixes = [
+            "Cień", "Wędrowiec", "Adept", "Łowca", "Mściciel", "Samuraj", "Strażnik", "Kowal", "Nomad", "Duch",
+            "Wilk", "Kruk", "Szept", "Ostrze", "Rycerz", "Mnich", "Zwiadowca", "Wojownik", "Archont", "Suweren",
+            "Fantazmat", "Egzekutor", "Ronin", "Asceta", "Strateg", "Mistrz", "Tytan", "Monarcha", "Pielgrzym", "Obserwator",
+            "Buntownik", "Wartownik", "Szturmowiec"
         ];
+        const rivalSuffixes = [
+            "Północy", "Otchłani", "Żelaza", "Ciszy", "Pustki", "Burzy", "Nocy", "Popiołu", "Cuszimy", "Woli",
+            "Mroku", "Stali", "Gór", "Wiatru", "Ognia", "Cierpliwości", "Cienia", "Świtu", "Zmierzchu", "Lodu",
+            "Zemsty", "Honoru", "Spokoju", "Tłumu", "Peryferii", "Bramy", "Krawędzi", "Horyzontu", "Skały", "Rygoru",
+            "Przeznaczenia", "Eminencji", "Absolutu"
+        ];
+
+        const rankingRivals = [];
+        for (let i = 0; i < 99; i++) {
+            const pName = rivalPrefixes[i % rivalPrefixes.length];
+            const sName = rivalSuffixes[(i * 7 + Math.floor(i / 3)) % rivalSuffixes.length];
+            // Punkty rosną wykładniczo od 40 PKT (miejsce #100) aż do 6800 PKT (miejsce #1)
+            const pts = Math.round(40 + Math.pow(i, 1.85) * 1.38);
+            let tag = "Bottom 20%";
+            if (i >= 85) tag = "Top 15%";
+            else if (i >= 70) tag = "Top 30%";
+            else if (i >= 50) tag = "Top 50%";
+            else if (i >= 25) tag = "Bottom 50%";
+
+            rankingRivals.push({
+                name: `${pName} ${sName} #${99 - i}`,
+                pts,
+                tag
+            });
+        }
 
         // PULA 100 UNIKALNYCH NAGŁYCH MISJI SYSTEMOWYCH
         const urgentQuestsPool = [
@@ -800,6 +1077,7 @@
             const template = weeklyBossesPool[idx];
             return {
                 index: idx,
+                category: template.category,
                 name: template.name,
                 desc: template.desc,
                 defeated: false,
@@ -938,9 +1216,9 @@
             return xpSum * 2;
         }
 
-        // Pomocnicza funkcja obliczająca aktualne miejsce w tabeli rywali
+        // Pozycja w Top 100 (1..100)
         function getPlayerRankPosition(pts) {
-            let rank = rankingRivals.length + 1;
+            let rank = rankingRivals.length + 1; // 100
             for (let i = 0; i < rankingRivals.length; i++) {
                 if (pts >= rankingRivals[i].pts) {
                     rank--;
@@ -949,9 +1227,22 @@
             return rank;
         }
 
+        function countCompletedTasksToday() {
+            let done = 0;
+            ['sila', 'intelekt', 'wola'].forEach(catKey => {
+                state.habits[catKey].forEach(h => {
+                    if (h.status === 'done' || (h.weeklyTarget && (h.weeklyDone || 0) >= h.weeklyTarget)) {
+                        done++;
+                    }
+                });
+            });
+            return done;
+        }
+
         function render() {
             const currentReq = getReqForLevel(state.level);
             const currentRank = getRank(state.level);
+            const posIn100 = getPlayerRankPosition(state.advantagePoints);
             
             document.getElementById('header-level').innerText = state.level;
             document.getElementById('header-rank').innerText = currentRank;
@@ -967,21 +1258,11 @@
             document.getElementById('stat-rank').innerText = currentRank;
             document.getElementById('stat-xp').innerText = state.level >= 100 ? "MAX POZIOM" : `${state.xp} / ${currentReq} XP`;
             document.getElementById('stat-total-xp').innerText = `${state.totalXp} XP`;
-            document.getElementById('stat-advantage').innerText = `${state.advantagePoints} PKT (#${getPlayerRankPosition(state.advantagePoints)} w tabeli)`;
+            document.getElementById('stat-advantage').innerText = `${state.advantagePoints} PKT (#${posIn100}/100)`;
             document.getElementById('stat-coins').innerText = `${state.coins} ₵`;
             document.getElementById('stat-ego').innerText = getEgoPercentile(state.level);
             document.getElementById('stat-shields').innerText = `${state.shields} szt.`;
             document.getElementById('shop-balance').innerText = `${state.coins} ₵`;
-
-            // Status Boostu 9/9 (Odblokowywany na Lvl 30)
-            const boostEl = document.getElementById('stat-perfect-boost');
-            if (state.level >= 30) {
-                boostEl.innerText = "🔓 AKTYWNY (+2 XP za 9/9)";
-                boostEl.className = "text-[11px] font-bold text-emerald-400";
-            } else {
-                boostEl.innerText = "🔒 WYMAGANY LVL 30";
-                boostEl.className = "text-[11px] font-bold text-slate-500";
-            }
 
             const totalBonus = getStreakBonus(state.categoryStreaks.sila) +
                                getStreakBonus(state.categoryStreaks.intelekt) +
@@ -994,6 +1275,7 @@
             renderHabitCategory('intelekt', 'habits-intelekt');
             renderHabitCategory('wola', 'habits-wola');
             renderHardcoreSection();
+            renderPerfectDayModule();
             renderShop();
             renderTitlesList();
 
@@ -1006,22 +1288,41 @@
             }).join('');
         }
 
-        // Renderowanie Bossa Tygodniowego
+        // Renderowanie Bossa Tygodniowego (Odblokowywany na Poziomie 7)
         function renderWeeklyBoss() {
+            const lockedDiv = document.getElementById('boss-locked');
+            const unlockedDiv = document.getElementById('boss-unlocked');
+            const badge = document.getElementById('boss-reward-badge');
+            const catBadge = document.getElementById('boss-category-badge');
+
+            if (state.level < 7) {
+                lockedDiv.classList.remove('hidden');
+                unlockedDiv.classList.add('hidden');
+                catBadge.classList.add('hidden');
+                badge.innerText = "🔒 WYMAGANY POZIOM 7";
+                badge.className = "text-[11px] font-tech px-2.5 py-0.5 rounded bg-obsidian text-slate-400 border border-edge";
+                return;
+            }
+
+            lockedDiv.classList.add('hidden');
+            unlockedDiv.classList.remove('hidden');
+
             const boss = state.weeklyBoss;
             if (!boss) return;
 
+            catBadge.classList.remove('hidden');
+            catBadge.innerText = boss.category || "LOŻA SPECJALNA";
+
             document.getElementById('boss-title').innerText = boss.defeated
                 ? `💀 POKONANO: ${boss.name}`
-                : `👹 BOSS TYGODNIOWY: ${boss.name}`;
+                : `👹 ${boss.name}`;
             document.getElementById('boss-desc').innerText = boss.desc;
 
-            const badge = document.getElementById('boss-reward-badge');
             if (boss.defeated) {
-                badge.innerText = "✓ NAGRODA ODEBRANA (+15 XP & +30 ₵)";
+                badge.innerText = "✓ POKONANY (+15 XP & +30 ₵)";
                 badge.className = "text-[11px] font-tech px-2.5 py-0.5 rounded bg-emerald-950/50 text-emerald-300 border border-emerald-500/40 font-bold";
             } else {
-                badge.innerText = "NAGRODA: +15 XP & +30 ₵";
+                badge.innerText = "🔓 AKTYWNY (KARA: -10 XP)";
                 badge.className = "text-[11px] font-tech px-2.5 py-0.5 rounded bg-rose-950/40 text-rose-300 border border-rose-500/30";
             }
 
@@ -1029,15 +1330,16 @@
             container.innerHTML = boss.tasks.map((t, idx) => `
                 <div onclick="window.toggleBossTask(${idx})" class="cursor-pointer p-2.5 rounded border font-tech text-xs flex items-center justify-between transition ${t.done ? 'bg-emerald-950/25 border-emerald-500/40 text-emerald-300 line-through' : 'bg-obsidian/80 border-edge hover:border-rose-500/40 text-slate-200'}">
                     <div class="flex items-center gap-2.5">
-                        <span class="w-4 h-4 rounded border flex items-center justify-center text-[10px] ${t.done ? 'bg-emerald-600 border-emerald-400 text-white' : 'border-slate-600 text-transparent'}">✓</span>
+                        <span class="w-4 h-4 rounded border flex items-center justify-center text-[10px] shrink-0 ${t.done ? 'bg-emerald-600 border-emerald-400 text-white' : 'border-slate-600 text-transparent'}">✓</span>
                         <span>${t.text}</span>
                     </div>
-                    <span class="text-[10px] ${t.done ? 'text-emerald-400' : 'text-slate-500'}">${t.done ? 'ZALICZONE' : 'ETAP ' + (idx + 1) + '/3'}</span>
+                    <span class="text-[10px] shrink-0 ml-2 ${t.done ? 'text-emerald-400' : 'text-slate-500'}">${t.done ? 'ZALICZONE' : 'ETAP ' + (idx + 1) + '/3'}</span>
                 </div>
             `).join('');
         }
 
         window.toggleBossTask = function(idx) {
+            if (state.level < 7) return;
             const boss = state.weeklyBoss;
             if (!boss) return;
 
@@ -1048,14 +1350,14 @@
                 boss.defeated = true;
                 adjustXP(15);
                 state.coins += 30;
-                state.advantagePoints += 40;
-                addLog(`💀 POKONANO BOSSA TYGODNIOWEGO: ${boss.name}! Nagroda: +15 XP, +30 ₵ oraz +40 PKT Przewagi!`, "levelup");
-                showNotification(`💀 BOSS POKONANY! Zyskałeś +15 XP, +30 ₵ i +40 PKT Przewagi!`);
+                state.advantagePoints += 45;
+                addLog(`💀 POKONANO BOSSA TYGODNIOWEGO: ${boss.name}! Nagroda: +15 XP, +30 ₵ oraz +45 PKT Przewagi!`, "levelup");
+                showNotification(`💀 BOSS POKONANY! Zyskałeś +15 XP, +30 ₵ i +45 PKT Przewagi!`);
             } else if (!allDone && boss.defeated) {
                 boss.defeated = false;
                 adjustXP(-15);
                 state.coins = Math.max(0, state.coins - 30);
-                state.advantagePoints = Math.max(0, state.advantagePoints - 40);
+                state.advantagePoints = Math.max(0, state.advantagePoints - 45);
                 addLog(`Cofnięto pokonanie Bossa: ${boss.name} (-15 XP, -30 ₵).`, "info");
             }
 
@@ -1063,7 +1365,37 @@
             render();
         };
 
-        // Renderowanie Nagłej Misji Systemowej
+        // Renderowanie Modułu Perfekcyjnego Dnia 9/9 (Odblokowywany na Poziomie 30)
+        function renderPerfectDayModule() {
+            const lockedDiv = document.getElementById('perfect-locked');
+            const unlockedDiv = document.getElementById('perfect-unlocked');
+            const badge = document.getElementById('perfect-badge');
+
+            if (state.level < 30) {
+                lockedDiv.classList.remove('hidden');
+                unlockedDiv.classList.add('hidden');
+                badge.innerText = "🔒 WYMAGANY POZIOM 30";
+                badge.className = "text-[11px] font-tech px-2.5 py-1 rounded bg-obsidian text-slate-400 border border-edge";
+                return;
+            }
+
+            lockedDiv.classList.add('hidden');
+            unlockedDiv.classList.remove('hidden');
+            badge.innerText = "🔓 MODUŁ AKTYWNY (LVL 30+)";
+            badge.className = "text-[11px] font-tech px-2.5 py-1 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/40";
+
+            const doneCount = countCompletedTasksToday();
+            document.getElementById('perfect-today-counter').innerText = `${doneCount} / 9`;
+            const statusEl = document.getElementById('perfect-today-status');
+            if (doneCount === 9) {
+                statusEl.innerText = "✓ GOTOWE (+2 XP NA KONIEC DNIA)";
+                statusEl.className = "px-2.5 py-1 rounded bg-emerald-950/60 border border-emerald-500/50 text-emerald-300 text-[11px] font-bold shrink-0";
+            } else {
+                statusEl.innerText = `BRAKUJE ${9 - doneCount} ZADAŃ`;
+                statusEl.className = "px-2.5 py-1 rounded bg-panel border border-edge text-slate-400 text-[11px] shrink-0";
+            }
+        }
+
         function renderUrgentQuest() {
             const container = document.getElementById('urgent-quest-container');
             const uq = state.urgentQuest;
@@ -1113,7 +1445,6 @@
             render();
         };
 
-        // Renderowanie Sklepu Systemowego
         function renderShop() {
             const container = document.getElementById('shop-items');
             container.innerHTML = shopCatalog.map(item => {
@@ -1411,8 +1742,9 @@
                 state.level++;
                 const newRank = getRank(state.level);
                 addLog(`🎉 AWANS NA POZIOM ${state.level}! Tytuł: «${newRank}»`, "levelup");
+                if (state.level === 7) addLog(`👹 ODBLOKOWANO LOŻE Z BOSSAMI TYGODNIOWYMI!`, "levelup");
                 if (state.level === 25) addLog(`❖ ODBLOKOWANO PROTOKÓŁ HARDCORE!`, "levelup");
-                if (state.level === 30) addLog(`⚡ ODBLOKOWANO BOOST PERFEKCYJNEGO DNIA 9/9 (+2 XP)!`, "levelup");
+                if (state.level === 30) addLog(`⚡ ODBLOKOWANO REZONANS ABSOLUTNY 9/9 (+2 XP)!`, "levelup");
                 showNotification(`🎉 AWANS NA POZIOM ${state.level}! Nowy tytuł: «${newRank}»`);
                 currentReq = getReqForLevel(state.level);
             }
@@ -1427,11 +1759,7 @@
             if (state.level === 1 && state.xp < 0) state.xp = 0;
         }
 
-        // ZAKOŃCZENIE CYKLU DNIA:
-        // 1. Każde niezaznaczone codzienne zadanie = automatyczna PORAŻKA (-XP + reset serii)
-        // 2. Wypłata monet za 100% kategorii
-        // 3. Boost +2 XP za 9/9 (jeśli Lvl >= 30)
-        // 4. Przeliczenie Punktów Przewagi (awans lub spadek w tabeli)
+        // ZAKOŃCZENIE CYKLU DNIA
         window.endDay = function() {
             let dailyBonusTotal = 0;
             let coinsEarnedToday = 0;
@@ -1446,7 +1774,7 @@
             ['sila', 'intelekt', 'wola'].forEach(catKey => {
                 const habitsInCat = state.habits[catKey];
 
-                // KROK 1: Automatyczne rozliczenie niezaznaczonych zadań codziennych jako PORAŻKA
+                // Niezaznaczone codzienne zadania = automatyczna porażka
                 habitsInCat.forEach(h => {
                     if (!h.weeklyTarget && h.status === 'pending') {
                         h.status = 'failed';
@@ -1458,7 +1786,6 @@
                 const anyFailed = habitsInCat.some(h => h.status === 'failed');
                 const anyDone = habitsInCat.some(h => h.status === 'done');
 
-                // Zliczanie zadań do skuteczności dnia (9/9)
                 habitsInCat.forEach(h => {
                     totalTasksCount++;
                     if (h.status === 'done' || (h.weeklyTarget && (h.weeklyDone || 0) >= h.weeklyTarget)) {
@@ -1466,14 +1793,12 @@
                     }
                 });
 
-                // Sprawdzenie 100% kategorii dla wypłaty monet (2x XP)
                 if (isCategory100Percent(catKey)) {
                     const catCoins = calculateCategoryCoins(catKey);
                     coinsEarnedToday += catCoins;
                     completedCategories.push(`${catKey.toUpperCase()} (+${catCoins} ₵)`);
                 }
 
-                // Aktualizacja serii lub kara za porażkę (w tym automatyczną)
                 if (!anyFailed && anyDone) {
                     state.categoryStreaks[catKey] = Math.min(10, state.categoryStreaks[catKey] + 1);
                     const bonus = getStreakBonus(state.categoryStreaks[catKey]);
@@ -1488,7 +1813,6 @@
                     }
                 }
 
-                // Reset statusu zadań na kolejny dzień
                 habitsInCat.forEach(h => h.status = 'pending');
             });
 
@@ -1500,45 +1824,40 @@
                 state.hardcoreHabit.status = 'pending';
             }
 
-            // Wypłata monet
             if (coinsEarnedToday > 0) {
                 state.coins += coinsEarnedToday;
                 addLog(`🪙 WYPŁATA SKARBCOWA: Ukończono 100% w [${completedCategories.join(', ')}]. Otrzymano +${coinsEarnedToday} ₵!`, "levelup");
             }
 
-            // Wypłata XP z serii
             if (dailyBonusTotal > 0) {
                 adjustXP(dailyBonusTotal);
                 addLog(`⏭️ BONUS SERII: Doliczono +${dailyBonusTotal} XP za utrzymanie ciągłości.`, "success");
             }
 
-            // BOOST 9/9 (+2 XP od Poziomu 30)
+            // Moduł Rezonansu 9/9 (+2 XP od Poziomu 30)
             let perfectBoostEarned = 0;
             const completionRate = Math.round((completedTasksCount / totalTasksCount) * 100);
             if (completedTasksCount === totalTasksCount && state.level >= 30) {
                 perfectBoostEarned = 2;
                 adjustXP(2);
-                addLog(`⚡ BOOST PERFEKCYJNEGO DNIA (9/9): Przyznano dodatkowe +2 XP!`, "levelup");
+                addLog(`⚡ REZONANS ABSOLUTNY (9/9): Przyznano dodatkowe +2 XP!`, "levelup");
             }
 
-            // Obliczenie zmiany Punktów Przewagi (można zyskać lub spaść w tabeli!)
             let advantageDelta = 0;
             if (completionRate === 100) {
-                advantageDelta = 25 + (dailyBonusTotal * 2);
+                advantageDelta = 28 + (dailyBonusTotal * 2);
             } else if (completionRate >= 75) {
-                advantageDelta = 12 + dailyBonusTotal;
+                advantageDelta = 14 + dailyBonusTotal;
             } else if (completionRate >= 50) {
-                advantageDelta = 2;
+                advantageDelta = 3;
             } else {
-                // Kara w Punktach Przewagi za słaby dzień (<50%)
-                advantageDelta = -Math.max(10, autoFailedTasks.length * 6);
+                advantageDelta = -Math.max(12, autoFailedTasks.length * 7);
             }
 
             state.advantagePoints = Math.max(0, state.advantagePoints + advantageDelta);
             const rankAfter = getPlayerRankPosition(state.advantagePoints);
-            const rankDiff = rankBefore - rankAfter; // > 0 oznacza awans w tabeli, < 0 oznacza spadek
+            const rankDiff = rankBefore - rankAfter;
 
-            // Losowanie nowej Nagłej Misji na kolejny dzień
             const prevIdx = state.urgentQuest ? state.urgentQuest.index : -1;
             state.urgentQuest = pickRandomUrgentQuest(prevIdx);
             addLog(`⚡ NOWA NAGŁA MISJA NA JUTRO: "${state.urgentQuest.text}" (+${state.urgentQuest.xpValue} XP).`, "levelup");
@@ -1576,12 +1895,11 @@
             openAdvantageModal();
         };
 
-        // Renderowanie i otwieranie Tabeli Rankingu Przewagi
+        // Renderowanie Rankingu TOP 100
         window.openLeaderboardModal = function() {
             const modal = document.getElementById('leaderboard-modal');
             const listEl = document.getElementById('leaderboard-list');
 
-            // Łączymy rywali z aktualnym wynikiem gracza i sortujemy malejąco
             const combined = [
                 ...rankingRivals.map(r => ({ ...r, isPlayer: false })),
                 {
@@ -1592,13 +1910,17 @@
                 }
             ].sort((a, b) => b.pts - a.pts);
 
+            const playerIndex = combined.findIndex(x => x.isPlayer);
+            document.getElementById('modal-player-rank').innerText = `#${playerIndex + 1} / 100`;
+            document.getElementById('modal-player-pts').innerText = `${state.advantagePoints} PKT`;
+
             listEl.innerHTML = combined.map((entry, idx) => {
                 const pos = idx + 1;
                 if (entry.isPlayer) {
                     return `
-                        <div class="p-3 rounded border-2 border-sky-400 bg-sky-950/40 flex items-center justify-between shadow-lg">
+                        <div id="player-leaderboard-row" class="p-3 rounded border-2 border-sky-400 bg-sky-950/50 flex items-center justify-between shadow-lg">
                             <div class="flex items-center gap-2.5">
-                                <span class="text-sky-300 font-bold w-6">#${pos}</span>
+                                <span class="text-sky-300 font-bold w-8">#${pos}</span>
                                 <div>
                                     <div class="text-sky-200 font-bold">${entry.name}</div>
                                     <div class="text-[10px] text-sky-400">Tytuł: «${entry.tag}»</div>
@@ -1611,9 +1933,9 @@
                     `;
                 }
                 return `
-                    <div class="p-2.5 rounded border border-edge bg-obsidian/75 flex items-center justify-between text-slate-400">
+                    <div class="p-2 rounded border border-edge/80 bg-obsidian/70 flex items-center justify-between text-slate-400">
                         <div class="flex items-center gap-2.5">
-                            <span class="text-slate-600 font-bold w-6">#${pos}</span>
+                            <span class="text-slate-600 font-bold w-8">#${pos}</span>
                             <div>
                                 <div class="text-slate-300 font-medium">${entry.name}</div>
                                 <div class="text-[10px] text-slate-600">${entry.tag}</div>
@@ -1625,13 +1947,18 @@
             }).join('');
 
             modal.classList.remove('hidden');
+
+            // Automatyczne przewinięcie tabeli do pozycji gracza
+            setTimeout(() => {
+                const row = document.getElementById('player-leaderboard-row');
+                if (row) row.scrollIntoView({ block: 'center', behavior: 'smooth' });
+            }, 80);
         };
 
         window.closeLeaderboardModal = function() {
             document.getElementById('leaderboard-modal').classList.add('hidden');
         };
 
-        // Wyświetlanie okna Symulatora Przewagi
         window.openAdvantageModal = function() {
             const modal = document.getElementById('advantage-modal');
             const content = document.getElementById('advantage-content');
@@ -1649,18 +1976,18 @@
                 const deltaColor = isPositive ? 'text-emerald-400' : 'text-rose-400';
                 const deltaSign = isPositive ? '+' : '';
 
-                let rankMovementText = `<span class="text-slate-400">Bez zmiany pozycji (#${rep.rankAfter})</span>`;
+                let rankMovementText = `<span class="text-slate-400">Bez zmiany pozycji (#${rep.rankAfter}/100)</span>`;
                 if (rep.rankDiff > 0) {
-                    rankMovementText = `<span class="text-emerald-400 font-bold">▲ Awans o ${rep.rankDiff} poz. (#${rep.rankBefore} ➔ #${rep.rankAfter})</span>`;
+                    rankMovementText = `<span class="text-emerald-400 font-bold">▲ Awans o ${rep.rankDiff} miejsc (#${rep.rankBefore} ➔ #${rep.rankAfter})</span>`;
                 } else if (rep.rankDiff < 0) {
-                    rankMovementText = `<span class="text-rose-400 font-bold">▼ Spadek o ${Math.abs(rep.rankDiff)} poz. (#${rep.rankBefore} ➔ #${rep.rankAfter})</span>`;
+                    rankMovementText = `<span class="text-rose-400 font-bold">▼ Spadek o ${Math.abs(rep.rankDiff)} miejsc (#${rep.rankBefore} ➔ #${rep.rankAfter})</span>`;
                 }
 
                 const peopleLabel = rep.peopleDelta >= 0 ? 'WYPRZEDZONE JEDNOSTKI DZISIAJ:' : 'OSOBY, KTÓRE CIĘ WYPRZEDZIŁY:';
                 const peopleValue = rep.peopleDelta >= 0 ? `+${rep.peopleDelta} osób` : `${Math.abs(rep.peopleDelta)} osób`;
 
                 let verdictColor = "text-emerald-400";
-                let verdictText = "DOMINACJA SYSTEMOWA. Powiększasz dystans, podczas gdy tłum stoi w miejscu.";
+                let verdictText = "DOMINACJA SYSTEMOWA. Powiększasz dystans w Top 100, podczas gdy tłum stoi w miejscu.";
                 if (rep.completionRate < 50) {
                     verdictColor = "text-rose-400";
                     verdictText = "OSTRZEŻENIE: Zaniechanie zadań spowodowało spadek w rankingu i utratę XP.";
@@ -1680,7 +2007,7 @@
                             <span class="${deltaColor} font-bold">${deltaSign}${rep.advantageDelta} PKT (Razem: ${rep.ptsAfter} PKT)</span>
                         </div>
                         <div class="flex justify-between items-center">
-                            <span class="text-slate-400">POZYCJA W TABELI RYWALI:</span>
+                            <span class="text-slate-400">POZYCJA W TOP 100:</span>
                             <span>${rankMovementText}</span>
                         </div>
                         <div class="flex justify-between items-center">
@@ -1692,7 +2019,7 @@
                             <span class="text-slate-300 font-semibold">${rep.crowdQuitPercent}% populacji</span>
                         </div>
                         <div class="flex justify-between items-center pt-2 border-t border-edge">
-                            <span class="text-slate-400">WYPŁACONE MONETY / BOOST 9/9:</span>
+                            <span class="text-slate-400">WYPŁACONE MONETY / REZONANS 9/9:</span>
                             <span class="text-amber-300 font-bold">+${rep.coinsEarnedToday} ₵ ${rep.perfectBoostEarned > 0 ? `| +${rep.perfectBoostEarned} XP` : ''}</span>
                         </div>
                     </div>
@@ -1716,7 +2043,10 @@
             document.getElementById('advantage-modal').classList.add('hidden');
         };
 
-        // NOWY TYDZIEŃ: Reset liczników 0/3 + Losowanie nowego Bossa Tygodniowego
+        // NOWY TYDZIEŃ:
+        // 1. Reset liczników 0/3
+        // 2. Jeśli Poziom >= 7 i obecny Boss nie został pokonany -> KARA (-10 XP oraz -25 PKT Przewagi)
+        // 3. Losowanie nowego Bossa z puli 50 wyzwań
         window.resetWeeklyCounters = function() {
             ['sila', 'intelekt', 'wola'].forEach(catKey => {
                 state.habits[catKey].forEach(h => {
@@ -1724,11 +2054,21 @@
                 });
             });
 
-            const prevBossIdx = state.weeklyBoss ? state.weeklyBoss.index : -1;
-            state.weeklyBoss = pickRandomWeeklyBoss(prevBossIdx);
+            if (state.level >= 7 && state.weeklyBoss) {
+                if (!state.weeklyBoss.defeated) {
+                    adjustXP(-10);
+                    state.advantagePoints = Math.max(0, state.advantagePoints - 25);
+                    addLog(`💀 PORAŻKA W LOŻY: Nie pokonano Bossa (${state.weeklyBoss.name})! Kara: -10 XP oraz -25 PKT Przewagi.`, "danger");
+                }
+                const prevBossIdx = state.weeklyBoss.index;
+                state.weeklyBoss = pickRandomWeeklyBoss(prevBossIdx);
+                addLog(`🔄 NOWY TYDZIEŃ: Wyzerowano misje 0/3 oraz wylosowano nowego Bossa [${state.weeklyBoss.category}]: ${state.weeklyBoss.name}!`, "levelup");
+                showNotification(`Nowy Tydzień! Nowy Boss: ${state.weeklyBoss.name}`);
+            } else {
+                addLog(`🔄 NOWY TYDZIEŃ: Wyzerowano liczniki misji tygodniowych (0/3).`, "info");
+                showNotification("Wyzerowano liczniki misji tygodniowych (0/3).");
+            }
 
-            addLog(`🔄 NOWY TYDZIEŃ: Wyzerowano liczniki 0/3 oraz wylosowano nowego Bossa: ${state.weeklyBoss.name}!`, "levelup");
-            showNotification(`Nowy Tydzień! Pojawił się Boss: ${state.weeklyBoss.name}`);
             saveStateToCloud();
             render();
         };
