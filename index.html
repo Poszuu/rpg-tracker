@@ -3,78 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RPG Cloud Tracker - Firebase</title>
+    <title>RPG Habit & Cloud Tracker</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Firebase SDK (wersja kompatybilna dla skryptów HTML) -->
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen p-4 flex flex-col items-center">
+<body class="bg-slate-950 text-slate-100 min-h-screen p-3 sm:p-6 flex flex-col items-center">
 
-    <div class="w-full max-w-md bg-slate-800 rounded-2xl shadow-xl p-6 border border-slate-700">
+    <div class="w-full max-w-lg bg-slate-900 rounded-2xl shadow-2xl p-5 border border-slate-800">
         
-        <div class="flex justify-between items-center mb-6 border-b border-slate-700 pb-4">
-            <h1 class="text-xl font-bold text-indigo-400 flex items-center gap-2">🛡️ RPG Cloud Tracker</h1>
+        <!-- Nagłówek i status -->
+        <div class="flex justify-between items-center mb-5 border-b border-slate-800 pb-3">
+            <div>
+                <h1 class="text-lg font-bold text-indigo-400 flex items-center gap-2">⚡ RPG System Rozwoju</h1>
+                <p id="char-title" class="text-xs text-amber-400 font-medium tracking-wide">Początkujący Wędrowiec</p>
+            </div>
             <div class="text-right">
-                <span class="text-xs text-slate-400 block">Status chmury:</span>
+                <span class="text-[10px] text-slate-400 block">Chmura:</span>
                 <span id="sync-status" class="text-xs font-semibold text-amber-400">Łączenie...</span>
             </div>
         </div>
 
         <!-- Identyfikator profilu -->
-        <div class="mb-6 bg-slate-900/50 p-3 rounded-xl border border-slate-700/50">
-            <label class="block text-xs font-medium text-slate-300 mb-1">Identyfikator Profilu (np. <b>poszuu-postac</b>):</label>
+        <div class="mb-5 bg-slate-950/60 p-3 rounded-xl border border-slate-800">
+            <label class="block text-xs font-medium text-slate-300 mb-1">Identyfikator Profilu (synchronizacja):</label>
             <div class="flex gap-2">
-                <input type="text" id="profile-id" placeholder="np. poszuu-postac" class="bg-slate-800 border border-slate-600 rounded-lg px-3 py-1.5 text-sm w-full focus:outline-none focus:border-indigo-500">
-                <button onclick="loadFromCloud()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition whitespace-nowrap">Pobierz</button>
+                <input type="text" id="profile-id" placeholder="np. poszuu" class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-sm w-full focus:outline-none focus:border-indigo-500 text-indigo-200">
+                <button onclick="loadFromCloud()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition whitespace-nowrap shadow-md">Pobierz</button>
             </div>
         </div>
 
-        <!-- Statysty -->
-        <div class="bg-slate-900 p-4 rounded-xl mb-6 border border-slate-700">
+        <!-- Statysty postaci -->
+        <div class="bg-gradient-to-br from-slate-900 to-slate-950 p-4 rounded-xl mb-5 border border-slate-800 shadow-inner">
             <div class="flex justify-between items-center mb-2">
-                <span id="char-level" class="font-bold text-lg text-amber-400">Poziom 1</span>
-                <span id="char-gold" class="text-yellow-400 font-semibold">🪙 0 Złota</span>
+                <span id="char-level" class="font-extrabold text-lg text-emerald-400">Poziom 1</span>
+                <span id="char-gold" class="text-yellow-400 font-semibold text-sm">🪙 0 Złota</span>
             </div>
             
-            <div class="mb-2">
-                <div class="flex justify-between text-xs text-slate-400 mb-1">
-                    <span>HP (Zdrowie)</span>
-                    <span id="hp-text">100/100</span>
-                </div>
-                <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
-                    <div id="hp-bar" class="bg-red-500 h-full transition-all duration-300" style="width: 100%"></div>
-                </div>
-            </div>
-
             <div>
                 <div class="flex justify-between text-xs text-slate-400 mb-1">
-                    <span>Doświadczenie (XP)</span>
-                    <span id="xp-text">0/100</span>
+                    <span>Doświadczenie (XP) do następnego poziomu</span>
+                    <span id="xp-text">0 / 15</span>
                 </div>
-                <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
-                    <div id="xp-bar" class="bg-indigo-500 h-full transition-all duration-300" style="width: 0%"></div>
+                <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden p-0.5 border border-slate-700">
+                    <div id="xp-bar" class="bg-gradient-to-r from-indigo-500 to-emerald-400 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
                 </div>
             </div>
         </div>
 
-        <!-- Zadania -->
-        <div class="mb-6">
-            <div class="flex justify-between items-center mb-3">
-                <h2 class="font-semibold text-sm text-slate-300">Zadania</h2>
-                <button onclick="addTask()" class="text-xs bg-emerald-600 hover:bg-emerald-500 text-white px-2 py-1 rounded-md transition">+ Dodaj</button>
-            </div>
-            <div id="tasks-container" class="space-y-2 max-h-60 overflow-y-auto pr-1"></div>
+        <!-- Kategorie i Zadania -->
+        <div id="categories-container" class="space-y-4 mb-5">
+            <!-- Dynamicznie generowane kategorie -->
         </div>
 
-        <div class="flex gap-2">
-            <button onclick="saveToCloud()" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white py-2 rounded-xl text-sm font-semibold transition shadow-lg">Zapisz do Chmury</button>
-            <button onclick="loadFromCloud()" class="flex-1 bg-slate-700 hover:bg-slate-600 text-white py-2 rounded-xl text-sm font-semibold transition">Odśwież z Chmury</button>
+        <!-- Przyciski akcji -->
+        <div class="flex gap-2 pt-2 border-t border-slate-800">
+            <button onclick="saveToCloud()" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white py-2.5 rounded-xl text-sm font-semibold transition shadow-lg">Zapisz do Chmury</button>
+            <button onclick="loadFromCloud()" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-200 py-2.5 rounded-xl text-sm font-semibold transition border border-slate-700">Odśwież z Chmury</button>
         </div>
     </div>
 
     <script>
-        // Konfiguracja Firebase z Twojego projektu
+        // Konfiguracja Firebase (z Twojego projektu)
         const firebaseConfig = {
             apiKey: "AIzaSyBSBby9FM33xW-O6b8w9u80PkbxV05UHq4",
             authDomain: "rpgg-597dd.firebaseapp.com",
@@ -85,16 +76,97 @@
             measurementId: "G-PS84H4Y51M"
         };
 
-        // Inicjalizacja Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
+        // Tabela wymagań XP i rang do poziomu 50
+        const levelData = {
+            1: { req: 15, title: "Początkujący Wędrowiec" },
+            2: { req: 18, title: "Wędrowiec" },
+            3: { req: 22, title: "Poszukiwacz" },
+            4: { req: 27, title: "PRZEBUDZONY" },
+            5: { req: 33, title: "Przebudzony Adept" },
+            6: { req: 40, title: "Praktykant" },
+            7: { req: 48, title: "Wprawny Uczeń" },
+            8: { req: 57, title: "Konsekwentny Duch" },
+            9: { req: 67, title: "KOWAL WOLI" },
+            10: { req: 78, title: "Kowal Woli II" },
+            11: { req: 89, title: "Zaprzysiężony" },
+            12: { req: 100, title: "Stalowy Umysł" },
+            13: { req: 111, title: "Niezłomny" },
+            14: { req: 122, title: "WĘDROWIEC" },
+            15: { req: 133, title: "Wędrowiec Szlaków" },
+            16: { req: 144, title: "Badacz Prawdy" },
+            17: { req: 155, title: "Strażnik Równowagi" },
+            18: { req: 166, title: "Mistrz Prób" },
+            19: { req: 177, title: "ROZJEMCA LOSU" },
+            20: { req: 182, title: "Rozjemca (Odblokowano Korektę Nawyku)" },
+            21: { req: 187, title: "Wytrwały" },
+            22: { req: 192, title: "Ponadprzeciętny" },
+            23: { req: 197, title: "Mistrz Dyscypliny" },
+            24: { req: 202, title: "MISTRZ PRÓBY" },
+            25: { req: 207, title: "Architekt Dnia" },
+            26: { req: 212, title: "Władca Rutyny" },
+            27: { req: 217, title: "Ostrze Myśli" },
+            28: { req: 222, title: "Niewzruszony" },
+            29: { req: 227, title: "WYBRANIEC OSTRZA" },
+            30: { req: 230, title: "Wybraniec Losu" },
+            31: { req: 233, title: "Strażnik Czasu" },
+            32: { req: 236, title: "Weteran Nawyków" },
+            33: { req: 239, title: "Mistrz Rdzenia" },
+            34: { req: 242, title: "STRAŻNIK RDZENIA" },
+            35: { req: 245, title: "Obrońca Zasady" },
+            36: { req: 248, title: "Filary Żelaza" },
+            37: { req: 251, title: "Czempion Woli" },
+            38: { req: 254, title: "Niepokonany" },
+            39: { req: 257, title: "ARCHONT ŻELAZA" },
+            40: { req: 260, title: "Archont Rozwoju" },
+            41: { req: 263, title: "Wyższy Stan" },
+            42: { req: 266, title: "Oświecony" },
+            43: { req: 269, title: "Strażnik Ludzkości" },
+            44: { req: 272, title: "The People's Hope" },
+            45: { req: 275, title: "Ikona Wolności" },
+            46: { req: 278, title: "Legenda Codzienności" },
+            47: { req: 281, title: "Mistrz Absolutny" },
+            48: { req: 284, title: "Transcendentny" },
+            49: { req: 287, title: "WOLNY" },
+            50: { req: 300, title: "WOLNY / OSTATECZNY MISTRZ" }
+        };
+
+        // Stan gry
         let gameState = {
-            level: 1, hp: 100, maxHp: 100, xp: 0, maxXp: 100, gold: 0,
-            tasks: [
-                { id: 1, text: "Trening siłowy", reward: 20, done: false },
-                { id: 2, text: "Nauka języka", reward: 15, done: false }
-            ]
+            level: 1,
+            xp: 0,
+            gold: 0,
+            categories: {
+                sila: {
+                    name: "🔴 SIŁA (Fizyczność)",
+                    streak: 0,
+                    tasks: [
+                        { id: 's1', text: 'Dieta', done: false },
+                        { id: 's2', text: 'Suplementy + ocet', done: false },
+                        { id: 's3', text: 'Trening siłowy (3x w tyg.)', done: false }
+                    ]
+                },
+                intelekt: {
+                    name: "🔵 INTELEKT / ROZWÓJ (Umysł)",
+                    streak: 0,
+                    tasks: [
+                        { id: 'i1', text: 'Nauka języka', done: false },
+                        { id: 'i2', text: 'Czytanie książki', done: false },
+                        { id: 'i3', text: 'Gra na pianinie (3x w tyg.)', done: false }
+                    ]
+                },
+                wola: {
+                    name: "⚫ WOLA / DYSCYPLINA (Kontrola)",
+                    streak: 0,
+                    tasks: [
+                        { id: 'w1', text: 'Czysty dzień bez nawyku', done: false },
+                        { id: 'w2', text: 'Brak telefonu rano/wieczór', done: false },
+                        { id: 'w3', text: 'Medytacja wieczór', done: false }
+                    ]
+                }
+            }
         };
 
         let savedId = localStorage.getItem('rpg_cloud_id') || '';
@@ -109,55 +181,105 @@
         }
 
         function render() {
-            document.getElementById('char-level').innerText = `Poziom ${gameState.level}`;
-            document.getElementById('char-gold').innerText = `🪙 ${gameState.gold} Złota`;
-            document.getElementById('hp-text').innerText = `${gameState.hp}/${gameState.maxHp}`;
-            document.getElementById('hp-bar').style.width = `${(gameState.hp / gameState.maxHp) * 100}%`;
-            document.getElementById('xp-text').innerText = `${gameState.xp}/${gameState.maxXp}`;
-            document.getElementById('xp-bar').style.width = `${(gameState.xp / gameState.maxXp) * 100}%`;
-
-            const container = document.getElementById('tasks-container');
-            container.innerHTML = '';
+            const currentLevelInfo = levelData[gameState.level] || { req: 100, title: "WOLNY" };
             
-            gameState.tasks.forEach((task, index) => {
+            document.getElementById('char-level').innerText = `Poziom ${gameState.level}`;
+            document.getElementById('char-title').innerText = currentLevelInfo.title;
+            document.getElementById('char-gold').innerText = `🪙 ${gameState.gold} Złota`;
+            document.getElementById('xp-text').innerText = `${gameState.xp} / ${currentLevelInfo.req} XP`;
+            
+            const xpPercent = Math.min(100, (gameState.xp / currentLevelInfo.req) * 100);
+            document.getElementById('xp-bar').style.width = `${xpPercent}%`;
+
+            const container = document.getElementById('categories-container');
+            container.innerHTML = '';
+
+            for (const [catKey, catVal] of Object.entries(gameState.categories)) {
+                // Oblicz bonus z serii (+1 XP za każde 2 dni, maks do 10 dni czyli +5 XP)
+                const streakBonus = Math.min(5, Math.floor(catVal.streak / 2));
+
+                let tasksHtml = '';
+                catVal.tasks.forEach((task, tIndex) => {
+                    tasksHtml += `
+                        <div class="flex items-center justify-between bg-slate-900/80 p-2.5 rounded-lg border border-slate-800 mb-1.5">
+                            <label class="flex items-center gap-2.5 cursor-pointer text-xs sm:text-sm ${task.done ? 'line-through text-slate-500' : 'text-slate-200'}">
+                                <input type="checkbox" ${task.done ? 'checked' : ''} onchange="toggleTask('${catKey}', ${tIndex})" class="w-4 h-4 rounded bg-slate-800 border-slate-700 text-indigo-600 focus:ring-0">
+                                ${task.text}
+                            </label>
+                        </div>
+                    `;
+                });
+
                 container.innerHTML += `
-                    <div class="flex items-center justify-between bg-slate-900 p-2.5 rounded-xl border border-slate-700/50">
-                        <label class="flex items-center gap-2 cursor-pointer text-sm ${task.done ? 'line-through text-slate-500' : 'text-slate-200'}">
-                            <input type="checkbox" ${task.done ? 'checked' : ''} onchange="toggleTask(${index})" class="rounded bg-slate-800 border-slate-600 text-indigo-600">
-                            ${task.text}
-                        </label>
-                        <span class="text-xs text-amber-400 font-medium">+${task.reward} XP</span>
+                    <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 shadow">
+                        <div class="flex justify-between items-center mb-2 pb-1 border-b border-slate-900">
+                            <h2 class="font-bold text-xs sm:text-sm text-indigo-300">${catVal.name}</h2>
+                            <span class="text-[11px] bg-slate-900 px-2 py-0.5 rounded-full border border-slate-800 text-amber-400 font-medium">🔥 Seria: ${catVal.streak} dni (+${streakBonus} XP)</span>
+                        </div>
+                        <div class="space-y-1 mb-2">
+                            ${tasksHtml}
+                        </div>
+                        <div class="flex justify-end gap-1.5 pt-1">
+                            <button onclick="failCategory('${catKey}')" class="text-[10px] bg-red-950/60 hover:bg-red-900 text-red-300 border border-red-900/50 px-2.5 py-1 rounded-md transition font-medium">Błąd (-6 XP & Reset)</button>
+                            <button onclick="successCategory('${catKey}')" class="text-[10px] bg-emerald-950/60 hover:bg-emerald-900 text-emerald-300 border border-emerald-900/50 px-2.5 py-1 rounded-md transition font-medium">Zaliczenie Dnia (+Seria)</button>
+                        </div>
                     </div>
                 `;
-            });
+            }
         }
 
-        function toggleTask(index) {
-            const task = gameState.tasks[index];
+        function toggleTask(catKey, tIndex) {
+            const task = gameState.categories[catKey].tasks[tIndex];
             task.done = !task.done;
-            if (task.done) {
-                gameState.xp += task.reward;
-                gameState.gold += 10;
-                if (gameState.xp >= gameState.maxXp) {
-                    gameState.level++;
-                    gameState.xp -= gameState.maxXp;
-                    gameState.maxXp = Math.floor(gameState.maxXp * 1.2);
-                    alert("🎉 Awans na wyższy poziom!");
-                }
-            } else {
-                gameState.xp -= task.reward;
-                if(gameState.xp < 0) gameState.xp = 0;
-            }
             render();
             saveToCloud();
         }
 
-        function addTask() {
-            const text = prompt("Treść nowego zadania:");
-            if(text) {
-                gameState.tasks.push({ id: Date.now(), text: text, reward: 25, done: false });
-                render();
-                saveToCloud();
+        // Zaliczenie całego dnia w kategorii (rośnie seria, dodaje XP + bonus)
+        function successCategory(catKey) {
+            const cat = gameState.categories[catKey];
+            cat.streak++;
+            if(cat.streak > 10) cat.streak = 10; // Cap do 10 dni
+
+            const streakBonus = Math.min(5, Math.floor(cat.streak / 2));
+            const gainedXp = 5 + streakBonus; // bazowo 5 + bonus z serii
+
+            addXp(gainedXp);
+            gameState.gold += 5;
+            
+            // Oznacz zadania jako zrobione dla wygody
+            cat.tasks.forEach(t => t.done = true);
+
+            render();
+            saveToCloud();
+            alert(`✅ Zaliczone! Kategoria ${cat.name} zyskuje ${gainedXp} XP (${5} bazowe + ${streakBonus} za serię) oraz 🪙 5 złota!`);
+        }
+
+        // Kara za błąd w kategorii (-6 XP i reset serii)
+        function failCategory(catKey) {
+            if(!confirm("Czy na pewno chcesz naliczyć karę za błąd w tej kategorii (-6 XP i reset serii)?")) return;
+            
+            const cat = gameState.categories[catKey];
+            cat.streak = 0;
+            cat.tasks.forEach(t => t.done = false);
+
+            gameState.xp -= 6;
+            if(gameState.xp < 0) gameState.xp = 0;
+
+            render();
+            saveToCloud();
+            alert("❌ Zastosowano karę: -6 XP i reset serii.");
+        }
+
+        function addXp(amount) {
+            gameState.xp += amount;
+            const currentLevelInfo = levelData[gameState.level] || { req: 100 };
+            
+            while (gameState.xp >= currentLevelInfo.req && gameState.level < 50) {
+                gameState.xp -= currentLevelInfo.req;
+                gameState.level++;
+                alert(`🎉 AWANS! Twoja postać weszła na Poziom ${gameState.level}! Ranga: ${levelData[gameState.level].title}`);
+                currentLevelInfo = levelData[gameState.level] || { req: 100 };
             }
         }
 
@@ -167,17 +289,13 @@
 
         async function saveToCloud() {
             const id = cleanId(document.getElementById('profile-id').value);
-            if(!id) {
-                alert("Wpisz Identyfikator Profilu!");
-                return;
-            }
-            document.getElementById('profile-id').value = id;
+            if(!id) return;
             localStorage.setItem('rpg_cloud_id', id);
             setStatus("Zapisywanie...", "text-amber-400");
 
             try {
                 await db.collection("profiles").doc(id).set(gameState);
-                setStatus("Zapisano w chmurze ✅", "text-emerald-400");
+                setStatus("Zsynchronizowano ✅", "text-emerald-400");
             } catch(err) {
                 console.error(err);
                 setStatus("Błąd zapisu ❌", "text-red-400");
@@ -190,7 +308,6 @@
                 alert("Wpisz Identyfikator Profilu!");
                 return;
             }
-            document.getElementById('profile-id').value = id;
             localStorage.setItem('rpg_cloud_id', id);
             setStatus("Pobieranie...", "text-amber-400");
 
@@ -201,7 +318,8 @@
                     render();
                     setStatus("Zsynchronizowano ✅", "text-emerald-400");
                 } else {
-                    setStatus("Brak zapisu (nowy profil)", "text-amber-400");
+                    setStatus("Brak zapisu w chmurze", "text-amber-400");
+                    render();
                 }
             } catch(err) {
                 console.error(err);
@@ -209,7 +327,6 @@
             }
         }
 
-        // Automatyczne pobranie przy starcie, jeśli zapamiętano ID
         if(savedId) {
             loadFromCloud();
         } else {
