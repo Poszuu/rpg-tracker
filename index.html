@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SYSTEM ARCHITEKTUR // Shadow Interface v9.0</title>
+    <title>SYSTEM: MONARCHA CIENI // Shadow Interface v11.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -100,6 +100,10 @@
         .system-window-perfect::before { border-color: #34d399; }
         .system-window-perfect::after { border-color: #059669; }
 
+        .system-window-spotify { border-color: rgba(29, 185, 84, 0.35); }
+        .system-window-spotify::before { border-color: #1db954; }
+        .system-window-spotify::after { border-color: #1aa34a; }
+
         .header-scanline {
             background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.4), rgba(139, 92, 246, 0.4), transparent);
             height: 1px;
@@ -131,9 +135,9 @@
             <div class="flex items-center gap-3.5">
                 <div id="sync-indicator" class="w-2.5 h-2.5 bg-amber-400 rounded-full animate-pulse"></div>
                 <div>
-                    <span class="text-[10px] font-tech uppercase tracking-[0.2em] text-sky-400/90">[SYSTEM POWIADOMIEŃ // SHADOW OS]</span>
+                    <span class="text-[10px] font-tech uppercase tracking-[0.2em] text-violet-400/90">[SYSTEM: MONARCHA CIENI // SHADOW OS]</span>
                     <h1 class="font-anime text-2xl md:text-[26px] tracking-wider text-slate-100 font-bold leading-tight">
-                        ARCHITEKT RZECZYWISTOŚCI
+                        SYSTEM: MONARCHA CIENI
                     </h1>
                 </div>
             </div>
@@ -170,7 +174,7 @@
                     <span class="text-slate-500 text-[10px]">₵</span>
                 </div>
 
-                <button onclick="openLeaderboardModal()" class="bg-obsidian/90 hover:bg-sky-950/50 px-3 py-2 rounded border border-sky-500/40 flex items-center gap-1.5 transition" title="Otwórz Ranking Top 100">
+                <button onclick="playAudioClick(); openLeaderboardModal()" class="bg-obsidian/90 hover:bg-sky-950/50 px-3 py-2 rounded border border-sky-500/40 flex items-center gap-1.5 transition" title="Otwórz Ranking Top 100">
                     <span class="text-sky-400">🏆</span>
                     <span id="header-advantage" class="text-sky-300 font-bold">100</span>
                     <span class="text-slate-500 text-[10px]">PKT</span>
@@ -179,7 +183,7 @@
                 <div class="flex items-center bg-obsidian rounded border border-sky-500/30 overflow-hidden">
                     <span class="px-2 text-slate-500 select-none">ID:</span>
                     <input type="text" id="profile-id-input" placeholder="poszuu" class="bg-transparent text-sky-300 px-1 py-2 w-24 focus:outline-none">
-                    <button onclick="changeProfileId()" class="bg-sky-500/15 hover:bg-sky-500/30 text-sky-300 px-2.5 py-2 border-l border-sky-500/30 transition font-semibold">
+                    <button onclick="playAudioClick(); changeProfileId()" class="bg-sky-500/15 hover:bg-sky-500/30 text-sky-300 px-2.5 py-2 border-l border-sky-500/30 transition font-semibold">
                         Sync
                     </button>
                 </div>
@@ -329,12 +333,41 @@
                         <div class="flex items-center gap-2">
                             <input type="number" id="hardcore-xp-input" min="1" max="100" value="4" class="w-16 bg-panel border border-edge rounded px-2 py-2 text-xs font-tech text-amber-300 text-center focus:outline-none focus:border-amber-400/50" title="Stawka XP">
                             <span class="text-xs font-tech text-slate-400">XP</span>
-                            <button onclick="saveHardcoreHabit()" class="bg-amber-500/15 hover:bg-amber-500/25 text-amber-200 border border-amber-500/40 px-3.5 py-2 rounded text-xs font-tech font-semibold transition whitespace-nowrap">
+                            <button onclick="playAudioClick(); saveHardcoreHabit()" class="bg-amber-500/15 hover:bg-amber-500/25 text-amber-200 border border-amber-500/40 px-3.5 py-2 rounded text-xs font-tech font-semibold transition whitespace-nowrap">
                                 Aktywuj Wyzwanie
                             </button>
                         </div>
                     </div>
                     <div id="hardcore-habit-container"></div>
+                </div>
+            </section>
+
+            <!-- MODUŁ AUDIO // SPOTIFY (LVL 15+) -->
+            <section class="system-window system-window-spotify rounded-lg p-5 sm:p-6">
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-3.5 border-b border-edge pb-3">
+                    <div class="flex items-center gap-2.5">
+                        <span class="w-2 h-2 rotate-45 bg-emerald-400 inline-block"></span>
+                        <h2 class="text-emerald-300 font-anime font-bold text-xl tracking-wider uppercase">
+                            MODUŁ AUDIO // SPOTIFY
+                        </h2>
+                        <span class="text-[10px] font-tech text-emerald-300 px-2 py-0.5 bg-emerald-950/40 rounded border border-emerald-500/30">DŹWIĘK TŁA</span>
+                    </div>
+                    <span id="spotify-badge" class="text-[11px] font-tech px-2.5 py-1 rounded bg-obsidian text-slate-400 border border-edge">
+                        🔒 WYMAGANY POZIOM 15
+                    </span>
+                </div>
+
+                <!-- Widok zablokowany (Poziom < 15) -->
+                <div id="spotify-locked" class="py-4 text-center font-tech space-y-1 bg-obsidian/50 rounded border border-edge/60">
+                    <div class="text-slate-300 text-xs tracking-wider">[DOSTĘP ZABLOKOWANY — WYMAGANY POZIOM 15]</div>
+                    <div class="text-[11px] text-slate-500 max-w-lg mx-auto">
+                        Po osiągnięciu Poziomu 15 system odblokuje dedykowany moduł audio wspierający Twoją koncentrację.
+                    </div>
+                </div>
+
+                <!-- Widok odblokowany (Poziom >= 15) -->
+                <div id="spotify-unlocked" class="hidden bg-obsidian/85 p-4 rounded border border-emerald-500/30 font-tech text-xs text-center text-emerald-300">
+                    MODUŁ ODBLOKOWANY
                 </div>
             </section>
 
@@ -353,15 +386,13 @@
                     </span>
                 </div>
 
-                <!-- Widok zablokowany (Poziom < 30) -->
                 <div id="perfect-locked" class="py-4 text-center font-tech space-y-1 bg-obsidian/50 rounded border border-edge/60">
                     <div class="text-slate-300 text-xs tracking-wider">[DOSTĘP ZABLOKOWANY — WYMAGANY POZIOM 30]</div>
                     <div class="text-[11px] text-slate-500 max-w-lg mx-auto">
-                        Po osiągnięciu Poziomu 30 odblokujesz pasywny rezonans: każde zamknięcie cyklu dnia ze skutecznością 9/9 (100% planu) automatycznie wygeneruje bonusowe +2 XP.
+                        Po osiągnięciu Poziomu 30 odblokujesz pasywny rezonans: każde zamknięcie cyklu dnia ze skutecznością 9/9 automatycznie wygeneruje bonusowe +2 XP.
                     </div>
                 </div>
 
-                <!-- Widok odblokowany (Poziom >= 30) -->
                 <div id="perfect-unlocked" class="hidden bg-obsidian/85 p-3.5 rounded border border-emerald-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-2 font-tech text-xs">
                     <div>
                         <div class="text-emerald-300 font-semibold">⚡ Status Dzisiejszego Rezonansu: <span id="perfect-today-counter" class="text-white">0 / 9</span> zadań</div>
@@ -373,10 +404,10 @@
 
             <!-- Przyciski Zarządzania Cyklem -->
             <div class="flex flex-wrap gap-3.5 pt-1">
-                <button onclick="endDay()" class="bg-gradient-to-r from-sky-600/25 to-violet-600/25 hover:from-sky-500/35 hover:to-violet-500/35 text-sky-200 font-tech px-5 py-3 rounded border border-sky-400/50 text-xs font-semibold transition flex items-center gap-2 shadow-lg">
-                    <span>⏭️</span> Zakończ Cykl Dnia (Depozyt Monet + Analiza Przewagi)
+                <button onclick="playAudioClick(); endDay()" class="bg-gradient-to-r from-sky-600/25 to-violet-600/25 hover:from-sky-500/35 hover:to-violet-500/35 text-sky-200 font-tech px-5 py-3 rounded border border-sky-400/50 text-xs font-semibold transition flex items-center gap-2 shadow-lg">
+                    <span>⏭️</span> Zakończ Cykl Dnia (Depozyt Monet + Rywale w Rankingu)
                 </button>
-                <button onclick="resetWeeklyCounters()" class="bg-gradient-to-r from-amber-600/25 to-emerald-600/25 hover:from-amber-500/35 hover:to-emerald-500/35 text-amber-200 font-tech px-4 py-3 rounded border border-amber-400/50 text-xs font-semibold transition flex items-center gap-2 shadow-lg">
+                <button onclick="playAudioClick(); resetWeeklyCounters()" class="bg-gradient-to-r from-amber-600/25 to-emerald-600/25 hover:from-amber-500/35 hover:to-emerald-500/35 text-amber-200 font-tech px-4 py-3 rounded border border-amber-400/50 text-xs font-semibold transition flex items-center gap-2 shadow-lg">
                     <span>💰</span> Nowy Tydzień (Wypłata Skarbca + Reset 0/3)
                 </button>
             </div>
@@ -387,7 +418,7 @@
                     <h3 class="font-anime text-slate-300 font-bold text-base tracking-wider uppercase flex items-center gap-2">
                         <span>📟</span> DZIENNIK ZDARZEŃ SYSTEMOWYCH
                     </h3>
-                    <button onclick="clearLogs()" class="text-[11px] text-slate-500 hover:text-slate-300 font-tech transition">Wyczyść log</button>
+                    <button onclick="playAudioClick(); clearLogs()" class="text-[11px] text-slate-500 hover:text-slate-300 font-tech transition">Wyczyść log</button>
                 </div>
                 <div id="system-logs" class="space-y-1.5 max-h-48 overflow-y-auto font-tech text-xs pr-1"></div>
             </section>
@@ -403,10 +434,10 @@
                         <span>⚡</span> KARTA STATUSU
                     </h3>
                     <div class="flex gap-1.5">
-                        <button onclick="openLeaderboardModal()" class="text-[10px] font-tech bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 px-2 py-1 rounded border border-amber-500/30 transition">
+                        <button onclick="playAudioClick(); openLeaderboardModal()" class="text-[10px] font-tech bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 px-2 py-1 rounded border border-amber-500/30 transition">
                             🏆 Top 100
                         </button>
-                        <button onclick="openAdvantageModal()" class="text-[10px] font-tech bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 px-2 py-1 rounded border border-sky-500/30 transition">
+                        <button onclick="playAudioClick(); openAdvantageModal()" class="text-[10px] font-tech bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 px-2 py-1 rounded border border-sky-500/30 transition">
                             📊 Raport
                         </button>
                     </div>
@@ -504,7 +535,7 @@
 
             <!-- Strefa Zarządzania Danymi -->
             <section class="system-window rounded-lg p-4">
-                <button onclick="openResetModal()" class="w-full bg-rose-950/25 hover:bg-rose-950/50 text-rose-400 font-tech py-2.5 px-3 rounded border border-rose-500/30 text-xs transition">
+                <button onclick="playAudioClick(); openResetModal()" class="w-full bg-rose-950/25 hover:bg-rose-950/50 text-rose-400 font-tech py-2.5 px-3 rounded border border-rose-500/30 text-xs transition">
                     🗑️ Inicjalizuj Reset Postępu w Chmurze
                 </button>
             </section>
@@ -519,13 +550,13 @@
                     <div class="text-[10px] font-tech text-amber-300 tracking-widest uppercase">[ROZLICZENIE CYKLU 7-DNIOWEGO]</div>
                     <h3 class="font-anime text-2xl text-slate-100 font-bold tracking-wider">💰 WYPŁATA ZE SKARBCA TYGODNIOWEGO</h3>
                 </div>
-                <button onclick="closeWeeklyPayoutModal()" class="text-slate-400 hover:text-white text-xl leading-none">&times;</button>
+                <button onclick="playAudioClick(); closeWeeklyPayoutModal()" class="text-slate-400 hover:text-white text-xl leading-none">&times;</button>
             </div>
 
             <div id="weekly-payout-content" class="space-y-3 font-tech text-xs"></div>
 
             <div class="pt-2">
-                <button onclick="closeWeeklyPayoutModal()" class="w-full bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-400/50 font-tech py-2.5 px-4 rounded font-bold transition">
+                <button onclick="playAudioClick(); closeWeeklyPayoutModal()" class="w-full bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-400/50 font-tech py-2.5 px-4 rounded font-bold transition">
                     Odbierz Wypłatę i Rozpocznij Nowy Tydzień
                 </button>
             </div>
@@ -540,7 +571,7 @@
                     <div class="text-[10px] font-tech text-amber-300 tracking-widest uppercase">[KLASYFIKACJA GLOBALNA // TOP 100]</div>
                     <h3 class="font-anime text-2xl text-slate-100 font-bold tracking-wider">RANKING PUNKTÓW PRZEWAGI (100 MIEJSC)</h3>
                 </div>
-                <button onclick="closeLeaderboardModal()" class="text-slate-400 hover:text-white text-xl leading-none">&times;</button>
+                <button onclick="playAudioClick(); closeLeaderboardModal()" class="text-slate-400 hover:text-white text-xl leading-none">&times;</button>
             </div>
 
             <div class="flex flex-wrap justify-between items-center gap-2 text-[11px] font-tech bg-obsidian/80 px-3 py-2 rounded border border-edge">
@@ -551,7 +582,7 @@
             <div id="leaderboard-list" class="space-y-1.5 max-h-[400px] overflow-y-auto pr-1 font-tech text-xs"></div>
 
             <div class="pt-2 flex justify-end">
-                <button onclick="closeLeaderboardModal()" class="w-full bg-amber-500/15 hover:bg-amber-500/25 text-amber-200 border border-amber-500/40 font-tech py-2.5 px-4 rounded font-bold transition">
+                <button onclick="playAudioClick(); closeLeaderboardModal()" class="w-full bg-amber-500/15 hover:bg-amber-500/25 text-amber-200 border border-amber-500/40 font-tech py-2.5 px-4 rounded font-bold transition">
                     Zamknij Ranking Top 100
                 </button>
             </div>
@@ -566,16 +597,16 @@
                     <div class="text-[10px] font-tech text-sky-400 tracking-widest uppercase">[RAPORT ANALITYCZNY SYSTEMU]</div>
                     <h3 class="font-anime text-2xl text-slate-100 font-bold tracking-wider">SYMULATOR PRZEWAGI NAD TŁUMEM</h3>
                 </div>
-                <button onclick="closeAdvantageModal()" class="text-slate-400 hover:text-white text-xl leading-none">&times;</button>
+                <button onclick="playAudioClick(); closeAdvantageModal()" class="text-slate-400 hover:text-white text-xl leading-none">&times;</button>
             </div>
 
             <div id="advantage-content" class="space-y-3.5 font-tech text-xs"></div>
 
             <div class="pt-2 flex gap-2.5">
-                <button onclick="closeAdvantageModal(); openLeaderboardModal();" class="flex-1 bg-amber-500/15 hover:bg-amber-500/25 text-amber-200 border border-amber-500/40 font-tech py-2.5 px-3 rounded font-bold transition">
+                <button onclick="playAudioClick(); closeAdvantageModal(); openLeaderboardModal();" class="flex-1 bg-amber-500/15 hover:bg-amber-500/25 text-amber-200 border border-amber-500/40 font-tech py-2.5 px-3 rounded font-bold transition">
                     🏆 Zobacz Ranking Top 100
                 </button>
-                <button onclick="closeAdvantageModal()" class="flex-1 bg-sky-500/20 hover:bg-sky-500/30 text-sky-200 border border-sky-400/50 font-tech py-2.5 px-3 rounded font-bold transition">
+                <button onclick="playAudioClick(); closeAdvantageModal()" class="flex-1 bg-sky-500/20 hover:bg-sky-500/30 text-sky-200 border border-sky-400/50 font-tech py-2.5 px-3 rounded font-bold transition">
                     Zamknij
                 </button>
             </div>
@@ -592,8 +623,8 @@
                 Czy na pewno chcesz bezpowrotnie wyzerować wszystkie poziomy, odblokowane tytuły, punkty XP, monety, skarbiec tygodniowy, ranking przewagi oraz serie zapisane w chmurze?
             </p>
             <div class="pt-2 flex justify-end gap-3">
-                <button onclick="closeResetModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-tech px-4 py-2 rounded border border-edge">Anuluj</button>
-                <button onclick="confirmHardReset()" class="bg-rose-600/80 hover:bg-rose-600 text-white text-xs font-tech px-4 py-2 rounded font-bold">Potwierdzam Reset</button>
+                <button onclick="playAudioClick(); closeResetModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-tech px-4 py-2 rounded border border-edge">Anuluj</button>
+                <button onclick="playAudioClick(); confirmHardReset()" class="bg-rose-600/80 hover:bg-rose-600 text-white text-xs font-tech px-4 py-2 rounded font-bold">Potwierdzam Reset</button>
             </div>
         </div>
     </div>
@@ -602,6 +633,58 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // GENERATOR EFEKTÓW DŹWIĘKOWYCH (WEB AUDIO API W STYLU SOLO LEVELING)
+        let audioCtx = null;
+        function getAudioContext() {
+            if (!audioCtx) {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (AudioContext) audioCtx = new AudioContext();
+            }
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            return audioCtx;
+        }
+
+        window.playAudioClick = function() {
+            try {
+                const ctx = getAudioContext();
+                if (!ctx) return;
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(800, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(400, ctx.currentTime + 0.05);
+                gain.gain.setValueAtTime(0.08, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.05);
+            } catch(e) {}
+        };
+
+        window.playAudioLevelUp = function() {
+            try {
+                const ctx = getAudioContext();
+                if (!ctx) return;
+                const now = ctx.currentTime;
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(300, now);
+                osc.frequency.setValueAtTime(450, now + 0.1);
+                osc.frequency.setValueAtTime(600, now + 0.2);
+                osc.frequency.setValueAtTime(900, now + 0.3);
+                gain.gain.setValueAtTime(0.12, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start(now);
+                osc.stop(now + 0.6);
+            } catch(e) {}
+        };
 
         const firebaseConfig = {
             apiKey: "AIzaSyBSBby9FM33xW-O6b8w9u80PkbxV05UHq4",
@@ -620,9 +703,7 @@
         let unsubscribeDoc = null;
         let isRemoteUpdate = false;
 
-        // 50 UNIKALNYCH BOSSÓW TYGODNIOWYCH (6 KATEGORII TEMATYCZNYCH)
         const weeklyBossesPool = [
-            // --- KATEGORIA 1: SZLAK BUSHIDO & JAPONIA ---
             { category: "SZLAK BUSHIDO", name: "MIYAMOTO MUSASHI — MISTRZ DWÓCH MIECZY", desc: "Droga strategii, precyzji ruchu i estetyki samuraja.", tasks: [
                 { id: 'b1', text: "Poświęć 30 min na kaligrafię, szkicowanie lub rysunek odręczny", done: false },
                 { id: 'b2', text: "Wykonaj łącznie 200 przysiadów w pozycji szerokiej (Kiba-dachi / Sumo)", done: false },
@@ -668,8 +749,6 @@
                 { id: 'b2', text: "Przez 4 dni odczekaj 10 sekund przed każdą odpowiedzią w dyskusji", done: false },
                 { id: 'b3', text: "Uporządkuj wszystkie dokumenty, notatki i pliki w komputerze", done: false }
             ]},
-
-            // --- KATEGORIA 2: STOICYZM & FILOZOFIA ---
             { category: "STOICYZM", name: "MAREK AURELIUSZ — CESARZ FILOZOF", desc: "Władza nad własnym umysłem mimo zewnętrznego chaosu.", tasks: [
                 { id: 'b1', text: "Prowadź wieczorny dziennik stoicki (5 min refleksji) przez 5 dni", done: false },
                 { id: 'b2', text: "Przez 4 dni świadomie wybierz dyskomfort (np. brak poduszki lub chłodny pokój)", done: false },
@@ -710,8 +789,6 @@
                 { id: 'b2', text: "Zmień trasę codziennego spaceru/powrotu 4 razy", done: false },
                 { id: 'b3', text: "Wykonaj łącznie 200 pajacyków lub skoków na skakance", done: false }
             ]},
-
-            // --- KATEGORIA 3: SPARTA & WYTRZYMAŁOŚĆ ---
             { category: "SPARTA", name: "LEONIDAS — KRÓL TERMOPILE", desc: "Utrzymanie pozycji mimo przytłaczającej przewagi wroga.", tasks: [
                 { id: 'b1', text: "Wykonaj łącznie 250 przysiadów w ciągu tygodnia", done: false },
                 { id: 'b2', text: "Zrób łącznie 5 minut maksymalnego zwisu na drążku (dead hang)", done: false },
@@ -757,8 +834,6 @@
                 { id: 'b2', text: "Zrób 2 długie marsze z obciążonym plecakiem (rucking min. 30 min)", done: false },
                 { id: 'b3', text: "Rozwiąż 10 zagadek logicznych lub zadań matematycznych w pamięci", done: false }
             ]},
-
-            // --- KATEGORIA 4: MISTRZOWIE UMYSŁU & STRATEGIA ---
             { category: "STRATEGIA", name: "LEONARDO DA VINCI — CZŁOWIEK RENESANSU", desc: "Ciekawość świata, obserwacja i łączenie różnych dziedzin.", tasks: [
                 { id: 'b1', text: "Naszkicuj w zeszycie 3 przedmioty lub mechanizmy z natury", done: false },
                 { id: 'b2', text: "Przez 3 dni wykonuj proste czynności (mycie zębów, jedzenie) niedominującą ręką", done: false },
@@ -799,8 +874,6 @@
                 { id: 'b2', text: "Wyćwicz asertywność: odmów 2 razy rzeczy, na które nie masz czasu ani ochoty", done: false },
                 { id: 'b3', text: "Zrób 45-minutową sesję planowania swojej ścieżki kariery / rozwoju", done: false }
             ]},
-
-            // --- KATEGORIA 5: MNICH & WYCISZENIE ---
             { category: "SZLAK MNICHA", name: "BODHIDHARMA — ZAŁOŻYCIEL SHAOLIN", desc: "Niewzruszona postawa i jedność ciała z umysłem.", tasks: [
                 { id: 'b1', text: "Utrzymaj pozycję jeźdźca (horse stance) łącznie przez 8 minut w tygodniu", done: false },
                 { id: 'b2', text: "Zrób 4 sesje świadomego, głębokiego oddychania przeponowego (po 10 min)", done: false },
@@ -841,8 +914,6 @@
                 { id: 'b2', text: "Przez 5 dni nie używaj słów 'nie chce mi się' ani 'nie mam czasu'", done: false },
                 { id: 'b3', text: "Zrób 3 sesje ćwiczeń wzroku (patrzenie w dal, relaksacja oczu po 10 min)", done: false }
             ]},
-
-            // --- KATEGORIA 6: ARCHITEKT NOWOCZESNOŚCI ---
             { category: "ARCHITEKT", name: "CAL NEWPORT — MISTRZ GŁĘBOKIEJ PRACY", desc: "Zdolność do pełnej koncentracji w rozproszonym świecie.", tasks: [
                 { id: 'b1', text: "Wykonaj 4 bloki Deep Work (po 50 min) z wyłączonym internetem/powiadomieniami", done: false },
                 { id: 'b2', text: "Sprawdzaj wiadomości i powiadomienia tylko w 2 wyznaczonych oknach dziennie (4 dni)", done: false },
@@ -885,7 +956,6 @@
             ]}
         ];
 
-        // 99 RYWALI W RANKINGU TOP 100
         const rivalPrefixes = [
             "Cień", "Wędrowiec", "Adept", "Łowca", "Mściciel", "Samuraj", "Strażnik", "Kowal", "Nomad", "Duch",
             "Wilk", "Kruk", "Szept", "Ostrze", "Rycerz", "Mnich", "Zwiadowca", "Wojownik", "Archont", "Suweren",
@@ -899,25 +969,18 @@
             "Przeznaczenia", "Eminencji", "Absolutu"
         ];
 
+        // Tabela 99 rywali (inicjalizowana z unikalnymi punktami bazowymi)
         const rankingRivals = [];
         for (let i = 0; i < 99; i++) {
             const pName = rivalPrefixes[i % rivalPrefixes.length];
             const sName = rivalSuffixes[(i * 7 + Math.floor(i / 3)) % rivalSuffixes.length];
             const pts = Math.round(40 + Math.pow(i, 1.85) * 1.38);
-            let tag = "Bottom 20%";
-            if (i >= 85) tag = "Top 15%";
-            else if (i >= 70) tag = "Top 30%";
-            else if (i >= 50) tag = "Top 50%";
-            else if (i >= 25) tag = "Bottom 50%";
-
             rankingRivals.push({
                 name: `${pName} ${sName} #${99 - i}`,
-                pts,
-                tag
+                pts
             });
         }
 
-        // PULA 100 UNIKALNYCH NAGŁYCH MISJI SYSTEMOWYCH
         const urgentQuestsPool = [
             { text: "Zrób 50 pompek w dowolnych seriach w ciągu dnia", xp: 3 },
             { text: "Zimny prysznic przez minimum 60 sekund", xp: 3 },
@@ -948,80 +1011,9 @@
             { text: "Przeczytaj 15 dodatkowych stron książki ponad codzienną normę", xp: 3 },
             { text: "Napisz podsumowanie swoich postępów z ostatnich 7 dni", xp: 2 },
             { text: "Zrób 20 minut treningu core / brzucha", xp: 3 },
-            { text: "Unikaj kofeiny po godzinie 14:00 dla maksymalnej jakości snu", xp: 2 },
-            { text: "Połóż się spać minimum 30 minut wcześniej niż zwykle", xp: 3 },
-            { text: "Zrób 100 pajacyków na rozruszanie krążenia w przerwie od siedzenia", xp: 2 },
-            { text: "Przez cały dzień pilnuj idealnie prostej postawy ciała", xp: 3 },
-            { text: "Zrób szybką sesję wizualizacji swoich długoterminowych celów (10 min)", xp: 2 },
-            { text: "Wykonaj 40 dipów (pompek na poręczach lub krześle)", xp: 3 },
-            { text: "Zjedz dodatkową porcję warzyw do dwóch posiłków", xp: 2 },
-            { text: "Zero podjadania między głównymi posiłkami przez cały dzień", xp: 3 },
-            { text: "Zrób 25 minut szybkiego marszu lub truchtu", xp: 3 },
-            { text: "Przetestuj swoją pamięć: powtórz bez zaglądania materiał z wczoraj", xp: 2 },
-            { text: "Zrób 30 minut pracy nad własnym projektem pobocznym", xp: 4 },
-            { text: "Ogranicz czas ekranowy telefonu o minimum 30% względem średniej", xp: 4 },
-            { text: "Zrób 3 serie po 15 wspięć na palce na każdą nogę", xp: 2 },
-            { text: "Wypij zieloną herbatę lub napar ziołowy zamiast słodkiego napoju", xp: 2 },
-            { text: "Zrób 10 minut automasażu lub rolowania spiętych mięśni", xp: 2 },
-            { text: "Przeczytaj wartościowy artykuł naukowy lub branżowy", xp: 2 },
-            { text: "Zrób 50 brzuszków lub spięć brzucha w dowolnym momencie dnia", xp: 2 },
-            { text: "Wyłącz wszystkie powiadomienia w telefonie na 4 godziny", xp: 3 },
-            { text: "Zrób 15 minut ćwiczeń na grip / przedramiona", xp: 2 },
-            { text: "Napisz 3 rzeczy, za które jesteś dzisiaj realnie wdzięczny", xp: 2 },
-            { text: "Zrób 20 minut treningu interwałowego (HIIT) lub tabaty", xp: 5 },
-            { text: "Posprzątaj dokładnie swoją szafę lub szufladę z ubraniami", xp: 2 },
-            { text: "Zrób 40 pompek diamentowych lub z wąskim rozstawem dłoni", xp: 4 },
-            { text: "Przez 2 godziny po przebudzeniu nie sprawdzaj żadnych wiadomości", xp: 4 },
-            { text: "Zrób 10 minut ćwiczeń równowagi (stanie na jednej nodze z zamkniętymi oczami)", xp: 2 },
-            { text: "Odsłuchaj utwór klasyczny lub instrumentalny w pełnym skupieniu (15 min)", xp: 2 },
-            { text: "Zrób 30 minut nauki nowej umiejętności spoza codziennej rutyny", xp: 3 },
-            { text: "Zjedz kolację minimum 3 godziny przed snem", xp: 3 },
-            { text: "Zrób 100 skoków na skakance (lub imitacji skakanki)", xp: 2 },
-            { text: "Przejrzyj swoje wydatki z tego tygodnia i zoptymalizuj budżet", xp: 3 },
-            { text: "Zrób 15 minut ćwiczeń rozluźniających kark i barki", xp: 2 },
-            { text: "Przez cały dzień pij tylko wodę i niesłodzoną kawę/herbatę", xp: 3 },
-            { text: "Zrób 3 serie maksymalnego zwisu na drążku (dead hang)", xp: 3 },
-            { text: "Napisz listę 5 złych nawyków, które całkowicie eliminujesz", xp: 2 },
-            { text: "Zrób 20 minut szybkiego czytania bez regresji wzroku", xp: 3 },
-            { text: "Wykonaj 50 wznosów bioder (glute bridge)", xp: 2 },
-            { text: "Zostaw telefon w innym pokoju na cały wieczór", xp: 4 },
-            { text: "Zrób 15 minut treningu koordynacji (np. żonglowanie lub praca nóg)", xp: 2 },
-            { text: "Przeczytaj biografię lub historię wybitnej postaci (min. 15 min)", xp: 2 },
-            { text: "Zrób 35 pompek z nogami na podwyższeniu", xp: 4 },
-            { text: "Przez cały dzień używaj niedominującej ręki do prostych czynności", xp: 3 },
-            { text: "Zrób 10 minut treningu wzroku (patrzenie w dal, ćwiczenia gałek ocznych)", xp: 2 },
-            { text: "Zaplanuj dokładnie jadłospis na kolejne 2 dni", xp: 2 },
-            { text: "Zrób 45 minut nauki lub pracy w kompletnej ciszy (bez muzyki w tle)", xp: 3 },
-            { text: "Wykonaj 30 burpees (padnij-powstań) w ciągu dnia", xp: 5 },
-            { text: "Zrób 15 minut ćwiczeń oddechowych przed samym snem", xp: 2 },
-            { text: "Usuń z telefonu 3 aplikacje, które najbardziej marnują Twój czas", xp: 3 },
-            { text: "Zrób 20 minut spaceru po zmroku dla wyciszenia układu nerwowego", xp: 2 },
-            { text: "Wykonaj 60 sekund krzesełka przy ścianie (wall sit) w 3 seriach", xp: 3 },
-            { text: "Napisz na głos lub na papierze swoje 3 najważniejsze zasady życiowe", xp: 2 },
-            { text: "Zrób 25 minut porządków w skrzynce mailowej lub chmurze", xp: 2 },
-            { text: "Wykonaj 40 klasycznych pompek w jak najkrótszym czasie", xp: 3 },
-            { text: "Zjedz dzisiaj min. 30g białka w pierwszym posiłku", xp: 2 },
-            { text: "Zrób 15 minut treningu kalistenicznego w domu", xp: 3 },
-            { text: "Przez cały dzień nie przerywaj nikomu w trakcie rozmowy", xp: 3 },
-            { text: "Zrób 20 minut analizy swoich błędów z ostatniego miesiąca", xp: 3 },
-            { text: "Wykonaj 50 przysiadów sumo", xp: 2 },
-            { text: "Zrób 10 minut zimnego okładu na twarz/kark rano dla pobudzenia", xp: 2 },
-            { text: "Przeczytaj 10 stron książki na głos dla poprawy dykcji", xp: 3 },
-            { text: "Zrób 30 minut pracy bez żadnego dostępu do internetu", xp: 4 },
-            { text: "Wykonaj 20 pompek typu pike (na barki)", xp: 3 },
-            { text: "Zadbaj o 100% nawodnienia tuż po przebudzeniu (500 ml wody)", xp: 2 },
-            { text: "Zrób 15 minut rozciągania klatki piersiowej i otwierania bioder", xp: 2 },
-            { text: "Zapisz 5 pomysłów na rozwój osobisty lub zawodowy", xp: 2 },
-            { text: "Wykonaj 100 spinaczy (mountain climbers)", xp: 3 },
-            { text: "Przez 1 godzinę wieczorem korzystaj tylko z ciepłego, słabego światła", xp: 2 },
-            { text: "Zrób 20 minut treningu refleksyjnego lub szachów / łamigłówek logicznych", xp: 3 },
-            { text: "Wykonaj 3 serie po 12 pompek z zatrzymaniem na dole (pauza 2 sek.)", xp: 4 },
-            { text: "Uporządkuj swoją listę zadań i wykreśl wszystko, co zbędne", xp: 2 },
-            { text: "Zrób 15 minut marszu pod górę lub po schodach", xp: 3 },
-            { text: "Zakończ dzień 10-minutową sesją wdzięczności i wyciszenia umysłu", xp: 2 }
+            { text: "Unikaj kofeiny po godzinie 14:00 dla maksymalnej jakości snu", xp: 2 }
         ];
 
-        // ZAKTUALIZOWANY CENNIK SKLEPU SYSTEMOWEGO
         const shopCatalog = [
             { id: 'shield_streak', name: '🛡️ Tarcza Serii', desc: 'Chroni przed 1 resetem serii przy porażce.', cost: 80, type: 'shield' },
             { id: 'forgive_fail', name: '📜 Dekret Oczyszczenia', desc: 'Anuluje 1 aktywną porażkę dzisiaj i zwraca XP.', cost: 60, type: 'cleanse' },
@@ -1132,6 +1124,7 @@
             xp: 0, totalXp: 0, level: 1, coins: 0, shields: 0,
             pendingCoins: { sila: 0, intelekt: 0, wola: 0 },
             advantagePoints: 100,
+            rivals: rankingRivals,
             daysCompleted: 0, perfectDays: 0,
             habits: JSON.parse(JSON.stringify(initialHabits)),
             weeklyBoss: pickRandomWeeklyBoss(),
@@ -1176,6 +1169,7 @@
                         shields: cloudData.shields || 0,
                         pendingCoins: cloudData.pendingCoins || { sila: 0, intelekt: 0, wola: 0 },
                         advantagePoints: cloudData.advantagePoints !== undefined ? cloudData.advantagePoints : 100,
+                        rivals: cloudData.rivals || rankingRivals,
                         daysCompleted: cloudData.daysCompleted || 0,
                         perfectDays: cloudData.perfectDays || 0,
                         habits: cloudData.habits || JSON.parse(JSON.stringify(initialHabits)),
@@ -1193,6 +1187,7 @@
                         xp: 0, totalXp: 0, level: 1, coins: 0, shields: 0,
                         pendingCoins: { sila: 0, intelekt: 0, wola: 0 },
                         advantagePoints: 100,
+                        rivals: JSON.parse(JSON.stringify(rankingRivals)),
                         daysCompleted: 0, perfectDays: 0,
                         habits: JSON.parse(JSON.stringify(initialHabits)),
                         weeklyBoss: pickRandomWeeklyBoss(),
@@ -1239,17 +1234,12 @@
             return 0;
         }
 
-        // Sprawdza, czy wszystkie CODZIENNE zadania w danej kategorii zostały wykonane (2/2 w Sile i Intelekcie, 3/3 w Woli)
         function areDailyTasksInCategoryComplete(catKey) {
             const dailyList = state.habits[catKey].filter(h => !h.weeklyTarget);
             if (dailyList.length === 0) return false;
             return dailyList.every(h => h.status === 'done');
         }
 
-        // Dzienna pula monet trafiająca do Tygodniowego Skarbca za zaliczenie zadań dziennych kategorii:
-        // Siła: Dieta (2 XP) + Suplementy (1 XP) = 3 XP * 2 = +6 ₵
-        // Intelekt: Język (2 XP) + Książka (2 XP) = 4 XP * 2 = +8 ₵
-        // Wola: Czysty dzień (3 XP) + Telefon (2 XP) + Medytacja (1 XP) = 6 XP * 2 = +12 ₵
         function calculateDailyDepositForCategory(catKey) {
             if (!areDailyTasksInCategoryComplete(catKey)) return 0;
             const dailyList = state.habits[catKey].filter(h => !h.weeklyTarget);
@@ -1262,11 +1252,11 @@
             return (pc.sila || 0) + (pc.intelekt || 0) + (pc.wola || 0);
         }
 
-        // Pozycja w Top 100 (1..100)
         function getPlayerRankPosition(pts) {
-            let rank = rankingRivals.length + 1;
-            for (let i = 0; i < rankingRivals.length; i++) {
-                if (pts >= rankingRivals[i].pts) {
+            const rivals = state.rivals || rankingRivals;
+            let rank = rivals.length + 1;
+            for (let i = 0; i < rivals.length; i++) {
+                if (pts >= rivals[i].pts) {
                     rank--;
                 }
             }
@@ -1288,6 +1278,7 @@
         function render() {
             const currentReq = getReqForLevel(state.level);
             const currentRank = getRank(state.level);
+            const rivals = state.rivals || rankingRivals;
             const posIn100 = getPlayerRankPosition(state.advantagePoints);
             const pc = state.pendingCoins || { sila: 0, intelekt: 0, wola: 0 };
             const totalPending = getTotalPendingCoins();
@@ -1330,6 +1321,7 @@
             renderHabitCategory('intelekt', 'habits-intelekt');
             renderHabitCategory('wola', 'habits-wola');
             renderHardcoreSection();
+            renderSpotifyModule();
             renderPerfectDayModule();
             renderShop();
             renderTitlesList();
@@ -1382,7 +1374,7 @@
 
             const container = document.getElementById('boss-tasks-container');
             container.innerHTML = boss.tasks.map((t, idx) => `
-                <div onclick="window.toggleBossTask(${idx})" class="cursor-pointer p-2.5 rounded border font-tech text-xs flex items-center justify-between transition ${t.done ? 'bg-emerald-950/25 border-emerald-500/40 text-emerald-300 line-through' : 'bg-obsidian/80 border-edge hover:border-rose-500/40 text-slate-200'}">
+                <div onclick="playAudioClick(); window.toggleBossTask(${idx})" class="cursor-pointer p-2.5 rounded border font-tech text-xs flex items-center justify-between transition ${t.done ? 'bg-emerald-950/25 border-emerald-500/40 text-emerald-300 line-through' : 'bg-obsidian/80 border-edge hover:border-rose-500/40 text-slate-200'}">
                     <div class="flex items-center gap-2.5">
                         <span class="w-4 h-4 rounded border flex items-center justify-center text-[10px] shrink-0 ${t.done ? 'bg-emerald-600 border-emerald-400 text-white' : 'border-slate-600 text-transparent'}">✓</span>
                         <span>${t.text}</span>
@@ -1405,6 +1397,7 @@
                 adjustXP(15);
                 state.coins += 30;
                 state.advantagePoints += 45;
+                playAudioLevelUp();
                 addLog(`💀 POKONANO BOSSA TYGODNIOWEGO: ${boss.name}! Nagroda: +15 XP, +30 ₵ oraz +45 PKT Przewagi!`, "levelup");
                 showNotification(`💀 BOSS POKONANY! Zyskałeś +15 XP, +30 ₵ i +45 PKT Przewagi!`);
             } else if (!allDone && boss.defeated) {
@@ -1418,6 +1411,25 @@
             saveStateToCloud();
             render();
         };
+
+        function renderSpotifyModule() {
+            const lockedDiv = document.getElementById('spotify-locked');
+            const unlockedDiv = document.getElementById('spotify-unlocked');
+            const badge = document.getElementById('spotify-badge');
+
+            if (state.level < 15) {
+                lockedDiv.classList.remove('hidden');
+                unlockedDiv.classList.add('hidden');
+                badge.innerText = "🔒 WYMAGANY POZIOM 15";
+                badge.className = "text-[11px] font-tech px-2.5 py-1 rounded bg-obsidian text-slate-400 border border-edge";
+                return;
+            }
+
+            lockedDiv.classList.add('hidden');
+            unlockedDiv.classList.remove('hidden');
+            badge.innerText = "🔓 MODUŁ AKTYWNY (LVL 15+)";
+            badge.className = "text-[11px] font-tech px-2.5 py-1 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/40";
+        }
 
         function renderPerfectDayModule() {
             const lockedDiv = document.getElementById('perfect-locked');
@@ -1470,7 +1482,7 @@
                         </div>
                     </div>
                     <div class="flex items-center gap-2 font-tech text-xs shrink-0">
-                        <button onclick="window.toggleUrgentQuest()" 
+                        <button onclick="playAudioClick(); window.toggleUrgentQuest()" 
                             class="px-3.5 py-1.5 rounded border transition flex items-center gap-1.5 ${isDone ? 'bg-emerald-600/80 text-white border-emerald-400 font-bold' : 'bg-panel hover:bg-fuchsia-950/60 text-fuchsia-300 border-fuchsia-500/40'}">
                             ${isDone ? `✓ Ukończono (+${uq.xpValue} XP)` : `✓ Wykonaj Misję (+${uq.xpValue} XP)`}
                         </button>
@@ -1491,6 +1503,7 @@
                 uq.status = 'done';
                 adjustXP(uq.xpValue);
                 state.coins += (uq.xpValue * 2);
+                playAudioLevelUp();
                 addLog(`⚡ NAGŁA MISJA UKOŃCZONA: "${uq.text}" (+${uq.xpValue} XP, +${uq.xpValue * 2} ₵)!`, "levelup");
                 showNotification(`Nagła Misja ukończona! +${uq.xpValue} XP oraz +${uq.xpValue * 2} ₵!`);
             }
@@ -1508,7 +1521,7 @@
                             <div class="font-semibold text-slate-200">${item.name}</div>
                             <div class="text-[10px] text-slate-500 leading-tight mt-0.5">${item.desc}</div>
                         </div>
-                        <button onclick="window.buyShopItem('${item.id}')" 
+                        <button onclick="playAudioClick(); window.buyShopItem('${item.id}')" 
                             class="px-2.5 py-1.5 rounded border text-[11px] font-bold shrink-0 transition ${canAfford ? 'bg-amber-500/15 hover:bg-amber-500/30 text-amber-300 border-amber-500/40' : 'bg-panel text-slate-600 border-edge cursor-not-allowed'}">
                             ${item.cost} ₵
                         </button>
@@ -1551,6 +1564,7 @@
                 }
             } else {
                 state.coins -= item.cost;
+                playAudioLevelUp();
                 addLog(`👑 NAGRODA REALNA ODBLOKOWANA: ${item.name} (-${item.cost} ₵). Zasłużyłeś!`, "levelup");
                 showNotification(`Odblokowano nagrodę w realu: ${item.name}!`);
             }
@@ -1598,9 +1612,9 @@
                         </div>
                     </div>
                     <div class="flex items-center gap-2 font-tech text-xs shrink-0">
-                        <button onclick="window.markHardcoreDone()" class="px-3 py-1.5 rounded border transition ${isDone ? 'bg-emerald-600/80 text-white border-emerald-400 font-bold' : 'bg-panel hover:bg-emerald-950/60 text-emerald-400 border-edge'}">✓ (+${h.xpValue})</button>
-                        <button onclick="window.markHardcoreFailed()" class="px-3 py-1.5 rounded border transition ${isFailed ? 'bg-rose-600/80 text-white border-rose-400 font-bold' : 'bg-panel hover:bg-rose-950/60 text-rose-400 border-edge'}">✗ (-${h.xpValue})</button>
-                        <button onclick="window.removeHardcoreHabit()" class="px-2.5 py-1.5 rounded bg-panel hover:bg-rose-950 text-slate-500 hover:text-rose-400 border border-edge transition">✕</button>
+                        <button onclick="playAudioClick(); window.markHardcoreDone()" class="px-3 py-1.5 rounded border transition ${isDone ? 'bg-emerald-600/80 text-white border-emerald-400 font-bold' : 'bg-panel hover:bg-emerald-950/60 text-emerald-400 border-edge'}">✓ (+${h.xpValue})</button>
+                        <button onclick="playAudioClick(); window.markHardcoreFailed()" class="px-3 py-1.5 rounded border transition ${isFailed ? 'bg-rose-600/80 text-white border-rose-400 font-bold' : 'bg-panel hover:bg-rose-950/60 text-rose-400 border-edge'}">✗ (-${h.xpValue})</button>
+                        <button onclick="playAudioClick(); window.removeHardcoreHabit()" class="px-2.5 py-1.5 rounded bg-panel hover:bg-rose-950 text-slate-500 hover:text-rose-400 border border-edge transition">✕</button>
                     </div>
                 </div>
             `;
@@ -1719,12 +1733,12 @@
                         </div>
                     </div>
                     <div class="flex items-center gap-2 font-tech text-xs shrink-0">
-                        <button onclick="window.markHabitDone('${catKey}', '${habit.id}')" 
+                        <button onclick="playAudioClick(); window.markHabitDone('${catKey}', '${habit.id}')" 
                             class="px-3 py-1.5 rounded border transition flex items-center gap-1 ${isDone ? 'bg-emerald-600/80 text-white border-emerald-400 font-bold' : 'bg-panel hover:bg-emerald-950/50 text-emerald-400 border-edge hover:border-emerald-500/50'}">
                             ✓ Wykonano (+${habit.xpValue})
                         </button>
-                        <button onclick="window.markHabitFailed('${catKey}', '${habit.id}')" 
-                            class="px-3 py-1.5 rounded border transition flex items-center gap-1 ${isFailed ? 'bg-rose-600/80 text-white border-rose-400 font-bold' : 'bg-panel hover:bg-rose-950/50 text-rose-400 border-edge hover:border-rose-500/50'}">
+                        <button onclick="playAudioClick(); window.markHabitFailed('${catKey}', '${habit.id}')" 
+                            class="px-3 py-1.5 rounded border transition ${isFailed ? 'bg-rose-600/80 text-white border-rose-400 font-bold' : 'bg-panel hover:bg-rose-950/50 text-rose-400 border-edge hover:border-rose-500/50'}">
                             ✗ Porażka (-${habit.xpValue})
                         </button>
                     </div>
@@ -1794,8 +1808,10 @@
                 state.xp -= currentReq;
                 state.level++;
                 const newRank = getRank(state.level);
+                playAudioLevelUp();
                 addLog(`🎉 AWANS NA POZIOM ${state.level}! Tytuł: «${newRank}»`, "levelup");
                 if (state.level === 7) addLog(`👹 ODBLOKOWANO LOŻE Z BOSSAMI TYGODNIOWYMI!`, "levelup");
+                if (state.level === 15) addLog(`🎵 ODBLOKOWANO MODUŁ AUDIO // SPOTIFY!`, "levelup");
                 if (state.level === 25) addLog(`❖ ODBLOKOWANO PROTOKÓŁ HARDCORE!`, "levelup");
                 if (state.level === 30) addLog(`⚡ ODBLOKOWANO REZONANS ABSOLUTNY 9/9 (+2 XP)!`, "levelup");
                 showNotification(`🎉 AWANS NA POZIOM ${state.level}! Nowy tytuł: «${newRank}»`);
@@ -1812,8 +1828,7 @@
             if (state.level === 1 && state.xp < 0) state.xp = 0;
         }
 
-        // ZAKOŃCZENIE CYKLU DNIA:
-        // Odkłada zarobione dzisiaj monety do Tygodniowego Skarbca (pendingCoins)
+        // ZAKOŃCZENIE CYKLU DNIA Z SYMULACJĄ RYWALI (Tabela pucharów rośnie i spada, ale z przewagą wzrostu)
         window.endDay = function() {
             let dailyBonusTotal = 0;
             let depositedCoinsToday = 0;
@@ -1823,14 +1838,31 @@
             let autoFailedTasks = [];
 
             if (!state.pendingCoins) state.pendingCoins = { sila: 0, intelekt: 0, wola: 0 };
+            if (!state.rivals) state.rivals = JSON.parse(JSON.stringify(rankingRivals));
 
             const rankBefore = getPlayerRankPosition(state.advantagePoints);
             const ptsBefore = state.advantagePoints;
 
+            // Symulacja pucharów 99 rywali przy końcu dnia (głównie rosną, ale niewiele więcej niż spadają)
+            state.rivals.forEach(r => {
+                const roll = Math.random();
+                let delta = 0;
+                if (roll < 0.55) {
+                    // Wzrost (np. +1 do +4 PKT)
+                    delta = Math.floor(Math.random() * 4) + 1;
+                } else if (roll < 0.85) {
+                    // Lekki spadek (np. -1 do -3 PKT)
+                    delta = -(Math.floor(Math.random() * 3) + 1);
+                } else {
+                    // Stagnacja
+                    delta = 0;
+                }
+                r.pts = Math.max(10, r.pts + delta);
+            });
+
             ['sila', 'intelekt', 'wola'].forEach(catKey => {
                 const habitsInCat = state.habits[catKey];
 
-                // Niezaznaczone codzienne zadania = automatyczna porażka
                 habitsInCat.forEach(h => {
                     if (!h.weeklyTarget && h.status === 'pending') {
                         h.status = 'failed';
@@ -1849,7 +1881,6 @@
                     }
                 });
 
-                // Odłożenie monet za zadania dzienne tej kategorii do Skarbca Tygodniowego
                 const dayDeposit = calculateDailyDepositForCategory(catKey);
                 if (dayDeposit > 0) {
                     state.pendingCoins[catKey] = (state.pendingCoins[catKey] || 0) + dayDeposit;
@@ -1953,13 +1984,6 @@
             openAdvantageModal();
         };
 
-        // NOWY TYDZIEŃ:
-        // 1. Rozliczenie Skarbca Tygodniowego:
-        //    - Siła: wypłaca zgromadzony depozyt + 10 ₵ premii tylko gdy Trening = 3/3 (inaczej depozyt przepada!)
-        //    - Intelekt: wypłaca zgromadzony depozyt + 6 ₵ premii tylko gdy Pianino = 3/3 (inaczej depozyt przepada!)
-        //    - Wola: wypłaca 100% zgromadzonego depozytu bez dodatkowych warunków
-        // 2. Otwiera osobne Okno Wypłaty Tygodniowej
-        // 3. Resetuje liczniki 0/3 i rozlicza Bossa Tygodniowego (od LVL 7)
         window.resetWeeklyCounters = function() {
             const pc = state.pendingCoins || { sila: 0, intelekt: 0, wola: 0 };
 
@@ -1973,11 +1997,11 @@
             const intelektUnlocked = pianinoDone >= 3;
 
             const silaBase = pc.sila || 0;
-            const silaBonus = silaUnlocked ? (treningHabit.xpValue * 2) : 0; // +10 ₵
+            const silaBonus = silaUnlocked ? (treningHabit.xpValue * 2) : 0;
             const silaPayout = silaUnlocked ? (silaBase + silaBonus) : 0;
 
             const intelektBase = pc.intelekt || 0;
-            const intelektBonus = intelektUnlocked ? (pianinoHabit.xpValue * 2) : 0; // +6 ₵
+            const intelektBonus = intelektUnlocked ? (pianinoHabit.xpValue * 2) : 0;
             const intelektPayout = intelektUnlocked ? (intelektBase + intelektBonus) : 0;
 
             const wolaPayout = pc.wola || 0;
@@ -1985,18 +2009,15 @@
             const totalPaidOut = silaPayout + intelektPayout + wolaPayout;
             const totalForfeited = (!silaUnlocked ? silaBase : 0) + (!intelektUnlocked ? intelektBase : 0);
 
-            // Przelanie należnych monet do portfela i wyzerowanie Skarbca Tygodniowego
             state.coins += totalPaidOut;
             state.pendingCoins = { sila: 0, intelekt: 0, wola: 0 };
 
-            // Reset liczników 0/3
             ['sila', 'intelekt', 'wola'].forEach(catKey => {
                 state.habits[catKey].forEach(h => {
                     if (h.weeklyTarget) h.weeklyDone = 0;
                 });
             });
 
-            // Rozliczenie Bossa Tygodniowego (od Poziomu 7)
             let bossSummaryHtml = '';
             if (state.level >= 7 && state.weeklyBoss) {
                 const oldBossName = state.weeklyBoss.name;
@@ -2021,11 +2042,9 @@
 
             addLog(`💰 WYPŁATA TYGODNIOWA: Przetransferowano +${totalPaidOut} ₵ do portfela (Przepadło: ${totalForfeited} ₵).`, "levelup");
 
-            // Wygenerowanie zawartości osobnego okna Wypłaty Tygodniowej
             const payoutContent = document.getElementById('weekly-payout-content');
             payoutContent.innerHTML = `
                 <div class="bg-obsidian/90 p-4 rounded border border-edge space-y-3">
-                    <!-- SIŁA -->
                     <div class="p-2.5 rounded border ${silaUnlocked ? 'border-emerald-500/40 bg-emerald-950/20' : 'border-rose-500/40 bg-rose-950/20'}">
                         <div class="flex justify-between items-center font-bold">
                             <span class="text-rose-400">ATRYBUT: SIŁA (Trening: ${treningDone}/3)</span>
@@ -2038,7 +2057,6 @@
                         </div>
                     </div>
 
-                    <!-- INTELEKT -->
                     <div class="p-2.5 rounded border ${intelektUnlocked ? 'border-emerald-500/40 bg-emerald-950/20' : 'border-rose-500/40 bg-rose-950/20'}">
                         <div class="flex justify-between items-center font-bold">
                             <span class="text-sky-400">ATRYBUT: INTELEKT (Pianino: ${pianinoDone}/3)</span>
@@ -2051,7 +2069,6 @@
                         </div>
                     </div>
 
-                    <!-- WOLA -->
                     <div class="p-2.5 rounded border border-violet-500/40 bg-violet-950/20">
                         <div class="flex justify-between items-center font-bold">
                             <span class="text-violet-400">ATRYBUT: WOLA (Kumulacja Tygodniowa)</span>
@@ -2062,7 +2079,6 @@
                         </div>
                     </div>
 
-                    <!-- SUMA KOŃCOWA -->
                     <div class="pt-2 border-t border-edge flex justify-between items-center text-sm">
                         <span class="text-slate-300 font-bold">ŁĄCZNY PRZELEW DO PORTFELA:</span>
                         <span class="text-amber-300 font-bold text-lg">+${totalPaidOut} ₵</span>
@@ -2084,13 +2100,13 @@
             document.getElementById('weekly-payout-modal').classList.add('hidden');
         };
 
-        // Renderowanie Rankingu TOP 100
         window.openLeaderboardModal = function() {
             const modal = document.getElementById('leaderboard-modal');
             const listEl = document.getElementById('leaderboard-list');
+            const rivals = state.rivals || rankingRivals;
 
             const combined = [
-                ...rankingRivals.map(r => ({ ...r, isPlayer: false })),
+                ...rivals.map(r => ({ ...r, isPlayer: false })),
                 {
                     name: `TY (${profileId.toUpperCase()} — LVL ${state.level})`,
                     pts: state.advantagePoints,
@@ -2127,7 +2143,6 @@
                             <span class="text-slate-600 font-bold w-8">#${pos}</span>
                             <div>
                                 <div class="text-slate-300 font-medium">${entry.name}</div>
-                                <div class="text-[10px] text-slate-600">${entry.tag}</div>
                             </div>
                         </div>
                         <span class="text-slate-400 font-semibold">${entry.pts} PKT</span>
@@ -2156,7 +2171,7 @@
                 content.innerHTML = `
                     <div class="p-4 bg-obsidian/80 rounded border border-edge text-slate-300 space-y-2">
                         <div class="text-sky-400 font-bold">Brak zamkniętego cyklu dnia do analizy.</div>
-                        <p class="text-slate-400">Zaznacz wykonane zadania i kliknij <span class="text-sky-300">Zakończ Cykl Dnia</span>, aby odłożyć dzisiejsze monety do Skarbca Tygodniowego i wygenerować raport.</p>
+                        <p class="text-slate-400">Zaznacz wykonane zadania i kliknij <span class="text-sky-300">Zakończ Cykl Dnia</span>, aby odłożyć dzisiejsze monety do Skarbca Tygodniowego i zaktualizować ranking rywali.</p>
                     </div>
                 `;
             } else {
@@ -2175,16 +2190,16 @@
                 const peopleValue = rep.peopleDelta >= 0 ? `+${rep.peopleDelta} osób` : `${Math.abs(rep.peopleDelta)} osób`;
 
                 let verdictColor = "text-emerald-400";
-                let verdictText = "DOMINACJA SYSTEMOWA. Powiększasz dystans w Top 100 i zasilasz Skarbiec Tygodniowy.";
+                let verdictText = "DOMINACJA SYSTEMOWA. Rywale w tabeli również walczą o każdy punkt, ale utrzymujesz przewagę.";
                 if (rep.completionRate < 50) {
                     verdictColor = "text-rose-400";
-                    verdictText = "OSTRZEŻENIE: Zaniechanie zadań spowodowało spadek w rankingu i utratę XP.";
+                    verdictText = "OSTRZEŻENIE: Zaniechanie zadań sprawiło, że tłum rywali zaczął Cię wyprzedzać.";
                 } else if (rep.completionRate < 100) {
                     verdictColor = "text-amber-300";
-                    verdictText = "SOLIDNY POSTĘP. Pamiętaj o domknięciu misji tygodniowych 3/3 przed końcem tygodnia, aby odebrać depozyt!";
+                    verdictText = "SOLIDNY POSTĘP. Pamiętaj o domknięciu misji tygodniowych 3/3 przed końcem tygodnia!";
                 }
 
-                const depositedTodayVal = rep.depositedCoinsToday !== undefined ? rep.depositedCoinsToday : (rep.coinsEarnedToday || 0);
+                const depositedTodayVal = rep.depositedCoinsToday !== undefined ? rep.depositedCoinsToday : 0;
                 const vaultTotalVal = rep.totalInVault !== undefined ? rep.totalInVault : getTotalPendingCoins();
 
                 content.innerHTML = `
@@ -2247,6 +2262,7 @@
                 xp: 0, totalXp: 0, level: 1, coins: 0, shields: 0,
                 pendingCoins: { sila: 0, intelekt: 0, wola: 0 },
                 advantagePoints: 100,
+                rivals: JSON.parse(JSON.stringify(rankingRivals)),
                 daysCompleted: 0, perfectDays: 0,
                 habits: JSON.parse(JSON.stringify(initialHabits)),
                 weeklyBoss: pickRandomWeeklyBoss(),
