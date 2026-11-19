@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SYSTEM: MONARCHA CIENI // Shadow Interface v11.0</title>
+    <title>LEVELING // Shadow Interface v11.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -135,9 +135,9 @@
             <div class="flex items-center gap-3.5">
                 <div id="sync-indicator" class="w-2.5 h-2.5 bg-amber-400 rounded-full animate-pulse"></div>
                 <div>
-                    <span class="text-[10px] font-tech uppercase tracking-[0.2em] text-violet-400/90">[SYSTEM: MONARCHA CIENI // SHADOW OS]</span>
+                    <span class="text-[10px] font-tech uppercase tracking-[0.2em] text-violet-400/90">[LEVELING]</span>
                     <h1 class="font-anime text-2xl md:text-[26px] tracking-wider text-slate-100 font-bold leading-tight">
-                        SYSTEM: MONARCHA CIENI
+                        LEVELING
                     </h1>
                 </div>
             </div>
@@ -300,9 +300,22 @@
                         </h2>
                         <span id="badge-100-wola" class="text-[10px] font-tech px-2 py-0.5 rounded border border-edge bg-obsidian text-slate-500">0/3 ZROBIONE</span>
                     </div>
-                    <span class="text-[11px] text-slate-400 font-tech">100% dnia (3/3) = +12 ₵ do Skarbca Tygodniowego</span>
+                    <span class="text-[11px] text-slate-400 font-tech">100% dnia (4/4) = +16 ₵ do Skarbca Tygodniowego</span>
                 </div>
                 <div id="habits-wola" class="space-y-3"></div>
+            </section>
+
+            <!-- KATEGORIA 4: FINANSE -->
+            <section class="system-window rounded-lg p-5 sm:p-6">
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 mb-4 border-b border-edge pb-3">
+                    <div class="flex items-center gap-2.5">
+                        <span class="w-2 h-2 rotate-45 bg-amber-400 inline-block"></span>
+                        <h2 class="text-amber-300 font-anime font-bold text-xl tracking-wider uppercase">ATRYBUT: FINANSE</h2>
+                        <span id="badge-100-finanse" class="text-[10px] font-tech px-2 py-0.5 rounded border border-edge bg-obsidian text-slate-500">0/1 ZROBIONE</span>
+                    </div>
+                    <span class="text-[11px] text-slate-400 font-tech">3 sesje w tygodniu: +8 ₵ za sesję i +8 ₵ premii przy 3/3</span>
+                </div>
+                <div id="habits-finanse" class="space-y-3"></div>
             </section>
 
             <!-- PROTOKÓŁ HARDCORE (LVL 25+) -->
@@ -342,6 +355,38 @@
                 </div>
             </section>
 
+            <!-- QUEST: ZMIANA PRACY (LVL 50+) -->
+            <section class="system-window system-window-hardcore rounded-lg p-5 sm:p-6">
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-4 border-b border-edge pb-3">
+                    <div class="flex items-center gap-2.5">
+                        <span class="w-2 h-2 rotate-45 bg-amber-400 inline-block"></span>
+                        <h2 class="text-amber-300 font-anime font-bold text-xl tracking-wider uppercase">QUEST: ZMIANA PRACY</h2>
+                        <span class="text-[11px] font-tech text-amber-400/80 px-2 py-0.5 bg-amber-950/30 rounded border border-amber-500/20">EDYCJA ATRYBUTÓW</span>
+                    </div>
+                    <span id="work-change-badge" class="text-[11px] font-tech px-2.5 py-1 rounded bg-obsidian text-slate-400 border border-edge">🔒 WYMAGANY POZIOM 50</span>
+                </div>
+                <div id="work-change-locked" class="py-4 text-center font-tech space-y-1 bg-obsidian/50 rounded border border-edge/60">
+                    <div class="text-slate-300 text-xs tracking-wider">[DOSTĘP ZABLOKOWANY — WYMAGANY POZIOM 50]</div>
+                    <div class="text-[11px] text-slate-500 max-w-lg mx-auto">Po osiągnięciu poziomu 50 odblokujesz możliwość zastępowania zadań w istniejących atrybutach, np. wymiany czytania na inną aktywność.</div>
+                </div>
+                <div id="work-change-unlocked" class="hidden space-y-3.5">
+                    <div class="text-[11px] font-tech text-slate-400 bg-obsidian/80 p-3 rounded border border-edge">Wybierz kategorię i zadanie, które chcesz zastąpić, a następnie wpisz nową nazwę. Zmiana zachowuje miejsce zadania, jego XP, warunek tygodniowy, licznik wykonania i zasady wypłaty — nie usuwa ani nie dodaje slotów.</div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        <select id="work-change-category" onchange="window.updateWorkChangeHabitOptions(true)" class="bg-panel border border-edge rounded px-3 py-2.5 text-xs font-tech text-slate-200 focus:outline-none focus:border-amber-400/50">
+                            <option value="sila">Siła</option>
+                            <option value="intelekt">Intelekt</option>
+                            <option value="wola">Wola</option>
+                            <option value="finanse">Finanse</option>
+                        </select>
+                        <select id="work-change-habit" onchange="window.loadWorkChangeHabitName()" class="bg-panel border border-edge rounded px-3 py-2.5 text-xs font-tech text-slate-200 focus:outline-none focus:border-amber-400/50"></select>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-2.5">
+                        <input type="text" id="work-change-name-input" maxlength="80" placeholder="Nowa nazwa zadania" class="flex-1 bg-panel border border-edge rounded px-3 py-2.5 text-xs font-tech text-slate-200 focus:outline-none focus:border-amber-400/50">
+                        <button onclick="playAudioClick(); window.saveWorkChange()" class="bg-amber-500/15 hover:bg-amber-500/25 text-amber-200 border border-amber-500/40 px-4 py-2.5 rounded text-xs font-tech font-semibold transition whitespace-nowrap">Zapisz zmianę</button>
+                    </div>
+                </div>
+            </section>
+
             <!-- MODUŁ AUDIO // SPOTIFY (LVL 15+) -->
             <section class="system-window system-window-spotify rounded-lg p-5 sm:p-6">
                 <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-3.5 border-b border-edge pb-3">
@@ -371,13 +416,13 @@
                 </div>
             </section>
 
-            <!-- MODUŁ REZONANSU: PERFEKCYJNY DZIEŃ 9/9 (LVL 30+) -->
+            <!-- MODUŁ REZONANSU: PERFEKCYJNY DZIEŃ 11/11 (LVL 30+) -->
             <section class="system-window system-window-perfect rounded-lg p-5 sm:p-6">
                 <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-3.5 border-b border-edge pb-3">
                     <div class="flex items-center gap-2.5">
                         <span class="w-2 h-2 rotate-45 bg-emerald-400 inline-block"></span>
                         <h2 class="text-emerald-300 font-anime font-bold text-xl tracking-wider uppercase">
-                            REZONANS ABSOLUTNY [9/9 PERFECT DAY]
+                            REZONANS ABSOLUTNY [11/11 PERFECT DAY]
                         </h2>
                         <span class="text-[10px] font-tech text-emerald-300 px-2 py-0.5 bg-emerald-950/40 rounded border border-emerald-500/30">MNOŻNIK</span>
                     </div>
@@ -389,14 +434,14 @@
                 <div id="perfect-locked" class="py-4 text-center font-tech space-y-1 bg-obsidian/50 rounded border border-edge/60">
                     <div class="text-slate-300 text-xs tracking-wider">[DOSTĘP ZABLOKOWANY — WYMAGANY POZIOM 30]</div>
                     <div class="text-[11px] text-slate-500 max-w-lg mx-auto">
-                        Po osiągnięciu Poziomu 30 odblokujesz pasywny rezonans: każde zamknięcie cyklu dnia ze skutecznością 9/9 automatycznie wygeneruje bonusowe +2 XP.
+                        Po osiągnięciu Poziomu 30 odblokujesz pasywny rezonans: każde zamknięcie cyklu dnia ze skutecznością 11/11 automatycznie wygeneruje bonusowe +2 XP.
                     </div>
                 </div>
 
                 <div id="perfect-unlocked" class="hidden bg-obsidian/85 p-3.5 rounded border border-emerald-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-2 font-tech text-xs">
                     <div>
-                        <div class="text-emerald-300 font-semibold">⚡ Status Dzisiejszego Rezonansu: <span id="perfect-today-counter" class="text-white">0 / 9</span> zadań</div>
-                        <div class="text-[11px] text-slate-400 mt-0.5">Gdy zamkniesz dzień z wynikiem 9/9, System dopisze dodatkowe <span class="text-emerald-400 font-bold">+2 XP</span>.</div>
+                        <div class="text-emerald-300 font-semibold">⚡ Status Dzisiejszego Rezonansu: <span id="perfect-today-counter" class="text-white">0 / 11</span> zadań</div>
+                        <div class="text-[11px] text-slate-400 mt-0.5">Gdy zamkniesz dzień z wynikiem 11/11, System dopisze dodatkowe <span class="text-emerald-400 font-bold">+2 XP</span>.</div>
                     </div>
                     <span id="perfect-today-status" class="px-2.5 py-1 rounded bg-panel border border-edge text-slate-400 text-[11px] shrink-0">W TOKU</span>
                 </div>
@@ -475,7 +520,7 @@
                             <span class="text-emerald-300 font-bold">🏦 SKARBIEC TYGODNIOWY:</span>
                             <span id="stat-pending-total" class="text-emerald-300 font-bold">0 ₵</span>
                         </div>
-                        <div class="grid grid-cols-3 gap-1 text-[10px] text-center pt-1 border-t border-edge/80">
+                        <div class="grid grid-cols-4 gap-1 text-[10px] text-center pt-1 border-t border-edge/80">
                             <div class="bg-panel p-1 rounded border border-edge">
                                 <div class="text-rose-400">SIŁA</div>
                                 <div id="stat-pending-sila" class="text-slate-200 font-bold">0 ₵</div>
@@ -487,6 +532,10 @@
                             <div class="bg-panel p-1 rounded border border-edge">
                                 <div class="text-violet-400">WOLA</div>
                                 <div id="stat-pending-wola" class="text-slate-200 font-bold">0 ₵</div>
+                            </div>
+                            <div class="bg-panel p-1 rounded border border-edge">
+                                <div class="text-amber-300">FINANSE</div>
+                                <div id="stat-pending-finanse" class="text-slate-200 font-bold">0 ₵</div>
                             </div>
                         </div>
                     </div>
@@ -516,7 +565,7 @@
                     <span id="shop-balance" class="text-xs font-tech text-amber-300 font-bold bg-obsidian px-2.5 py-1 rounded border border-amber-500/30">0 ₵</span>
                 </div>
                 <p class="text-[11px] font-tech text-slate-400 leading-relaxed">
-                    Monety ze Skarbca trafiają do portfela przy resecie tygodnia (wymagane <span class="text-sky-300">3/3</span> w Sile i Intelekcie).
+                    Monety ze Skarbca trafiają do portfela przy resecie tygodnia (wymagane <span class="text-sky-300">3/3</span> w Sile, Intelekcie i Finansach).
                 </p>
 
                 <div id="shop-items" class="space-y-2 text-xs font-tech"></div>
@@ -1017,7 +1066,7 @@
         const shopCatalog = [
             { id: 'shield_streak', name: '🛡️ Tarcza Serii', desc: 'Chroni przed 1 resetem serii przy porażce.', cost: 80, type: 'shield' },
             { id: 'forgive_fail', name: '📜 Dekret Oczyszczenia', desc: 'Anuluje 1 aktywną porażkę dzisiaj i zwraca XP.', cost: 60, type: 'cleanse' },
-            { id: 'real_hour', name: '🎮 1h Rozrywki Bez Wyrzutów', desc: 'Pozwolenie Systemu na 1h gry/serialu w realu.', cost: 50, type: 'real' },
+            { id: 'real_hour', name: '🎮 1h Rozrywki Bez Wyrzutów', desc: 'Pozwolenie Systemu na 1h gry/serialu w realu.', cost: 40, type: 'real' },
             { id: 'real_cheat', name: '🍔 Uczta Wojownika (Cheat Meal)', desc: 'Jednorazowy posiłek poza dietą zatwierdzony przez System.', cost: 40, type: 'real' },
             { id: 'real_free_day', name: '👑 Dzień Regeneracji (Wolne)', desc: 'Pełny dzień odpoczynku w realu bez utraty serii.', cost: 180, type: 'real' }
         ];
@@ -1082,7 +1131,7 @@
 
         const initialHabits = {
             sila: [
-                { id: 'dieta', name: 'Dieta', xpValue: 2, status: 'pending' },
+                { id: 'dieta', name: 'Zdrowe odżywianie', xpValue: 2, status: 'pending' },
                 { id: 'suplementy', name: 'Suplementy + ocet', xpValue: 1, status: 'pending' },
                 { id: 'trening', name: 'Trening siłowy (3x w tyg.)', xpValue: 5, status: 'pending', weeklyTarget: 3, weeklyDone: 0 }
             ],
@@ -1094,9 +1143,38 @@
             wola: [
                 { id: 'czysty_dzien', name: 'Czysty dzień bez nawyku', xpValue: 3, status: 'pending' },
                 { id: 'telefon', name: 'Brak telefonu rano/wieczór', xpValue: 2, status: 'pending' },
-                { id: 'medytacja', name: 'Medytacja wieczór', xpValue: 1, status: 'pending' }
+                { id: 'medytacja', name: 'Medytacja wieczór', xpValue: 1, status: 'pending' },
+                { id: 'sen_8h', name: 'Sen minimum 8 godzin', xpValue: 2, status: 'pending' }
+            ],
+            finanse: [
+                { id: 'finanse_praca', name: 'Praca nad finansami (min. 30 min, 3x w tyg.)', xpValue: 4, status: 'pending', weeklyTarget: 3, weeklyDone: 0, weeklyCoinDeposit: 8 }
             ]
         };
+
+        function mergeHabitsWithDefaults(savedHabits) {
+            const merged = savedHabits ? JSON.parse(JSON.stringify(savedHabits)) : {};
+            for (const [catKey, defaults] of Object.entries(initialHabits)) {
+                if (!Array.isArray(merged[catKey])) {
+                    merged[catKey] = JSON.parse(JSON.stringify(defaults));
+                    continue;
+                }
+                for (const defaultHabit of defaults) {
+                    const existing = merged[catKey].find(h => h.id === defaultHabit.id);
+                    if (!existing) {
+                        merged[catKey].push(JSON.parse(JSON.stringify(defaultHabit)));
+                        continue;
+                    }
+                    // Only migrate the requested old label; preserve any other customized task names and progress.
+                    if (defaultHabit.id === 'dieta' && existing.name === 'Dieta') existing.name = defaultHabit.name;
+                    for (const key of ['xpValue', 'weeklyTarget', 'weeklyCoinDeposit']) {
+                        if (defaultHabit[key] !== undefined && existing[key] === undefined) existing[key] = defaultHabit[key];
+                    }
+                    if (defaultHabit.weeklyTarget && existing.weeklyDone === undefined) existing.weeklyDone = 0;
+                    if (existing.status === undefined) existing.status = 'pending';
+                }
+            }
+            return merged;
+        }
 
         function pickRandomUrgentQuest(excludeIndex = -1) {
             let idx;
@@ -1122,7 +1200,7 @@
 
         let state = {
             xp: 0, totalXp: 0, level: 1, coins: 0, shields: 0,
-            pendingCoins: { sila: 0, intelekt: 0, wola: 0 },
+            pendingCoins: { sila: 0, intelekt: 0, wola: 0, finanse: 0 },
             advantagePoints: 100,
             rivals: rankingRivals,
             daysCompleted: 0, perfectDays: 0,
@@ -1130,7 +1208,7 @@
             weeklyBoss: pickRandomWeeklyBoss(),
             urgentQuest: pickRandomUrgentQuest(),
             hardcoreHabit: null,
-            categoryStreaks: { sila: 0, intelekt: 0, wola: 0 },
+            categoryStreaks: { sila: 0, intelekt: 0, wola: 0, finanse: 0 },
             lastReport: null,
             logs: []
         };
@@ -1167,16 +1245,16 @@
                         ...cloudData,
                         coins: cloudData.coins || 0,
                         shields: cloudData.shields || 0,
-                        pendingCoins: cloudData.pendingCoins || { sila: 0, intelekt: 0, wola: 0 },
+                        pendingCoins: { sila: 0, intelekt: 0, wola: 0, finanse: 0, ...(cloudData.pendingCoins || {}) },
                         advantagePoints: cloudData.advantagePoints !== undefined ? cloudData.advantagePoints : 100,
                         rivals: cloudData.rivals || rankingRivals,
                         daysCompleted: cloudData.daysCompleted || 0,
                         perfectDays: cloudData.perfectDays || 0,
-                        habits: cloudData.habits || JSON.parse(JSON.stringify(initialHabits)),
+                        habits: mergeHabitsWithDefaults(cloudData.habits),
                         weeklyBoss: cloudData.weeklyBoss || pickRandomWeeklyBoss(),
                         urgentQuest: cloudData.urgentQuest || pickRandomUrgentQuest(),
                         hardcoreHabit: cloudData.hardcoreHabit !== undefined ? cloudData.hardcoreHabit : null,
-                        categoryStreaks: cloudData.categoryStreaks || { sila: 0, intelekt: 0, wola: 0 },
+                        categoryStreaks: { sila: 0, intelekt: 0, wola: 0, finanse: 0, ...(cloudData.categoryStreaks || {}) },
                         lastReport: cloudData.lastReport || null,
                         logs: cloudData.logs || []
                     };
@@ -1185,7 +1263,7 @@
                 } else {
                     state = {
                         xp: 0, totalXp: 0, level: 1, coins: 0, shields: 0,
-                        pendingCoins: { sila: 0, intelekt: 0, wola: 0 },
+                        pendingCoins: { sila: 0, intelekt: 0, wola: 0, finanse: 0 },
                         advantagePoints: 100,
                         rivals: JSON.parse(JSON.stringify(rankingRivals)),
                         daysCompleted: 0, perfectDays: 0,
@@ -1193,7 +1271,7 @@
                         weeklyBoss: pickRandomWeeklyBoss(),
                         urgentQuest: pickRandomUrgentQuest(),
                         hardcoreHabit: null,
-                        categoryStreaks: { sila: 0, intelekt: 0, wola: 0 },
+                        categoryStreaks: { sila: 0, intelekt: 0, wola: 0, finanse: 0 },
                         lastReport: null,
                         logs: []
                     };
@@ -1248,8 +1326,8 @@
         }
 
         function getTotalPendingCoins() {
-            const pc = state.pendingCoins || { sila: 0, intelekt: 0, wola: 0 };
-            return (pc.sila || 0) + (pc.intelekt || 0) + (pc.wola || 0);
+            const pc = state.pendingCoins || { sila: 0, intelekt: 0, wola: 0, finanse: 0 };
+            return Object.values(pc).reduce((sum, value) => sum + (Number(value) || 0), 0);
         }
 
         function getPlayerRankPosition(pts) {
@@ -1265,7 +1343,7 @@
 
         function countCompletedTasksToday() {
             let done = 0;
-            ['sila', 'intelekt', 'wola'].forEach(catKey => {
+            Object.keys(state.habits).forEach(catKey => {
                 state.habits[catKey].forEach(h => {
                     if (h.status === 'done' || (h.weeklyTarget && (h.weeklyDone || 0) >= h.weeklyTarget)) {
                         done++;
@@ -1280,7 +1358,7 @@
             const currentRank = getRank(state.level);
             const rivals = state.rivals || rankingRivals;
             const posIn100 = getPlayerRankPosition(state.advantagePoints);
-            const pc = state.pendingCoins || { sila: 0, intelekt: 0, wola: 0 };
+            const pc = state.pendingCoins || { sila: 0, intelekt: 0, wola: 0, finanse: 0 };
             const totalPending = getTotalPendingCoins();
             
             document.getElementById('header-level').innerText = state.level;
@@ -1305,14 +1383,13 @@
             document.getElementById('stat-pending-sila').innerText = `${pc.sila || 0} ₵`;
             document.getElementById('stat-pending-intelekt').innerText = `${pc.intelekt || 0} ₵`;
             document.getElementById('stat-pending-wola').innerText = `${pc.wola || 0} ₵`;
+            document.getElementById('stat-pending-finanse').innerText = `${pc.finanse || 0} ₵`;
 
             document.getElementById('stat-ego').innerText = getEgoPercentile(state.level);
             document.getElementById('stat-shields').innerText = `${state.shields} szt.`;
             document.getElementById('shop-balance').innerText = `${state.coins} ₵`;
 
-            const totalBonus = getStreakBonus(state.categoryStreaks.sila) +
-                               getStreakBonus(state.categoryStreaks.intelekt) +
-                               getStreakBonus(state.categoryStreaks.wola);
+            const totalBonus = Object.values(state.categoryStreaks).reduce((sum, streak) => sum + getStreakBonus(streak || 0), 0);
             document.getElementById('stat-streak-bonus').innerText = `+${totalBonus} XP / dzień`;
 
             renderWeeklyBoss();
@@ -1320,7 +1397,9 @@
             renderHabitCategory('sila', 'habits-sila');
             renderHabitCategory('intelekt', 'habits-intelekt');
             renderHabitCategory('wola', 'habits-wola');
+            renderHabitCategory('finanse', 'habits-finanse');
             renderHardcoreSection();
+            renderWorkChangeSection();
             renderSpotifyModule();
             renderPerfectDayModule();
             renderShop();
@@ -1450,13 +1529,14 @@
             badge.className = "text-[11px] font-tech px-2.5 py-1 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/40";
 
             const doneCount = countCompletedTasksToday();
-            document.getElementById('perfect-today-counter').innerText = `${doneCount} / 9`;
+            const totalCount = Object.values(state.habits).reduce((sum, list) => sum + list.length, 0);
+            document.getElementById('perfect-today-counter').innerText = `${doneCount} / ${totalCount}`;
             const statusEl = document.getElementById('perfect-today-status');
-            if (doneCount === 9) {
+            if (doneCount === totalCount) {
                 statusEl.innerText = "✓ GOTOWE (+2 XP NA KONIEC DNIA)";
                 statusEl.className = "px-2.5 py-1 rounded bg-emerald-950/60 border border-emerald-500/50 text-emerald-300 text-[11px] font-bold shrink-0";
             } else {
-                statusEl.innerText = `BRAKUJE ${9 - doneCount} ZADAŃ`;
+                statusEl.innerText = `BRAKUJE ${totalCount - doneCount} ZADAŃ`;
                 statusEl.className = "px-2.5 py-1 rounded bg-panel border border-edge text-slate-400 text-[11px] shrink-0";
             }
         }
@@ -1546,7 +1626,7 @@
                 showNotification(`Kupiono: ${item.name}! Chroni przed kolejnym resetem serii.`);
             } else if (item.type === 'cleanse') {
                 let foundFailed = false;
-                for (const k of ['sila', 'intelekt', 'wola']) {
+                for (const k of ['sila', 'intelekt', 'wola', 'finanse']) {
                     const failedH = state.habits[k].find(h => h.status === 'failed');
                     if (failedH) {
                         failedH.status = 'pending';
@@ -1652,6 +1732,67 @@
             saveStateToCloud(); render();
         };
 
+        function renderWorkChangeSection() {
+            const lockedDiv = document.getElementById('work-change-locked');
+            const unlockedDiv = document.getElementById('work-change-unlocked');
+            const badge = document.getElementById('work-change-badge');
+            if (state.level < 50) {
+                lockedDiv.classList.remove('hidden');
+                unlockedDiv.classList.add('hidden');
+                badge.innerText = '🔒 WYMAGANY POZIOM 50';
+                badge.className = 'text-[11px] font-tech px-2.5 py-1 rounded bg-obsidian text-slate-400 border border-edge';
+                return;
+            }
+            lockedDiv.classList.add('hidden');
+            unlockedDiv.classList.remove('hidden');
+            badge.innerText = '🔓 QUEST AKTYWNY (LVL 50+)';
+            badge.className = 'text-[11px] font-tech px-2.5 py-1 rounded bg-amber-500/15 text-amber-300 border border-amber-500/40';
+            window.updateWorkChangeHabitOptions(false);
+        }
+
+        window.updateWorkChangeHabitOptions = function(resetName = true) {
+            const categorySelect = document.getElementById('work-change-category');
+            const habitSelect = document.getElementById('work-change-habit');
+            const nameInput = document.getElementById('work-change-name-input');
+            if (!categorySelect || !habitSelect || !nameInput || !state.habits) return;
+            const catKey = categorySelect.value;
+            const habits = state.habits[catKey] || [];
+            const previousId = habitSelect.value;
+            habitSelect.innerHTML = '';
+            habits.forEach(habit => {
+                const option = document.createElement('option');
+                option.value = habit.id;
+                option.textContent = habit.name;
+                habitSelect.appendChild(option);
+            });
+            if (habits.some(h => h.id === previousId)) habitSelect.value = previousId;
+            if (resetName || !nameInput.value) window.loadWorkChangeHabitName();
+        };
+
+        window.loadWorkChangeHabitName = function() {
+            const catKey = document.getElementById('work-change-category').value;
+            const habitId = document.getElementById('work-change-habit').value;
+            const habit = (state.habits[catKey] || []).find(h => h.id === habitId);
+            if (habit) document.getElementById('work-change-name-input').value = habit.name;
+        };
+
+        window.saveWorkChange = function() {
+            if (state.level < 50) return showNotification('Quest Zmiana pracy jest dostępny od poziomu 50.');
+            const catKey = document.getElementById('work-change-category').value;
+            const habitId = document.getElementById('work-change-habit').value;
+            const newName = document.getElementById('work-change-name-input').value.trim();
+            const habit = (state.habits[catKey] || []).find(h => h.id === habitId);
+            if (!habit) return showNotification('Wybierz zadanie do zastąpienia.');
+            if (!newName || newName.length > 80) return showNotification('Wpisz nazwę zadania (1–80 znaków).');
+            const previousName = habit.name;
+            if (newName === previousName) return showNotification('Nowa nazwa jest taka sama jak obecna.');
+            habit.name = newName;
+            addLog(`⚒️ QUEST ZMIANA PRACY: Zmieniono zadanie „${previousName}” na „${newName}” w kategorii ${catKey.toUpperCase()}. Zachowano XP i zasady wykonania.`, 'levelup');
+            saveStateToCloud();
+            render();
+            showNotification('Zadanie zostało zastąpione. XP i warunki wypłaty pozostały bez zmian.');
+        };
+
         function renderTitlesList() {
             const container = document.getElementById('titles-list');
             container.innerHTML = titleMilestones.map(m => {
@@ -1729,7 +1870,7 @@
                             <span class="mx-1 text-slate-700">|</span>
                             Kara: <span class="text-rose-400/90">-${habit.xpValue} XP</span>
                             <span class="mx-1 text-slate-700">|</span>
-                            Depozyt: <span class="text-amber-300/80">+${habit.xpValue * 2} ₵</span>
+                            Depozyt: <span class="text-amber-300/80">+${habit.weeklyCoinDeposit || habit.xpValue * 2} ₵${habit.weeklyCoinDeposit ? ' / sesję' : ''}</span>
                         </div>
                     </div>
                     <div class="flex items-center gap-2 font-tech text-xs shrink-0">
@@ -1754,12 +1895,17 @@
             if (habit.status === 'done') {
                 habit.status = 'pending';
                 if (habit.weeklyTarget && habit.weeklyDone > 0) habit.weeklyDone--;
+                if (habit.weeklyCoinDeposit) state.pendingCoins[catKey] = Math.max(0, (state.pendingCoins[catKey] || 0) - habit.weeklyCoinDeposit);
                 adjustXP(-habit.xpValue);
                 addLog(`Cofnięto wykonanie: "${habit.name}" (-${habit.xpValue} XP).`, "info");
             } else {
                 if (habit.status === 'failed') adjustXP(habit.xpValue);
                 habit.status = 'done';
                 if (habit.weeklyTarget) habit.weeklyDone = (habit.weeklyDone || 0) + 1;
+                if (habit.weeklyCoinDeposit) {
+                    state.pendingCoins[catKey] = (state.pendingCoins[catKey] || 0) + habit.weeklyCoinDeposit;
+                    addLog(`🏦 DEPOZYT ${catKey.toUpperCase()}: +${habit.weeklyCoinDeposit} ₵ za sesję.`, 'levelup');
+                }
                 adjustXP(habit.xpValue);
                 addLog(`ZALICZONO: "${habit.name}" (+${habit.xpValue} XP).`, "success");
             }
@@ -1779,6 +1925,7 @@
             } else {
                 if (habit.status === 'done') {
                     if (habit.weeklyTarget && habit.weeklyDone > 0) habit.weeklyDone--;
+                    if (habit.weeklyCoinDeposit) state.pendingCoins[catKey] = Math.max(0, (state.pendingCoins[catKey] || 0) - habit.weeklyCoinDeposit);
                     adjustXP(-habit.xpValue);
                 }
                 habit.status = 'failed';
@@ -1813,7 +1960,8 @@
                 if (state.level === 7) addLog(`👹 ODBLOKOWANO LOŻE Z BOSSAMI TYGODNIOWYMI!`, "levelup");
                 if (state.level === 15) addLog(`🎵 ODBLOKOWANO MODUŁ AUDIO // SPOTIFY!`, "levelup");
                 if (state.level === 25) addLog(`❖ ODBLOKOWANO PROTOKÓŁ HARDCORE!`, "levelup");
-                if (state.level === 30) addLog(`⚡ ODBLOKOWANO REZONANS ABSOLUTNY 9/9 (+2 XP)!`, "levelup");
+                if (state.level === 30) addLog(`⚡ ODBLOKOWANO REZONANS ABSOLUTNY 11/11 (+2 XP)!`, "levelup");
+                if (state.level === 50) addLog(`🔓 ODBLOKOWANO QUEST: ZMIANA PRACY!`, "levelup");
                 showNotification(`🎉 AWANS NA POZIOM ${state.level}! Nowy tytuł: «${newRank}»`);
                 currentReq = getReqForLevel(state.level);
             }
@@ -1837,7 +1985,7 @@
             let completedTasksCount = 0;
             let autoFailedTasks = [];
 
-            if (!state.pendingCoins) state.pendingCoins = { sila: 0, intelekt: 0, wola: 0 };
+            if (!state.pendingCoins) state.pendingCoins = { sila: 0, intelekt: 0, wola: 0, finanse: 0 };
             if (!state.rivals) state.rivals = JSON.parse(JSON.stringify(rankingRivals));
 
             const rankBefore = getPlayerRankPosition(state.advantagePoints);
@@ -1860,7 +2008,9 @@
                 r.pts = Math.max(10, r.pts + delta);
             });
 
-            ['sila', 'intelekt', 'wola'].forEach(catKey => {
+            Object.keys(state.habits).forEach(catKey => {
+                if (!state.categoryStreaks) state.categoryStreaks = {};
+                if (state.categoryStreaks[catKey] === undefined) state.categoryStreaks[catKey] = 0;
                 const habitsInCat = state.habits[catKey];
 
                 habitsInCat.forEach(h => {
@@ -1928,7 +2078,7 @@
             if (completedTasksCount === totalTasksCount && state.level >= 30) {
                 perfectBoostEarned = 2;
                 adjustXP(2);
-                addLog(`⚡ REZONANS ABSOLUTNY (9/9): Przyznano dodatkowe +2 XP!`, "levelup");
+                addLog(`⚡ REZONANS ABSOLUTNY (11/11): Przyznano dodatkowe +2 XP!`, "levelup");
             }
 
             let advantageDelta = 0;
@@ -1985,16 +2135,19 @@
         };
 
         window.resetWeeklyCounters = function() {
-            const pc = state.pendingCoins || { sila: 0, intelekt: 0, wola: 0 };
+            const pc = state.pendingCoins || { sila: 0, intelekt: 0, wola: 0, finanse: 0 };
 
             const treningHabit = state.habits.sila.find(h => h.id === 'trening');
             const pianinoHabit = state.habits.intelekt.find(h => h.id === 'pianino');
+            const financeHabit = state.habits.finanse.find(h => h.id === 'finanse_praca');
 
             const treningDone = treningHabit ? (treningHabit.weeklyDone || 0) : 0;
             const pianinoDone = pianinoHabit ? (pianinoHabit.weeklyDone || 0) : 0;
+            const financeDone = financeHabit ? (financeHabit.weeklyDone || 0) : 0;
 
             const silaUnlocked = treningDone >= 3;
             const intelektUnlocked = pianinoDone >= 3;
+            const financeUnlocked = financeDone >= 3;
 
             const silaBase = pc.sila || 0;
             const silaBonus = silaUnlocked ? (treningHabit.xpValue * 2) : 0;
@@ -2004,15 +2157,18 @@
             const intelektBonus = intelektUnlocked ? (pianinoHabit.xpValue * 2) : 0;
             const intelektPayout = intelektUnlocked ? (intelektBase + intelektBonus) : 0;
 
+            const financeBase = pc.finanse || 0;
+            const financeBonus = financeUnlocked && financeHabit ? (financeHabit.xpValue * 2) : 0;
+            const financePayout = financeUnlocked ? (financeBase + financeBonus) : 0;
             const wolaPayout = pc.wola || 0;
 
-            const totalPaidOut = silaPayout + intelektPayout + wolaPayout;
-            const totalForfeited = (!silaUnlocked ? silaBase : 0) + (!intelektUnlocked ? intelektBase : 0);
+            const totalPaidOut = silaPayout + intelektPayout + wolaPayout + financePayout;
+            const totalForfeited = (!silaUnlocked ? silaBase : 0) + (!intelektUnlocked ? intelektBase : 0) + (!financeUnlocked ? financeBase : 0);
 
             state.coins += totalPaidOut;
-            state.pendingCoins = { sila: 0, intelekt: 0, wola: 0 };
+            state.pendingCoins = { sila: 0, intelekt: 0, wola: 0, finanse: 0 };
 
-            ['sila', 'intelekt', 'wola'].forEach(catKey => {
+            Object.keys(state.habits).forEach(catKey => {
                 state.habits[catKey].forEach(h => {
                     if (h.weeklyTarget) h.weeklyDone = 0;
                 });
@@ -2076,6 +2232,18 @@
                         </div>
                         <div class="text-[11px] text-slate-400 mt-1">
                             Pełna wypłata skumulowanych środków z czystych dni Woli bez dodatkowych warunków.
+                        </div>
+                    </div>
+
+                    <div class="p-2.5 rounded border ${financeUnlocked ? 'border-emerald-500/40 bg-emerald-950/20' : 'border-rose-500/40 bg-rose-950/20'}">
+                        <div class="flex justify-between items-center font-bold">
+                            <span class="text-amber-300">ATRYBUT: FINANSE (Sesje: ${financeDone}/3)</span>
+                            <span class="${financeUnlocked ? 'text-emerald-400' : 'text-rose-400'}">${financeUnlocked ? `+${financePayout} ₵ WYPŁACONO` : `0 ₵ (PRZEPADŁO ${financeBase} ₵)`}</span>
+                        </div>
+                        <div class="text-[11px] text-slate-400 mt-1">
+                            ${financeUnlocked
+                                ? `Warunek 3/3 spełniony! Depozyt za 3 sesje (${financeBase} ₵) + premia za 3/3 (+${financeBonus} ₵).`
+                                : `Brak ukończenia 3/3 sesji — zgromadzony depozyt (${financeBase} ₵) przepadł.`}
                         </div>
                     </div>
 
@@ -2230,7 +2398,7 @@
                         </div>
                         ${rep.perfectBoostEarned > 0 ? `
                         <div class="flex justify-between items-center pt-2 border-t border-edge">
-                            <span class="text-slate-400">REZONANS ABSOLUTNY 9/9:</span>
+                            <span class="text-slate-400">REZONANS ABSOLUTNY 11/11:</span>
                             <span class="text-emerald-400 font-bold">+${rep.perfectBoostEarned} XP</span>
                         </div>` : ''}
                     </div>
@@ -2260,7 +2428,7 @@
         window.confirmHardReset = async function() {
             state = {
                 xp: 0, totalXp: 0, level: 1, coins: 0, shields: 0,
-                pendingCoins: { sila: 0, intelekt: 0, wola: 0 },
+                pendingCoins: { sila: 0, intelekt: 0, wola: 0, finanse: 0 },
                 advantagePoints: 100,
                 rivals: JSON.parse(JSON.stringify(rankingRivals)),
                 daysCompleted: 0, perfectDays: 0,
@@ -2268,7 +2436,7 @@
                 weeklyBoss: pickRandomWeeklyBoss(),
                 urgentQuest: pickRandomUrgentQuest(),
                 hardcoreHabit: null,
-                categoryStreaks: { sila: 0, intelekt: 0, wola: 0 },
+                categoryStreaks: { sila: 0, intelekt: 0, wola: 0, finanse: 0 },
                 lastReport: null,
                 logs: []
             };
