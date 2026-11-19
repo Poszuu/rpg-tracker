@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LEVELING // Shadow Interface v11.0</title>
+    <title>LEVELING // Shadow Interface v11.1</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -273,6 +273,11 @@
                     <span class="text-[11px] text-slate-400 font-tech">Depozyt: +6 ₵/dzień (wypłata przy 3/3 treningach +10 ₵)</span>
                 </div>
                 <div id="habits-sila" class="space-y-3"></div>
+                <div class="mt-4 rounded border border-edge bg-obsidian/70 p-3 space-y-2">
+                    <label for="note-sila" class="block text-[10px] font-tech tracking-wider text-rose-300">NOTATNIK ANALITYCZNY // SIŁA</label>
+                    <textarea id="note-sila" rows="2" maxlength="500" oninput="window.updateCategoryNoteDraft('sila', this.value)" onchange="window.saveCategoryNote('sila', this.value)" placeholder="Krótko: co zrobiłem, co nie zadziałało, co poprawię jutro?" class="w-full resize-y bg-panel border border-edge rounded px-3 py-2 text-xs font-tech text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-rose-400/50"></textarea>
+                    <div class="text-[10px] font-tech text-slate-500">Wymagane przy zamknięciu dnia · minimum 5 znaków · maks. 500</div>
+                </div>
             </section>
 
             <!-- KATEGORIA 2: INTELEKT -->
@@ -288,6 +293,11 @@
                     <span class="text-[11px] text-slate-400 font-tech">Depozyt: +8 ₵/dzień (wypłata przy 3/3 pianinie +6 ₵)</span>
                 </div>
                 <div id="habits-intelekt" class="space-y-3"></div>
+                <div class="mt-4 rounded border border-edge bg-obsidian/70 p-3 space-y-2">
+                    <label for="note-intelekt" class="block text-[10px] font-tech tracking-wider text-sky-300">NOTATNIK ANALITYCZNY // INTELEKT</label>
+                    <textarea id="note-intelekt" rows="2" maxlength="500" oninput="window.updateCategoryNoteDraft('intelekt', this.value)" onchange="window.saveCategoryNote('intelekt', this.value)" placeholder="Krótko: co zrobiłem, co nie zadziałało, co poprawię jutro?" class="w-full resize-y bg-panel border border-edge rounded px-3 py-2 text-xs font-tech text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-sky-400/50"></textarea>
+                    <div class="text-[10px] font-tech text-slate-500">Wymagane przy zamknięciu dnia · minimum 5 znaków · maks. 500</div>
+                </div>
             </section>
 
             <!-- KATEGORIA 3: WOLA -->
@@ -303,6 +313,11 @@
                     <span class="text-[11px] text-slate-400 font-tech">100% dnia (4/4) = +16 ₵ do Skarbca Tygodniowego</span>
                 </div>
                 <div id="habits-wola" class="space-y-3"></div>
+                <div class="mt-4 rounded border border-edge bg-obsidian/70 p-3 space-y-2">
+                    <label for="note-wola" class="block text-[10px] font-tech tracking-wider text-violet-300">NOTATNIK ANALITYCZNY // WOLA</label>
+                    <textarea id="note-wola" rows="2" maxlength="500" oninput="window.updateCategoryNoteDraft('wola', this.value)" onchange="window.saveCategoryNote('wola', this.value)" placeholder="Krótko: co zrobiłem, co nie zadziałało, co poprawię jutro?" class="w-full resize-y bg-panel border border-edge rounded px-3 py-2 text-xs font-tech text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-violet-400/50"></textarea>
+                    <div class="text-[10px] font-tech text-slate-500">Wymagane przy zamknięciu dnia · minimum 5 znaków · maks. 500</div>
+                </div>
             </section>
 
             <!-- KATEGORIA 4: FINANSE -->
@@ -316,6 +331,11 @@
                     <span class="text-[11px] text-slate-400 font-tech">3 sesje w tygodniu: +8 ₵ za sesję i +8 ₵ premii przy 3/3</span>
                 </div>
                 <div id="habits-finanse" class="space-y-3"></div>
+                <div class="mt-4 rounded border border-edge bg-obsidian/70 p-3 space-y-2">
+                    <label for="note-finanse" class="block text-[10px] font-tech tracking-wider text-amber-300">NOTATNIK ANALITYCZNY // FINANSE</label>
+                    <textarea id="note-finanse" rows="2" maxlength="500" oninput="window.updateCategoryNoteDraft('finanse', this.value)" onchange="window.saveCategoryNote('finanse', this.value)" placeholder="Krótko: co zrobiłem, co nie zadziałało, co poprawię jutro?" class="w-full resize-y bg-panel border border-edge rounded px-3 py-2 text-xs font-tech text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-amber-400/50"></textarea>
+                    <div class="text-[10px] font-tech text-slate-500">Wymagane przy zamknięciu dnia · minimum 5 znaków · maks. 500</div>
+                </div>
             </section>
 
             <!-- PROTOKÓŁ HARDCORE (LVL 25+) -->
@@ -457,6 +477,16 @@
                 </button>
             </div>
 
+            <!-- AUDYT TYGODNIOWY I KONSEKWENCJE -->
+            <section class="system-window system-window-hardcore rounded-lg p-5 sm:p-6 space-y-3">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-edge pb-2.5">
+                    <h3 class="font-anime text-amber-300 font-bold text-lg tracking-wider uppercase">AUDYT TYGODNIOWY // PRÓG TOLERANCJI</h3>
+                    <span class="text-[10px] font-tech text-rose-300 border border-rose-500/30 rounded px-2 py-1">KARA PO 12 POMINIĘCIACH</span>
+                </div>
+                <div id="weekly-audit-summary" class="text-xs font-tech text-slate-300">Oczekiwanie na pierwszy cykl tygodniowy.</div>
+                <div id="weekly-penalty-list" class="space-y-2"></div>
+            </section>
+
             <!-- Dziennik Zdarzeń Systemowych -->
             <section class="system-window rounded-lg p-5">
                 <div class="flex justify-between items-center mb-3 border-b border-edge pb-2.5">
@@ -549,10 +579,7 @@
                         <span class="text-slate-400">BONUS CIĄGŁOŚCI:</span>
                         <span id="stat-streak-bonus" class="text-violet-400 font-bold">+0 XP / dzień</span>
                     </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-slate-400">AKTYWNE TARCZE SERII:</span>
-                        <span id="stat-shields" class="text-sky-400 font-bold">0 szt.</span>
-                    </div>
+
                 </div>
             </section>
 
@@ -1063,10 +1090,214 @@
             { text: "Unikaj kofeiny po godzinie 14:00 dla maksymalnej jakości snu", xp: 2 }
         ];
 
+        const weeklyConsequencePool = [
+            "Dokończ jedno pominięte zadanie w jego normalnym, zaplanowanym zakresie.",
+            "Wykonaj jeden blok skupienia 25 minut nad najważniejszym zaległym zadaniem.",
+            "Poświęć 30 minut na rozpisanie kolejnego tygodnia w konkretnych blokach czasu.",
+            "Zapisz trzy przyczyny pominięć i do każdej dopisz jedno rozwiązanie.",
+            "Uporządkuj biurko i przygotuj je do pracy przez 20 minut.",
+            "Uporządkuj pokój przez 20 minut, bez prób robienia wszystkiego naraz.",
+            "Oczyść pulpit komputera i folder Pobrane przez 15 minut.",
+            "Uporządkuj pliki związane z nauką lub pracą w trzech logicznych folderach.",
+            "Zrób kopię zapasową jednego ważnego pliku lub folderu.",
+            "Przejrzyj kalendarz i wpisz wszystkie znane terminy na najbliższe 7 dni.",
+            "Przygotuj wieczorem ubranie, materiały i miejsce do pierwszego zadania jutro.",
+            "Usuń lub wyłącz jedno zbędne źródło powiadomień.",
+            "Ustaw limit dla jednej aplikacji, która najczęściej rozprasza.",
+            "Przenieś telefon poza zasięg ręki na jeden zaplanowany blok pracy.",
+            "Zrób 20-minutowy przegląd listy zadań i usuń pozycje nieaktualne.",
+            "Wybierz jedno zadanie odkładane od kilku dni i wykonaj jego pierwszy konkretny krok.",
+            "Dokończ jedną drobną sprawę administracyjną, którą odkładasz.",
+            "Odpowiedz na jedną ważną wiadomość, która czeka na odpowiedź.",
+            "Przygotuj listę trzech priorytetów na jutro i określ pierwszy krok każdego z nich.",
+            "Przeprowadź 15-minutowy audyt tego, gdzie uciekł czas w ostatnim tygodniu.",
+            "Poświęć 20 minut na uporządkowanie notatek z nauki.",
+            "Uzupełnij brakujące notatki z jednej lekcji lub jednego spotkania.",
+            "Przeczytaj 10 stron materiału, który jest bezpośrednio związany z Twoim celem.",
+            "Wykonaj 20 minut nauki języka i zapisz pięć zdań z nowymi słowami.",
+            "Rozwiąż jedną krótką serię zadań z przedmiotu, który wymaga poprawy.",
+            "Wyjaśnij na piśmie jedno zagadnienie własnymi słowami.",
+            "Przejrzyj ostatnie błędy i zapisz, jak rozpoznasz je następnym razem.",
+            "Zamień jeden niejasny cel na mierzalny krok do wykonania w ciągu 48 godzin.",
+            "Zaplanuj konkretną godzinę rozpoczęcia najważniejszego zadania na jutro.",
+            "Przygotuj stanowisko do nauki lub pracy przed snem.",
+            "Zrób 15-minutowe porządkowanie kuchni lub wspólnej przestrzeni.",
+            "Wykonaj jedno uzgodnione domowe obowiązkowe zadanie, które odkładałeś.",
+            "Poświęć 20 minut na pomoc domownikowi w konkretnej sprawie.",
+            "Posegreguj ubrania i odłóż rzeczy na swoje miejsce przez 15 minut.",
+            "Przygotuj listę zakupów i sprawdź, czego naprawdę brakuje.",
+            "Umyj i uporządkuj własne naczynia oraz blat po posiłku.",
+            "Wyrzuć odpady i posegreguj je zgodnie z lokalnymi zasadami.",
+            "Wyczyść jedną małą, zaniedbaną przestrzeń, na przykład półkę lub szufladę.",
+            "Zajmij się jedną drobną naprawą lub zgłoś ją osobie, która może pomóc.",
+            "Oddaj jedną niepotrzebną, ale sprawną rzecz do ponownego wykorzystania.",
+            "Przygotuj prosty plan posiłków na następny dzień, bez ograniczania jedzenia.",
+            "Zrób przegląd zapasów i zaplanuj wykorzystanie produktów, które już masz.",
+            "Przez 20 minut uporządkuj dokumenty papierowe lub cyfrowe.",
+            "Sprawdź, czy wszystkie ważne pliki mają czytelne nazwy i daty.",
+            "Wyczyść skrzynkę odbiorczą z niepotrzebnych wiadomości przez 15 minut.",
+            "Zrezygnuj z jednej nieużywanej subskrypcji po sprawdzeniu warunków.",
+            "Przejrzyj wydatki z ostatnich 7 dni i sklasyfikuj je bez oceniania siebie.",
+            "Zaktualizuj prosty budżet na kolejny tydzień.",
+            "Ustal jedną realistyczną kwotę oszczędności na najbliższy miesiąc.",
+            "Porównaj ceny jednego planowanego zakupu i zapisz wniosek.",
+            "Zrób listę trzech umiejętności, które mogą poprawić Twoją sytuację finansową.",
+            "Poświęć 25 minut na ćwiczenie umiejętności przydatnej w pracy lub projekcie.",
+            "Zaktualizuj opis jednego projektu lub portfolio o konkretny wykonany rezultat.",
+            "Przygotuj szkic jednej wiadomości dotyczącej współpracy, zlecenia lub nauki.",
+            "Zbierz w jednym miejscu informacje potrzebne do kolejnego kroku zawodowego.",
+            "Zrób 20-minutowy przegląd postępu w najważniejszym projekcie.",
+            "Podziel duże zaległe zadanie na trzy kroki i wykonaj pierwszy.",
+            "Zidentyfikuj jedną przeszkodę środowiskową i usuń ją przed kolejną sesją pracy.",
+            "Przygotuj krótką checklistę do zadania, które często odkładasz.",
+            "Wykonaj 15 minut spokojnej mobilizacji lub spaceru, jeśli pasuje to do Twojego planu i samopoczucia.",
+            "Zaplanuj jeden rozsądny blok regeneracji po wymagającym dniu.",
+            "Sprawdź, czy plan treningowy na kolejny tydzień uwzględnia odpoczynek.",
+            "Przygotuj sprzęt i strój do najbliższego zaplanowanego treningu.",
+            "Zapisz, co w ostatnim planie było nierealistyczne, i skoryguj obciążenie.",
+            "Wykonaj 20-minutowy spacer w zwykłym, komfortowym tempie.",
+            "Zaplanuj stałą porę zakończenia pracy na jutro, aby chronić sen.",
+            "Przygotuj sypialnię do odpoczynku: przewietrz i odłóż rozpraszacze.",
+            "Przejrzyj swoje cele i usuń jeden, który stracił znaczenie.",
+            "Napisz krótką analizę: co było pod Twoją kontrolą, a co nie.",
+            "Wybierz jeden nawyk i opisz, jaki bodziec go uruchamia.",
+            "Przygotuj środowisko tak, aby jutrzejszy dobry wybór był łatwiejszy.",
+            "Zapisz jedną rzecz, którą należy przestać robić, i konkretną alternatywę.",
+            "Zapisz jedną rzecz, którą należy utrzymać, bo faktycznie działa.",
+            "Przeprowadź 15-minutowy przegląd tygodnia bez usprawiedliwień i bez obrażania siebie.",
+            "Zamień jedno rozproszenie na zaplanowaną aktywność o podobnym czasie trwania.",
+            "Przygotuj materiały do pierwszej lekcji lub sesji pracy następnego dnia.",
+            "Zrób 20 minut porządkowania zakładek i zapisanych materiałów.",
+            "Oznacz trzy materiały, do których wrócisz, i usuń resztę zakładek.",
+            "Ustal jeden miernik, po którym poznasz, że jutro zadanie zostało wykonane.",
+            "Przeanalizuj jedno niedotrzymane zobowiązanie i ustal nowy realistyczny termin.",
+            "Wykonaj jeden zaległy telefon lub przygotuj się do niego, jeśli wymaga umówienia.",
+            "Zrób listę rzeczy do załatwienia poza domem i połącz je w jedną trasę.",
+            "Oddaj lub odłóż w odpowiednie miejsce jedną rzecz, która od dawna zalega.",
+            "Poświęć 20 minut na naprawę lub ulepszenie swojego miejsca pracy.",
+            "Zapisz jeden konkretny sposób ograniczenia tarcia przy najtrudniejszym zadaniu.",
+            "Wykonaj dodatkowy, zaplanowany blok 20 minut nad zaległą nauką.",
+            "Przygotuj pięć pytań, które pomogą Ci lepiej zrozumieć bieżący temat.",
+            "Przećwicz krótkie przedstawienie jednego pomysłu lub projektu na głos.",
+            "Zapisz jedną rzecz, którą możesz uprościć w swoim planie tygodnia.",
+            "Przejrzyj ustawienia prywatności i bezpieczeństwa jednego ważnego konta.",
+            "Zaktualizuj hasło jednego konta, jeśli jest słabe lub powtarzane, używając menedżera haseł.",
+            "Sprawdź, czy ważne dokumenty są zapisane w bezpiecznym miejscu.",
+            "Poświęć 15 minut na uporządkowanie zdjęć lub plików, które trudno znaleźć.",
+            "Zrób listę pięciu małych spraw, które poprawią funkcjonowanie domu lub stanowiska.",
+            "Wybierz jedną z tych spraw i wykonaj ją od razu w bezpiecznym zakresie.",
+            "Przygotuj plan awaryjny na najczęstszą przeszkodę w jutrzejszym planie.",
+            "Zapisz dwie rzeczy, których nie należy przeciążać w kolejnym tygodniu.",
+            "Przeznacz 15 minut na uporządkowanie finansowych lub zawodowych notatek.",
+            "Przekaż jedną sprawną, niepotrzebną rzecz do lokalnej zbiórki, jeśli jest potrzebna.",
+            "Rozważ niewielką darowiznę na wybrany cel tylko wtedy, gdy mieści się w Twoim dobrowolnym budżecie."
+        ];
+
+        const dailyClosingMessages = [
+            "Dzień zamknięty. Czas nie wybacza zaległości.",
+            "Kolejna cegła w murze albo w przepaści. Rejestr pozostaje.",
+            "Rejestr zapisany. Cisza przed następnym świtem.",
+            "Ślad został utrwalony. Reszta znika w ciemności.",
+            "Doba dobiegła końca. Bilans nie potrzebuje komentarza.",
+            "Zegar wykonał swoje zadanie. Teraz pozostaje zapis.",
+            "Karty zamknięte. Nie wszystkie odpowiedzi są widoczne.",
+            "Wynik zapisano. Jutro odsłoni dalszy ciąg.",
+            "Popiół opadł. Pozostał tylko ślad decyzji.",
+            "Noc przejęła zmianę. Rejestr pozostaje otwarty.",
+            "Dzień odszedł bez świadków. Dane zostały.",
+            "Cisza zamknęła ostatni rozdział tej doby.",
+            "Nie ma już ruchów do wykonania. Jest tylko wynik.",
+            "Kolejny rozdział zapisany bez ozdobników.",
+            "Światło gaśnie. Liczby pozostają czytelne.",
+            "Doba zamknięta. Żaden szczegół nie został zapomniany.",
+            "W archiwum przybyła kolejna linia.",
+            "Zapis zakończony. Niewykorzystany czas nie wraca.",
+            "Drzwi dnia zostały zamknięte od wewnątrz.",
+            "Ostatni sygnał ucichł. Pozostał bilans.",
+            "To, co wykonane, pozostaje. Reszta czeka w cieniu.",
+            "Nie ma werdyktu. Jest zapis i jego konsekwencje.",
+            "Noc nie komentuje. Jedynie przechowuje ślady.",
+            "Dzień zniknął za linią horyzontu.",
+            "Kolejna strona została odwrócona bez fanfar.",
+            "System odnotował ruch. Milczenie należy do reszty.",
+            "Zamknięto cykl. Nie zamknięto spraw niedokończonych.",
+            "Wskazówki przesunęły się dalej. Rejestr nie śpi.",
+            "Każdy wybór pozostawił własny znak.",
+            "Czas opuścił salę. Ślady zostały na miejscu.",
+            "Doba zamknięta. Echo wykonanych decyzji pozostaje.",
+            "Niektóre ścieżki urywają się w połowie. Zapis to pamięta.",
+            "Ostatnia linia dzisiejszego rozdziału została postawiona.",
+            "Ciemność nie ocenia. Odsłania kontury.",
+            "Bilans został przypieczętowany.",
+            "Zegar milknie tylko na moment.",
+            "Dzień odłożony do archiwum. Bez dopisków.",
+            "To, co pominięte, nie rozpływa się w nocy.",
+            "W ciszy łatwiej usłyszeć ciężar decyzji.",
+            "Kolejny krąg domknięty. Ślad pozostaje.",
+            "Zapis nie zna wymówek ani legend.",
+            "Dzień zamknięty. Jego kształt jest już niezmienny.",
+            "Ostatni punkt postawiony. Reszta należy do kolejnej doby.",
+            "Wszystko, co dziś miało miejsce, ma już swoje miejsce.",
+            "Cień przesunął się o jedną dobę.",
+            "Rejestr przyjął dzisiejszy ciężar.",
+            "Koniec cyklu. Początek kolejnej pustej strony.",
+            "Nie słychać już kroków. Widać ich ślady.",
+            "Doba została zamknięta bez świadków i bez fanfar.",
+            "Wynik nie potrzebuje światła, by istnieć.",
+            "Został tylko zapis ruchów wykonanych i pominiętych.",
+            "Noc przykrywa szczegóły, ale nie usuwa ich skutków.",
+            "Dzień opuścił scenę. Dekoracje pozostają.",
+            "Kolejny znak na mapie czasu.",
+            "Granica doby została przekroczona. Rejestr trwa.",
+            "Odpowiedzi zapisano. Pytania pozostają w cieniu.",
+            "Czas zamknął księgę, nie wymazał treści.",
+            "Światło zgasło nad dzisiejszym polem działań.",
+            "Dzień bez powtórzeń. Zapis bez poprawek.",
+            "Zamknięto dzisiejszą komnatę. Klucz pozostaje przy Tobie.",
+            "Kolejna doba przechodzi do archiwum.",
+            "W ciszy widać to, co za dnia ginęło w ruchu.",
+            "Niech liczby pozostaną na swoim miejscu.",
+            "Ostatni akord ucichł. Pozostała przestrzeń.",
+            "Dzień zakończony. Nie wszystko zostało dopowiedziane.",
+            "Ślad po decyzji jest dłuższy niż sama chwila.",
+            "Zapisano bez interpretacji. Interpretacja należy do Ciebie.",
+            "Kolejna brama czasu została za plecami.",
+            "Doba zamknięta. Wskazówki nie zatrzymały się ani na chwilę.",
+            "W archiwum nie ma pustych gestów.",
+            "Noc przechowuje to, czego dzień nie dokończył.",
+            "Każdy koniec ma własny, cichy protokół.",
+            "Zapis przyjęty. Kolejny rozdział nie został jeszcze otwarty.",
+            "Światło nad planszą zgasło.",
+            "Czas nie zostawia kopii zapasowej minionych godzin.",
+            "Dzień zamknięty. Ślad pozostaje pod powierzchnią.",
+            "Ostatnie okno zostało wygaszone.",
+            "Nie ma już zmian w dzisiejszym rejestrze.",
+            "Kolejna warstwa czasu osiadła na poprzedniej.",
+            "Cisza jest ostatnim wpisem tej doby.",
+            "To, co miało zostać zapisane, zostało zapisane.",
+            "Dzień przeszedł w stan archiwalny.",
+            "Granica została zamknięta. Jej ślad pozostaje widoczny.",
+            "Noc zabiera dźwięki, nie konsekwencje.",
+            "Rejestr nie dopisuje intencji. Tylko fakty.",
+            "Kolejny rozdział czasu został odłożony.",
+            "Doba zakończona. Pozostała nieruchoma liczba.",
+            "Ostatni wpis zniknął z ekranu, nie z pamięci.",
+            "Cień przeszedł przez kolejną stronę kalendarza.",
+            "Niektóre odpowiedzi przychodzą dopiero po ciszy.",
+            "Zapis zamknięty. Świt nie został jeszcze wywołany.",
+            "Dzisiejszy ślad został zabezpieczony w archiwum.",
+            "Koniec dnia. Bez fanfar, bez dopisków.",
+            "Czas przesunął granicę. System odnotował zmianę.",
+            "Wszystkie dzisiejsze decyzje mają już swój cień.",
+            "Księga dnia została zamknięta.",
+            "Rejestr pozostaje. Reszta należy do jutra.",
+            "Nadchodzi kolejna doba. Dzisiejsza nie wróci.",
+            "Cisza. Zapis. Koniec cyklu.",
+            "Odczyt zakończony. Następny wpis należy do kolejnej doby."
+        ];
+
         const shopCatalog = [
-            { id: 'shield_streak', name: '🛡️ Tarcza Serii', desc: 'Chroni przed 1 resetem serii przy porażce.', cost: 80, type: 'shield' },
-            { id: 'forgive_fail', name: '📜 Dekret Oczyszczenia', desc: 'Anuluje 1 aktywną porażkę dzisiaj i zwraca XP.', cost: 60, type: 'cleanse' },
-            { id: 'real_hour', name: '🎮 1h Rozrywki Bez Wyrzutów', desc: 'Pozwolenie Systemu na 1h gry/serialu w realu.', cost: 40, type: 'real' },
+            { id: 'real_hour', name: '🎮 1h Rozrywki Bez Wyrzutów', desc: 'Pozwolenie Systemu na 1h gry/serialu w realu.', cost: 35, type: 'real' },
             { id: 'real_cheat', name: '🍔 Uczta Wojownika (Cheat Meal)', desc: 'Jednorazowy posiłek poza dietą zatwierdzony przez System.', cost: 40, type: 'real' },
             { id: 'real_free_day', name: '👑 Dzień Regeneracji (Wolne)', desc: 'Pełny dzień odpoczynku w realu bez utraty serii.', cost: 180, type: 'real' }
         ];
@@ -1199,7 +1430,7 @@
         }
 
         let state = {
-            xp: 0, totalXp: 0, level: 1, coins: 0, shields: 0,
+            xp: 0, totalXp: 0, level: 1, coins: 0,
             pendingCoins: { sila: 0, intelekt: 0, wola: 0, finanse: 0 },
             advantagePoints: 100,
             rivals: rankingRivals,
@@ -1210,6 +1441,13 @@
             hardcoreHabit: null,
             categoryStreaks: { sila: 0, intelekt: 0, wola: 0, finanse: 0 },
             lastReport: null,
+            categoryNotes: { sila: '', intelekt: '', wola: '', finanse: '' },
+            dailyNotesHistory: [],
+            weeklyMissedDaily: 0,
+            weekDaysCompleted: 0,
+            pendingPenalties: [],
+            penaltyHistory: [],
+            lastWeeklyAudit: null,
             logs: []
         };
 
@@ -1244,7 +1482,6 @@
                         ...state,
                         ...cloudData,
                         coins: cloudData.coins || 0,
-                        shields: cloudData.shields || 0,
                         pendingCoins: { sila: 0, intelekt: 0, wola: 0, finanse: 0, ...(cloudData.pendingCoins || {}) },
                         advantagePoints: cloudData.advantagePoints !== undefined ? cloudData.advantagePoints : 100,
                         rivals: cloudData.rivals || rankingRivals,
@@ -1256,13 +1493,20 @@
                         hardcoreHabit: cloudData.hardcoreHabit !== undefined ? cloudData.hardcoreHabit : null,
                         categoryStreaks: { sila: 0, intelekt: 0, wola: 0, finanse: 0, ...(cloudData.categoryStreaks || {}) },
                         lastReport: cloudData.lastReport || null,
+                        categoryNotes: { sila: '', intelekt: '', wola: '', finanse: '', ...(cloudData.categoryNotes || {}) },
+                        dailyNotesHistory: cloudData.dailyNotesHistory || [],
+                        weeklyMissedDaily: Number(cloudData.weeklyMissedDaily) || 0,
+                        weekDaysCompleted: Number(cloudData.weekDaysCompleted) || 0,
+                        pendingPenalties: cloudData.pendingPenalties || [],
+                        penaltyHistory: cloudData.penaltyHistory || [],
+                        lastWeeklyAudit: cloudData.lastWeeklyAudit || null,
                         logs: cloudData.logs || []
                     };
                     isRemoteUpdate = false;
                     render();
                 } else {
                     state = {
-                        xp: 0, totalXp: 0, level: 1, coins: 0, shields: 0,
+                        xp: 0, totalXp: 0, level: 1, coins: 0,
                         pendingCoins: { sila: 0, intelekt: 0, wola: 0, finanse: 0 },
                         advantagePoints: 100,
                         rivals: JSON.parse(JSON.stringify(rankingRivals)),
@@ -1273,6 +1517,13 @@
                         hardcoreHabit: null,
                         categoryStreaks: { sila: 0, intelekt: 0, wola: 0, finanse: 0 },
                         lastReport: null,
+                        categoryNotes: { sila: '', intelekt: '', wola: '', finanse: '' },
+                        dailyNotesHistory: [],
+                        weeklyMissedDaily: 0,
+                        weekDaysCompleted: 0,
+                        pendingPenalties: [],
+                        penaltyHistory: [],
+                        lastWeeklyAudit: null,
                         logs: []
                     };
                     addLog(`Zainicjowano profil w chmurze: "${profileId}".`, "info");
@@ -1289,6 +1540,95 @@
             try { await setDoc(doc(db, 'architekt_profiles', profileId), state); }
             catch (e) { console.error("Cloud save error:", e); }
         }
+
+        const categoryNoteLabels = { sila: 'Siła', intelekt: 'Intelekt', wola: 'Wola', finanse: 'Finanse' };
+
+        window.updateCategoryNoteDraft = function(catKey, value) {
+            if (!categoryNoteLabels[catKey]) return;
+            if (!state.categoryNotes) state.categoryNotes = { sila: '', intelekt: '', wola: '', finanse: '' };
+            state.categoryNotes[catKey] = String(value || '').slice(0, 500);
+        };
+
+        window.saveCategoryNote = function(catKey, value) {
+            window.updateCategoryNoteDraft(catKey, value);
+            saveStateToCloud();
+        };
+
+        function renderCategoryNotes() {
+            const notes = state.categoryNotes || {};
+            for (const key of Object.keys(categoryNoteLabels)) {
+                const field = document.getElementById(`note-${key}`);
+                if (field && document.activeElement !== field) field.value = notes[key] || '';
+            }
+        }
+
+        function getWeeklyAuditSnapshot(finalizeWeek = false) {
+            const dailySlotsPerDay = Object.values(state.habits || {}).reduce((sum, list) =>
+                sum + (Array.isArray(list) ? list.filter(h => !h.weeklyTarget).length : 0), 0);
+            const dailyExpected = dailySlotsPerDay * 7;
+            const loggedDays = Math.min(7, Number(state.weekDaysCompleted) || 0);
+            const loggedDailyMisses = Number(state.weeklyMissedDaily) || 0;
+            const unloggedDayMisses = finalizeWeek ? ((7 - loggedDays) * dailySlotsPerDay) : 0;
+            const missedDaily = Math.min(dailyExpected, loggedDailyMisses + unloggedDayMisses);
+            let weeklyExpected = 0;
+            let weeklyCompleted = 0;
+            Object.values(state.habits || {}).forEach(list => (list || []).forEach(h => {
+                if (h.weeklyTarget) {
+                    weeklyExpected += Number(h.weeklyTarget) || 0;
+                    weeklyCompleted += Math.min(Number(h.weeklyTarget) || 0, Number(h.weeklyDone) || 0);
+                }
+            }));
+            const weeklyRemaining = Math.max(0, weeklyExpected - weeklyCompleted);
+            const missedWeekly = finalizeWeek ? weeklyRemaining : 0;
+            const totalExpected = dailyExpected + weeklyExpected;
+            const totalMissed = missedDaily + missedWeekly;
+            const completedDaily = Math.max(0, (loggedDays * dailySlotsPerDay) - loggedDailyMisses);
+            const completed = finalizeWeek
+                ? Math.max(0, totalExpected - totalMissed)
+                : completedDaily + weeklyCompleted;
+            return { dailySlotsPerDay, dailyExpected, loggedDays, missedDaily, weeklyExpected, weeklyCompleted, weeklyRemaining, missedWeekly, totalExpected, totalMissed, completed, finalizeWeek };
+        }
+
+        function renderWeeklyAudit() {
+            const summary = document.getElementById('weekly-audit-summary');
+            const penaltyList = document.getElementById('weekly-penalty-list');
+            if (!summary || !penaltyList) return;
+            const audit = getWeeklyAuditSnapshot();
+            const summaryCount = audit.missedDaily;
+            const thresholdExceededSoFar = audit.totalMissed > 12; // Kara jest aktywowana dopiero podczas zamknięcia tygodnia.
+            summary.innerHTML = `
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    <div class="bg-obsidian/80 border border-edge rounded p-2"><div class="text-slate-500">ZADANIA CODZIENNE</div><div class="text-slate-100 font-bold">${audit.dailyExpected}</div><div class="text-[10px] text-slate-500">${audit.missedDaily} pominiętych w ${audit.loggedDays}/7 dni</div></div>
+                    <div class="bg-obsidian/80 border border-edge rounded p-2"><div class="text-slate-500">SESJE TYGODNIOWE</div><div class="text-slate-100 font-bold">${audit.weeklyExpected}</div><div class="text-[10px] text-slate-500">${audit.weeklyCompleted} wykonanych · ${audit.weeklyRemaining} do celu</div></div>
+                    <div class="bg-obsidian/80 border border-edge rounded p-2"><div class="text-slate-500">ŁĄCZNA PULA</div><div class="text-slate-100 font-bold">${audit.totalExpected}</div><div class="text-[10px] text-slate-500">${audit.completed} wykonanych / zaliczonych</div></div>
+                    <div class="bg-obsidian/80 border ${thresholdExceededSoFar ? 'border-rose-500/50' : 'border-emerald-500/30'} rounded p-2"><div class="text-slate-500">POMINIĘCIA</div><div class="${thresholdExceededSoFar ? 'text-rose-300' : 'text-emerald-300'} font-bold">${summaryCount} / 12</div><div class="text-[10px] ${thresholdExceededSoFar ? 'text-rose-300' : 'text-slate-500'}">${thresholdExceededSoFar ? 'PRÓG PRZEKROCZONY — ROZLICZENIE TYGODNIA' : 'Wynik końcowy po zamknięciu tygodnia'}</div></div>
+                </div>
+                <p class="text-[10px] text-slate-500 mt-2">Bieżący układ zadań: ${audit.dailySlotsPerDay} codziennych × 7 dni + ${audit.weeklyExpected} wymaganych sesji tygodniowych = ${audit.totalExpected} wykonań. Konsekwencja uruchamia się przy 13 lub większej liczbie pominięć i jest oceniana dopiero przy „Nowy Tydzień”.</p>
+            `;
+            const pending = (state.pendingPenalties || []).filter(p => !p.completed);
+            const completed = (state.pendingPenalties || []).filter(p => p.completed);
+            if (!pending.length && !completed.length) {
+                penaltyList.innerHTML = '<div class="text-[11px] text-slate-500">Brak aktywnych konsekwencji. Rozliczenie następuje przy przycisku „Nowy Tydzień”.</div>';
+                return;
+            }
+            penaltyList.innerHTML = pending.map(p => `
+                <div class="p-3 rounded border border-rose-500/40 bg-rose-950/20 space-y-2">
+                    <div class="flex justify-between gap-2"><span class="text-[10px] text-rose-300 font-bold tracking-wider">KONSEKWENCJA AKTYWNA · ${p.missedTotal}/${p.totalExpected} POMINIĘĆ</span><span class="text-[10px] text-slate-500">${p.createdAt ? new Date(p.createdAt).toLocaleDateString('pl-PL') : ''}</span></div>
+                    <div class="text-xs text-slate-100">${p.text}</div>
+                    <button onclick="playAudioClick(); window.completeWeeklyPenalty('${p.id}')" class="px-3 py-1.5 rounded border border-emerald-500/40 bg-emerald-950/30 hover:bg-emerald-900/50 text-emerald-300 text-[10px] font-tech">Potwierdź wykonanie</button>
+                </div>
+            `).join('') + (completed.length ? `<div class="text-[10px] text-emerald-400 font-tech">Potwierdzone konsekwencje: ${completed.length}</div>` : '');
+        }
+
+        window.completeWeeklyPenalty = function(penaltyId) {
+            const penalty = (state.pendingPenalties || []).find(p => p.id === penaltyId && !p.completed);
+            if (!penalty) return;
+            penalty.completed = true;
+            penalty.completedAt = new Date().toISOString();
+            addLog(`KONSEKWENCJA TYGODNIOWA POTWIERDZONA: ${penalty.text}`, 'success');
+            saveStateToCloud();
+            render();
+        };
 
         function addLog(message, type = 'info') {
             const timeStr = new Date().toTimeString().split(' ')[0];
@@ -1386,7 +1726,6 @@
             document.getElementById('stat-pending-finanse').innerText = `${pc.finanse || 0} ₵`;
 
             document.getElementById('stat-ego').innerText = getEgoPercentile(state.level);
-            document.getElementById('stat-shields').innerText = `${state.shields} szt.`;
             document.getElementById('shop-balance').innerText = `${state.coins} ₵`;
 
             const totalBonus = Object.values(state.categoryStreaks).reduce((sum, streak) => sum + getStreakBonus(streak || 0), 0);
@@ -1398,6 +1737,8 @@
             renderHabitCategory('intelekt', 'habits-intelekt');
             renderHabitCategory('wola', 'habits-wola');
             renderHabitCategory('finanse', 'habits-finanse');
+            renderCategoryNotes();
+            renderWeeklyAudit();
             renderHardcoreSection();
             renderWorkChangeSection();
             renderSpotifyModule();
@@ -1619,35 +1960,10 @@
                 return;
             }
 
-            if (item.type === 'shield') {
-                state.coins -= item.cost;
-                state.shields += 1;
-                addLog(`🛒 ZAKUP W SKLEPIE: ${item.name} (-${item.cost} ₵). Posiadasz teraz ${state.shields} tarcz.`, "success");
-                showNotification(`Kupiono: ${item.name}! Chroni przed kolejnym resetem serii.`);
-            } else if (item.type === 'cleanse') {
-                let foundFailed = false;
-                for (const k of ['sila', 'intelekt', 'wola', 'finanse']) {
-                    const failedH = state.habits[k].find(h => h.status === 'failed');
-                    if (failedH) {
-                        failedH.status = 'pending';
-                        adjustXP(failedH.xpValue);
-                        foundFailed = true;
-                        state.coins -= item.cost;
-                        addLog(`📜 DEKRET OCZYSZCZENIA: Anulowano porażkę w "${failedH.name}" i zwrócono +${failedH.xpValue} XP (-${item.cost} ₵).`, "levelup");
-                        showNotification(`Dekret użyty! Porażka w "${failedH.name}" anulowana.`);
-                        break;
-                    }
-                }
-                if (!foundFailed) {
-                    showNotification("Nie masz dzisiaj żadnej aktywnej porażki do oczyszczenia!");
-                    return;
-                }
-            } else {
-                state.coins -= item.cost;
-                playAudioLevelUp();
-                addLog(`👑 NAGRODA REALNA ODBLOKOWANA: ${item.name} (-${item.cost} ₵). Zasłużyłeś!`, "levelup");
-                showNotification(`Odblokowano nagrodę w realu: ${item.name}!`);
-            }
+            state.coins -= item.cost;
+            playAudioLevelUp();
+            addLog(`👑 NAGRODA REALNA ODBLOKOWANA: ${item.name} (-${item.cost} ₵).`, "levelup");
+            showNotification(`Odblokowano nagrodę w realu: ${item.name}!`);
 
             saveStateToCloud();
             render();
@@ -1899,9 +2215,13 @@
                 adjustXP(-habit.xpValue);
                 addLog(`Cofnięto wykonanie: "${habit.name}" (-${habit.xpValue} XP).`, "info");
             } else {
+                if (habit.weeklyTarget && habit.status !== 'done' && (habit.weeklyDone || 0) >= habit.weeklyTarget) {
+                    showNotification(`Cel tygodniowy dla zadania „${habit.name}” został już osiągnięty.`);
+                    return;
+                }
                 if (habit.status === 'failed') adjustXP(habit.xpValue);
                 habit.status = 'done';
-                if (habit.weeklyTarget) habit.weeklyDone = (habit.weeklyDone || 0) + 1;
+                if (habit.weeklyTarget) habit.weeklyDone = Math.min(habit.weeklyTarget, (habit.weeklyDone || 0) + 1);
                 if (habit.weeklyCoinDeposit) {
                     state.pendingCoins[catKey] = (state.pendingCoins[catKey] || 0) + habit.weeklyCoinDeposit;
                     addLog(`🏦 DEPOZYT ${catKey.toUpperCase()}: +${habit.weeklyCoinDeposit} ₵ za sesję.`, 'levelup');
@@ -1931,15 +2251,9 @@
                 habit.status = 'failed';
                 adjustXP(-habit.xpValue);
 
-                if (state.shields > 0 && state.categoryStreaks[catKey] > 0) {
-                    state.shields -= 1;
-                    addLog(`🛡️ TARCZA SERII AKTYWOWANA! Uratowano serię (${state.categoryStreaks[catKey]} dni) w kategorii ${catKey.toUpperCase()} mimo porażki (-${habit.xpValue} XP).`, "levelup");
-                    showNotification(`🛡️ Tarcza uratowała Twoją serię w ${catKey.toUpperCase()}!`);
-                } else {
-                    state.categoryStreaks[catKey] = 0;
-                    addLog(`PORAŻKA: Nie wykonano "${habit.name}". Kara -${habit.xpValue} XP oraz reset serii w kategorii ${catKey.toUpperCase()}!`, "danger");
-                    showNotification(`⚠️ Porażka: -${habit.xpValue} XP oraz reset serii!`);
-                }
+                state.categoryStreaks[catKey] = 0;
+                addLog(`PORAŻKA: Nie wykonano "${habit.name}". Kara -${habit.xpValue} XP oraz reset serii w kategorii ${catKey.toUpperCase()}!`, "danger");
+                showNotification(`Porażka: -${habit.xpValue} XP oraz reset serii!`);
             }
 
             saveStateToCloud();
@@ -1978,12 +2292,27 @@
 
         // ZAKOŃCZENIE CYKLU DNIA Z SYMULACJĄ RYWALI (Tabela pucharów rośnie i spada, ale z przewagą wzrostu)
         window.endDay = function() {
+            const requiredNotes = ['sila', 'intelekt', 'wola', 'finanse'];
+            const notesForToday = {};
+            for (const key of requiredNotes) {
+                const field = document.getElementById(`note-${key}`);
+                const value = String(field ? field.value : ((state.categoryNotes || {})[key] || '')).trim();
+                if (value.length < 5) {
+                    showNotification(`Uzupełnij notatnik kategorii ${categoryNoteLabels[key]} (minimum 5 znaków), aby zamknąć dzień.`);
+                    if (field) field.focus();
+                    return;
+                }
+                notesForToday[key] = value.slice(0, 500);
+            }
+            state.categoryNotes = notesForToday;
+
             let dailyBonusTotal = 0;
             let depositedCoinsToday = 0;
             let depositedBreakdown = [];
             let totalTasksCount = 0;
             let completedTasksCount = 0;
             let autoFailedTasks = [];
+            let failedDailyCount = 0;
 
             if (!state.pendingCoins) state.pendingCoins = { sila: 0, intelekt: 0, wola: 0, finanse: 0 };
             if (!state.rivals) state.rivals = JSON.parse(JSON.stringify(rankingRivals));
@@ -2023,6 +2352,7 @@
 
                 const anyFailed = habitsInCat.some(h => h.status === 'failed');
                 const anyDone = habitsInCat.some(h => h.status === 'done');
+                failedDailyCount += habitsInCat.filter(h => !h.weeklyTarget && h.status === 'failed').length;
 
                 habitsInCat.forEach(h => {
                     totalTasksCount++;
@@ -2042,14 +2372,9 @@
                     state.categoryStreaks[catKey] = Math.min(10, state.categoryStreaks[catKey] + 1);
                     const bonus = getStreakBonus(state.categoryStreaks[catKey]);
                     dailyBonusTotal += bonus;
-                } else if (anyFailed) {
-                    if (state.shields > 0 && state.categoryStreaks[catKey] > 0) {
-                        state.shields -= 1;
-                        addLog(`🛡️ TARCZA SERII: Uratowano ciągłość w ${catKey.toUpperCase()} na koniec dnia!`, "levelup");
-                    } else if (state.categoryStreaks[catKey] > 0) {
-                        state.categoryStreaks[catKey] = 0;
-                        addLog(`💥 RESET SERII: Utracono ciągłość w kategorii ${catKey.toUpperCase()}.`, "danger");
-                    }
+                } else if (anyFailed && state.categoryStreaks[catKey] > 0) {
+                    state.categoryStreaks[catKey] = 0;
+                    addLog(`RESET SERII: Utracono ciągłość w kategorii ${catKey.toUpperCase()}.`, "danger");
                 }
 
                 habitsInCat.forEach(h => h.status = 'pending');
@@ -2101,6 +2426,8 @@
             addLog(`⚡ NOWA NAGŁA MISJA NA JUTRO: "${state.urgentQuest.text}" (+${state.urgentQuest.xpValue} XP).`, "levelup");
 
             state.daysCompleted += 1;
+            state.weekDaysCompleted = Math.min(7, (Number(state.weekDaysCompleted) || 0) + 1);
+            state.weeklyMissedDaily = (Number(state.weeklyMissedDaily) || 0) + failedDailyCount;
             if (completionRate === 100) state.perfectDays += 1;
 
             const crowdQuitPercent = completionRate >= 80 ? (78 + Math.floor(Math.random() * 14)) : (42 + Math.floor(Math.random() * 20));
@@ -2108,8 +2435,15 @@
                 ? Math.round((advantageDelta * 32) + (state.level * 10))
                 : -Math.round((Math.abs(advantageDelta) * 28));
 
+            const closureQuote = dailyClosingMessages[Math.floor(Math.random() * dailyClosingMessages.length)];
+            if (!Array.isArray(state.dailyNotesHistory)) state.dailyNotesHistory = [];
+            state.dailyNotesHistory.unshift({ dayNumber: state.daysCompleted, date: new Date().toISOString(), notes: { ...notesForToday } });
+            if (state.dailyNotesHistory.length > 90) state.dailyNotesHistory.length = 90;
+
             state.lastReport = {
                 dayNumber: state.daysCompleted,
+                closureQuote,
+                categoryNotes: { ...notesForToday },
                 completionRate,
                 completedTasksCount,
                 totalTasksCount,
@@ -2129,6 +2463,7 @@
                 nextUrgentQuest: state.urgentQuest
             };
 
+            state.categoryNotes = { sila: '', intelekt: '', wola: '', finanse: '' };
             saveStateToCloud();
             render();
             openAdvantageModal();
@@ -2136,6 +2471,30 @@
 
         window.resetWeeklyCounters = function() {
             const pc = state.pendingCoins || { sila: 0, intelekt: 0, wola: 0, finanse: 0 };
+            const weeklyAudit = getWeeklyAuditSnapshot(true);
+            const consequenceTriggered = weeklyAudit.totalMissed > 12;
+            let triggeredPenalty = null;
+            if (consequenceTriggered) {
+                const recentIds = new Set((state.penaltyHistory || []).slice(-10).map(p => p.id));
+                const candidates = weeklyConsequencePool.map((text, index) => ({ id: index + 1, text })).filter(p => !recentIds.has(p.id));
+                const pool = candidates.length ? candidates : weeklyConsequencePool.map((text, index) => ({ id: index + 1, text }));
+                const selected = pool[Math.floor(Math.random() * pool.length)];
+                triggeredPenalty = {
+                    id: `penalty-${Date.now()}-${selected.id}`,
+                    optionId: selected.id,
+                    text: selected.text,
+                    missedTotal: weeklyAudit.totalMissed,
+                    totalExpected: weeklyAudit.totalExpected,
+                    createdAt: new Date().toISOString(),
+                    completed: false
+                };
+                if (!Array.isArray(state.pendingPenalties)) state.pendingPenalties = [];
+                if (!Array.isArray(state.penaltyHistory)) state.penaltyHistory = [];
+                state.pendingPenalties.push(triggeredPenalty);
+                state.penaltyHistory.push({ id: selected.id, text: selected.text, createdAt: triggeredPenalty.createdAt, missedTotal: weeklyAudit.totalMissed });
+                addLog(`PRÓG TOLERANCJI PRZEKROCZONY: ${weeklyAudit.totalMissed}/${weeklyAudit.totalExpected} pominięć. Aktywowano konsekwencję: ${selected.text}`, 'danger');
+            }
+            state.lastWeeklyAudit = { ...weeklyAudit, threshold: 12, consequenceTriggered, triggeredPenalty: triggeredPenalty ? { ...triggeredPenalty } : null, closedAt: new Date().toISOString() };
 
             const treningHabit = state.habits.sila.find(h => h.id === 'trening');
             const pianinoHabit = state.habits.intelekt.find(h => h.id === 'pianino');
@@ -2167,6 +2526,8 @@
 
             state.coins += totalPaidOut;
             state.pendingCoins = { sila: 0, intelekt: 0, wola: 0, finanse: 0 };
+            state.weeklyMissedDaily = 0;
+            state.weekDaysCompleted = 0;
 
             Object.keys(state.habits).forEach(catKey => {
                 state.habits[catKey].forEach(h => {
@@ -2199,7 +2560,12 @@
             addLog(`💰 WYPŁATA TYGODNIOWA: Przetransferowano +${totalPaidOut} ₵ do portfela (Przepadło: ${totalForfeited} ₵).`, "levelup");
 
             const payoutContent = document.getElementById('weekly-payout-content');
-            payoutContent.innerHTML = `
+            const weeklyAuditHtml = `
+                <div class="p-3 rounded border ${consequenceTriggered ? 'border-rose-500/50 bg-rose-950/20' : 'border-emerald-500/30 bg-emerald-950/10'} space-y-2">
+                    <div class="font-bold ${consequenceTriggered ? 'text-rose-300' : 'text-emerald-300'}">AUDYT TYGODNIA: ${weeklyAudit.totalMissed}/${weeklyAudit.totalExpected} POMINIĘĆ</div>
+                    <div class="text-[11px] text-slate-300">Zadania codzienne: ${weeklyAudit.missedDaily}/${weeklyAudit.dailyExpected} pominiętych. Sesje tygodniowe: ${weeklyAudit.missedWeekly}/${weeklyAudit.weeklyExpected} pominiętych. Dopuszczalny limit: 12.</div>
+                    ${consequenceTriggered ? `<div class="border-t border-rose-500/20 pt-2 text-xs text-rose-200">PRÓG PRZEKROCZONY. Aktywowano konsekwencję: <strong>${triggeredPenalty.text}</strong><div class="text-[10px] text-rose-300/80 mt-1">Wykonaj ją w bezpiecznym, rozsądnym zakresie i potwierdź w panelu audytu.</div></div>` : '<div class="text-[11px] text-emerald-300">Limit nie został przekroczony. Dodatkowa konsekwencja nie została uruchomiona.</div>'}
+                </div>
                 <div class="bg-obsidian/90 p-4 rounded border border-edge space-y-3">
                     <div class="p-2.5 rounded border ${silaUnlocked ? 'border-emerald-500/40 bg-emerald-950/20' : 'border-rose-500/40 bg-rose-950/20'}">
                         <div class="flex justify-between items-center font-bold">
@@ -2257,6 +2623,7 @@
                     </div>
                 </div>
                 ${bossSummaryHtml}
+                ${weeklyAuditHtml}
             `;
 
             saveStateToCloud();
@@ -2357,16 +2724,6 @@
                 const peopleLabel = rep.peopleDelta >= 0 ? 'WYPRZEDZONE JEDNOSTKI DZISIAJ:' : 'OSOBY, KTÓRE CIĘ WYPRZEDZIŁY:';
                 const peopleValue = rep.peopleDelta >= 0 ? `+${rep.peopleDelta} osób` : `${Math.abs(rep.peopleDelta)} osób`;
 
-                let verdictColor = "text-emerald-400";
-                let verdictText = "DOMINACJA SYSTEMOWA. Rywale w tabeli również walczą o każdy punkt, ale utrzymujesz przewagę.";
-                if (rep.completionRate < 50) {
-                    verdictColor = "text-rose-400";
-                    verdictText = "OSTRZEŻENIE: Zaniechanie zadań sprawiło, że tłum rywali zaczął Cię wyprzedzać.";
-                } else if (rep.completionRate < 100) {
-                    verdictColor = "text-amber-300";
-                    verdictText = "SOLIDNY POSTĘP. Pamiętaj o domknięciu misji tygodniowych 3/3 przed końcem tygodnia!";
-                }
-
                 const depositedTodayVal = rep.depositedCoinsToday !== undefined ? rep.depositedCoinsToday : 0;
                 const vaultTotalVal = rep.totalInVault !== undefined ? rep.totalInVault : getTotalPendingCoins();
 
@@ -2409,8 +2766,13 @@
                         <div class="text-emerald-400 text-[11px]">Nagroda: +${rep.nextUrgentQuest.xpValue} XP oraz +${rep.nextUrgentQuest.xpValue * 2} ₵</div>
                     </div>
 
-                    <div class="text-[11px] ${verdictColor} font-semibold leading-relaxed px-1">
-                        > ${verdictText}
+                    <div class="p-3 rounded border border-violet-500/30 bg-violet-950/20 space-y-1">
+                        <div class="text-[9px] text-violet-300 tracking-[0.2em] font-bold">[ZAPIS KOŃCOWY]</div>
+                        <div class="text-sm text-slate-100 font-semibold leading-relaxed">${rep.closureQuote || 'Rejestr zapisany. Cisza przed następnym świtem.'}</div>
+                    </div>
+                    <div class="p-3 rounded border border-edge bg-obsidian/70 space-y-2">
+                        <div class="text-[10px] text-slate-400 font-bold tracking-wider">NOTATKI ANALITYCZNE // ZAPIS DNIA</div>
+                        ${Object.entries(rep.categoryNotes || {}).map(([key, value]) => `<div class="text-[11px] text-slate-300"><span class="text-sky-300 font-semibold">${categoryNoteLabels[key] || key}:</span> ${String(value).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}</div>`).join('')}
                     </div>
                 `;
             }
@@ -2427,7 +2789,7 @@
 
         window.confirmHardReset = async function() {
             state = {
-                xp: 0, totalXp: 0, level: 1, coins: 0, shields: 0,
+                xp: 0, totalXp: 0, level: 1, coins: 0,
                 pendingCoins: { sila: 0, intelekt: 0, wola: 0, finanse: 0 },
                 advantagePoints: 100,
                 rivals: JSON.parse(JSON.stringify(rankingRivals)),
@@ -2438,6 +2800,13 @@
                 hardcoreHabit: null,
                 categoryStreaks: { sila: 0, intelekt: 0, wola: 0, finanse: 0 },
                 lastReport: null,
+                categoryNotes: { sila: '', intelekt: '', wola: '', finanse: '' },
+                dailyNotesHistory: [],
+                weeklyMissedDaily: 0,
+                weekDaysCompleted: 0,
+                pendingPenalties: [],
+                penaltyHistory: [],
+                lastWeeklyAudit: null,
                 logs: []
             };
             addLog("System został całkowicie zresetowany w chmurze do Poziomu 1.", "info");
